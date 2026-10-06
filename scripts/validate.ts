@@ -7,6 +7,7 @@ export const SOURCE_REVISION = "089e8f27c6d63a2303b78d4e92eae9cca567e6d4";
 
 /** Files required for a complete reusable instruction and development package. */
 export const REQUIRED_FILES = [
+  ".gitattributes",
   "README.md",
   "LICENSE",
   "NOTICE",

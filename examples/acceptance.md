@@ -43,3 +43,9 @@ Aceitação: usar a integração existente, se disponível, e relacionar os acha
 Situação: integração depende de uma tarefa que falhou.
 
 Aceitação: não declarar integração concluída; identificar a dependência e o reparo necessário. Prosseguir apenas com trabalho independente e autorizado.
+
+## 8. Resolver achados de revisão com evidências
+
+Pedido: "Trate os achados de revisão deste PR e marque os que foram resolvidos."
+
+Aceitação: examinar cada achado relevante contra a versão atual, corrigir o que continua material e verificar o resultado. Resolver apenas conversas cuja correção foi comprovada, indicando a evidência pertinente. Se um comentário ficou desatualizado por mudança de linhas, verificar se o problema ainda existe. Manter abertos os itens não comprovados ou que dependem de uma decisão; não fechar tudo para obter uma lista sem pendências.

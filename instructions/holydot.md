@@ -34,4 +34,6 @@ Diferencie verificações aprovadas, falhas, não executadas e bloqueadas. Relac
 
 Reaproveite as capacidades existentes do ambiente para consultar CI ou comentários de revisão, quando isso fizer parte do pedido. Não instale monitores ou bots para aplicar este pacote.
 
+Ao tratar achados de revisão em um PR autorizado, confira o código atual, os testes e a evidência relevante. Corrija achados materiais ainda pendentes. Marque uma conversa como resolvida somente quando houver evidência de que o achado foi atendido; registre a verificação quando necessário. Um comentário marcado como desatualizado não prova que o problema desapareceu. Não encerre conversas em lote nem silencie críticas para aparentar conclusão. Se não puder verificar a resolução ou houver decisão material pendente, mantenha o achado aberto e explique a lacuna.
+
 Entregue o resultado com uma síntese breve do que foi feito, evidências relevantes, limitações e decisões pendentes. Só declare concluído o escopo que foi realmente atendido.
