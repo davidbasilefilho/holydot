@@ -45,7 +45,7 @@ O validador verifica arquivos essenciais, links Markdown inline locais, referên
 
 ## Distribuição
 
-O pacote npm distribui documentação, instruções, modelos, exemplos e o CLI de configuração `holydot`, que exige Bun 1.4. Não oferece servidor, instalação de regras de conta ou configuração automática do dot. Consulte [configuração](setup.md). Para contribuir, use o checkout GitHub com as ferramentas de desenvolvimento; a distribuição npm é voltada ao consumo do texto.
+O pacote npm distribui documentação, instruções, modelos, exemplos e o CLI de configuração e handoff de setup `holydot`, que exige Bun 1.4. Não oferece servidor ou API própria de conta: a aplicação de regras aceitas pertence ao host autenticado e seus controles reais. Consulte [configuração](setup.md). Para contribuir, use o checkout GitHub com as ferramentas de desenvolvimento; a distribuição npm é voltada ao consumo do texto.
 
 Os workflows deste repositório usam a action oficial do mise. `validation.yml` contém a verificação, incluindo `bun test`; `dev.yml` trata pushes de desenvolvimento e `stable.yml` tags estáveis `v*`. A publicação depende das permissões e da configuração do responsável no GitHub/npm. Não há monitoramento ou review bot para outros repositórios.
 

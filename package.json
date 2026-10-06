@@ -19,7 +19,8 @@
     "templates/",
     "examples/",
     "docs/",
-    "scripts/cli.ts"
+    "scripts/cli.ts",
+    "scripts/setup.ts"
   ],
   "type": "module",
   "publishConfig": {

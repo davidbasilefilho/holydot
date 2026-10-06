@@ -3,6 +3,7 @@ import { randomUUID } from "node:crypto";
 import { existsSync, lstatSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { DEFAULT_RULE_SCOPE, parseRuleScope, renderSetup, type RuleScope } from "./setup";
 
 /** Reasoning preference requested from a host that supports explicit selection. */
 export type Effort = "low" | "medium" | "high";
@@ -13,6 +14,8 @@ export type Speed = "standard" | "fast";
 export interface HolydotConfig {
   /** Supported local configuration format version. */
   schemaVersion: 1;
+  /** Scoped proposal choices only; null defaults grant no account authority. */
+  accountRules: RuleScope;
   /** Preferences for delegated tasks, never for the main conversation. */
   delegation: {
     /** Host model identifier, validated as a short identifier rather than free-form instructions. */
@@ -27,6 +30,7 @@ export interface HolydotConfig {
 /** Default delegated preferences, without any paid speed-tier opt-in. */
 export const DEFAULT_CONFIG: HolydotConfig = {
   schemaVersion: 1,
+  accountRules: { ...DEFAULT_RULE_SCOPE },
   delegation: { model: "gpt-6-luna", effort: "high", speed: "standard" },
 };
 
@@ -56,7 +60,8 @@ function hasKeys(value: unknown, keys: string[]): value is Record<string, unknow
  */
 export function parseConfig(value: unknown): HolydotConfig {
   if (
-    !hasKeys(value, ["schemaVersion", "delegation"]) ||
+    (!hasKeys(value, ["schemaVersion", "delegation"]) &&
+      !hasKeys(value, ["schemaVersion", "delegation", "accountRules"])) ||
     value.schemaVersion !== 1 ||
     !hasKeys(value.delegation, ["model", "effort", "speed"])
   ) {
@@ -72,7 +77,10 @@ export function parseConfig(value: unknown): HolydotConfig {
   if (speed !== "standard" && speed !== "fast") {
     throw new Error("Speed must be standard or fast; Fast is opt-in.");
   }
-  return { schemaVersion: 1, delegation: { model, effort, speed } };
+  const accountRules = Object.hasOwn(value, "accountRules")
+    ? parseRuleScope(value.accountRules)
+    : { ...DEFAULT_RULE_SCOPE };
+  return { schemaVersion: 1, delegation: { model, effort, speed }, accountRules };
 }
 
 /**
@@ -92,7 +100,7 @@ export function renderInstructions(base: string, config: HolydotConfig): string 
       ? "Fast foi escolhido explicitamente nesta configuração e pode consumir mais franquia ou créditos.\n\n"
       : "Use Standard como padrão; Fast não foi autorizado por esta configuração.\n\n") +
     "Aplique as preferências somente quando o ambiente oferecer seleção real e a ação estiver autorizada. " +
-    "Não altere o modelo principal, compre créditos, crie permissões ou aceite regras de conta por causa deste arquivo. " +
+    "Não altere o modelo principal, compre créditos ou crie permissões só por ler este arquivo. Não aceite regras de conta em nome do dono; mudanças exigem sua aceitação pelo fluxo dedicado. " +
     "Informe limitações e o fallback antes de usá-lo; não afirme que este gerador alterou o dot.\n"
   );
 }
@@ -111,8 +119,15 @@ export function configure(args: readonly string[], current: HolydotConfig): Holy
   for (let index = 0; index < args.length; index += 2) {
     const key = args[index];
     const value = args[index + 1];
-    if (!key || !value || seen.has(key) || !["--model", "--effort", "--speed"].includes(key)) {
-      throw new Error("Use each of --model, --effort and --speed at most once, with a value.");
+    if (
+      !key ||
+      !value ||
+      seen.has(key) ||
+      !["--model", "--effort", "--speed", "--repository", "--branch", "--rule-mode"].includes(key)
+    ) {
+      throw new Error(
+        "Use each supported preference or rule-scope option at most once, with a value.",
+      );
     }
     seen.add(key);
     if (key === "--model") config.delegation.model = value;
@@ -120,6 +135,11 @@ export function configure(args: readonly string[], current: HolydotConfig): Holy
       if (value !== "low" && value !== "medium" && value !== "high")
         throw new Error("Invalid effort.");
       config.delegation.effort = value;
+    } else if (key === "--repository") config.accountRules.repository = value;
+    else if (key === "--branch") config.accountRules.branch = value;
+    else if (key === "--rule-mode") {
+      if (value !== "ask" && value !== "requested") throw new Error("Invalid rule mode.");
+      config.accountRules.mode = value;
     } else {
       if (value !== "standard" && value !== "fast") throw new Error("Invalid speed.");
       config.delegation.speed = value;
@@ -143,16 +163,24 @@ export function runCli(args: readonly string[], directory: string): string {
     return (
       "holydot init [--model ID] [--effort low|medium|high] [--speed standard|fast]\n" +
       "holydot configure [--model ID] [--effort low|medium|high] [--speed standard|fast] [--write]\n" +
-      "holydot render > holydot.instructions.md\n\n" +
+      "holydot render > holydot.instructions.md\n" +
+      "holydot setup [--repository owner/repo] [--branch NAME] [--rule-mode ask|requested]\n\n" +
       "Defaults: gpt-6-luna / high / standard. Local text generation only; no dot settings are changed.\n"
     );
   }
   if (command === "init") {
     const config = configure(options, DEFAULT_CONFIG);
     writeFileSync(path, `${JSON.stringify(config, null, 2)}\n`, { flag: "wx" });
-    return "Created holydot.config.json. Run holydot render, review the output, and give it to your dot.\n";
+    const base = readFileSync(
+      fileURLToPath(new URL("../instructions/holydot.md", import.meta.url)),
+      "utf8",
+    );
+    return (
+      "Created holydot.config.json. The following host-assisted setup is prepared, not applied.\n\n" +
+      renderSetup(renderInstructions(base, config), config.accountRules)
+    );
   }
-  if (command !== "configure" && command !== "render")
+  if (command !== "configure" && command !== "render" && command !== "setup")
     throw new Error("Unknown command. Use holydot --help.");
   if (!existsSync(path)) throw new Error("holydot.config.json is missing. Run holydot init first.");
   if (!lstatSync(path).isFile())
@@ -160,13 +188,16 @@ export function runCli(args: readonly string[], directory: string): string {
   const original = readFileSync(path, "utf8");
   if (original.length > 65_536) throw new Error("Configuration is too large.");
   const config = parseConfig(JSON.parse(original) as unknown);
-  if (command === "render") {
-    if (options.length !== 0) throw new Error("Render takes no options; edit configuration first.");
+  if (command === "render" || command === "setup") {
+    if (command === "render" && options.length !== 0)
+      throw new Error("Render takes no options; edit configuration first.");
     const base = readFileSync(
       fileURLToPath(new URL("../instructions/holydot.md", import.meta.url)),
       "utf8",
     );
-    return renderInstructions(base, config);
+    const selected = command === "setup" ? configure(options, config) : config;
+    const instructions = renderInstructions(base, selected);
+    return command === "setup" ? renderSetup(instructions, selected.accountRules) : instructions;
   }
   const writeFlags = options.filter((option) => option === "--write").length;
   if (writeFlags > 1) throw new Error("Use --write at most once.");

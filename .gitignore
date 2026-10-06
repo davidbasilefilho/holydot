@@ -6,3 +6,4 @@ dist/
 .npmrc
 holydot.config.json*
 holydot.instructions.md
+holydot.setup.md

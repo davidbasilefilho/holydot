@@ -6,6 +6,7 @@ Esta adaptação foi preparada a partir de fontes públicas do repositório [dav
 
 - [Root](https://github.com/davidbasilefilho/holycodex/blob/089e8f27c6d63a2303b78d4e92eae9cca567e6d4/overlay/holycodex/instructions/root.md)
 - [Specialist](https://github.com/davidbasilefilho/holycodex/blob/089e8f27c6d63a2303b78d4e92eae9cca567e6d4/overlay/holycodex/instructions/specialist.md)
+- [Writing instructions: skill público](https://github.com/davidbasilefilho/holycodex/blob/089e8f27c6d63a2303b78d4e92eae9cca567e6d4/overlay/holycodex/skills/writing-instructions/SKILL.md)
 - [Política e contratos Rust](https://github.com/davidbasilefilho/holycodex/blob/089e8f27c6d63a2303b78d4e92eae9cca567e6d4/crates/holycodex-policy/src/lib.rs)
 - [Versão e licença do workspace](https://github.com/davidbasilefilho/holycodex/blob/089e8f27c6d63a2303b78d4e92eae9cca567e6d4/Cargo.toml)
 - [Licença](https://github.com/davidbasilefilho/holycodex/blob/089e8f27c6d63a2303b78d4e92eae9cca567e6d4/LICENSE), [NOTICE](https://github.com/davidbasilefilho/holycodex/blob/089e8f27c6d63a2303b78d4e92eae9cca567e6d4/NOTICE) e [notas de terceiros](https://github.com/davidbasilefilho/holycodex/blob/089e8f27c6d63a2303b78d4e92eae9cca567e6d4/THIRD-PARTY-NOTICES.md)

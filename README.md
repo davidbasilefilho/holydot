@@ -15,7 +15,7 @@ Isso não instala nada. Uma mensagem não garante aplicação permanente. Se seu
 
 ## Configuração opcional
 
-Com Bun 1.4 instalado, consulte [instalação e configuração](docs/setup.md) para criar preferências locais e gerar as instruções completas. O padrão é GPT-6 Luna, esforço high e velocidade Standard. Fast é opt-in e pode ser alterado depois. O gerador não configura sua conta ou seu dot automaticamente.
+Com Bun 1.4 instalado, consulte [instalação e configuração](docs/setup.md) para criar preferências locais e gerar as instruções completas. O padrão é GPT-6 Luna, esforço high e velocidade Standard. Fast é opt-in e pode ser alterado depois. O CLI prepara um setup assistido pelo host: quando houver controles reais, o host deve apresentar as aprovações, aplicar regras aceitas e verificar o estado. O CLI sozinho não altera a conta.
 
 ## Conteúdo
 
@@ -25,6 +25,8 @@ Com Bun 1.4 instalado, consulte [instalação e configuração](docs/setup.md) p
 - [Relatório de resultado](templates/result.md): resultado, verificações e limites
 - [Mapa da adaptação](docs/adaptation.md): o que veio do HolyCodex e o que não foi portado
 - [Proveniência](docs/provenance.md): fontes públicas fixadas e licença
+- [Índice de políticas](docs/policy-index.md): cobertura e limites de cada política
+- [Regras da conta](docs/account-rules.md): setup guiado, aprovação e verificação pelo host
 
 ## O que o pacote não faz
 

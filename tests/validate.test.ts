@@ -27,6 +27,14 @@ afterEach(() => {
 });
 
 describe("offline package validation", () => {
+  test("maintainer API-equivalent cost estimate stays conditional, separate from agent budgets", () => {
+    const usage = readFileSync(new URL("../docs/usage.md", import.meta.url), "utf8");
+    expect(usage).toContain("Modelo de estimativa para manutenção");
+    expect(usage).toContain("custo ponderado API-equivalente");
+    expect(usage).toContain("não é a fórmula confirmada do Pro");
+    expect(usage).toContain("não fixe multiplicadores nesta instrução");
+  });
+
   test("accepts a complete fixture and its local and external links", () => {
     const root = fixture();
     writeFileSync(

@@ -111,8 +111,8 @@ describe("local setup CLI", () => {
     runCli(["init"], root);
     const output = runCli(["render"], root);
     expect(output).toContain("Não encerre conversas em lote");
-    expect(output).toContain("Priorize seu ambiente cloud");
-    expect(output).toContain("Poupe sessões e recursos");
+    expect(output).toContain("Use esta ordem de execução");
+    expect(output).toContain("Organize as sessões pelo que o trabalho exige");
     expect(output).toContain("use a ferramenta estruturada de perguntas do ambiente");
     expect(output).toContain("Use visualizações proativamente");
     expect(output).toContain(
@@ -121,6 +121,61 @@ describe("local setup CLI", () => {
     expect(output).toContain("Velocidade solicitada: standard");
     expect(output).toContain("não afirme que este gerador alterou o dot");
     expect(existsSync(join(root, "holydot.instructions.md"))).toBe(false);
+  });
+
+  test("render preserves direct execution, local-computer, and integration boundaries", () => {
+    const root = fixture();
+    runCli(["init"], root);
+    const output = runCli(["render"], root);
+    expect(output).toContain("Faça integralmente no dot as tarefas pequenas");
+    expect(output).toContain(
+      "entregue esse plano e as evidências a uma instância real do HolyCodex Root",
+    );
+    expect(output).toContain("Cada Root coordena seus especialistas");
+    expect(output).toContain("Use Roots adicionais somente para frentes grandes independentes");
+    expect(output).toContain("O tamanho, sozinho, não justifica encaminhar para Codex Cloud");
+    expect(output).toContain("o computador do usuário apenas quando uma etapa realmente depender");
+    expect(output).toContain("Verifique a integração e as capacidades reais antes de usá-las");
+    expect(output).toContain("o futuro preset embedding do HolyCodex já existe");
+    expect(output).toContain(
+      "reunir fontes, documentação, evidências, análise e um plano completo",
+    );
+    expect(output).toContain("continue normalmente na mesma sessão e conta existentes");
+    expect(output).toContain("mantendo modelo, configuração e prefixo estáveis");
+    expect(output).toContain("gerar turnos ociosos de keepalive");
+    expect(output).toContain("Mantenha instruções estáveis reutilizáveis");
+    expect(output).toContain("updates concisos como deltas");
+    expect(output).toContain(
+      "eficiência vem da estrutura do fluxo, não de um limite de tokens por tarefa",
+    );
+    expect(output).toContain(
+      "Não alegue ganhos medidos de cache ou custo sem benchmarks e dados do host",
+    );
+  });
+
+  test("render includes authorized-project, UAC, review, and capability policies", () => {
+    const root = fixture();
+    runCli(["init"], root);
+    const output = runCli(["render"], root);
+    expect(output).toContain(
+      "Nos projetos HolyCodex e holydot, quando o usuário tiver autorizado a branch",
+    );
+    expect(output).toContain(
+      "Antes de iniciar uma ação que saiba ou espere que provoque uma solicitação de elevação de privilégio, UAC",
+    );
+    expect(output).toContain("Marque uma conversa como resolvida somente quando houver evidência");
+    expect(output).toContain(
+      "Quando navegador, computador ou outra conexão importar, confira a disponibilidade",
+    );
+    expect(output).toContain("instale bots ou automações redundantes para acompanhar o CI/review");
+    expect(output).toContain("Escrever instruções para Roots e especialistas");
+    expect(output).toContain(
+      "defina com clareza objetivo, contexto relevante, restrições, evidências",
+    );
+    expect(output).toContain("links e exemplos são opcionais, sem pesquisa web obrigatória");
+    expect(output).toContain(
+      "Antes de reimplementar uma biblioteca ou formato, avalie dependências maduras",
+    );
   });
 
   test("explicit preferences override only delegation defaults", () => {
