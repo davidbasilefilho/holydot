@@ -1,0 +1,14 @@
+holydot
+An independent textual adaptation of public HolyCodex 0.17.0 instructions
+and policy contracts from davidbasilefilho/holycodex, commit
+089e8f27c6d63a2303b78d4e92eae9cca567e6d4.
+
+Applicable attribution retained from the upstream NOTICE:
+OpenAI Codex
+Copyright 2025 OpenAI
+
+The instructions and task template have been modified for use as behavioral
+guidance in an existing assistant. This package does not distribute the
+Codex runtime, Ratatui code, or the toon-rs codec.
+
+See docs/provenance.md and LICENSE. No endorsement is implied.

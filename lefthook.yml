@@ -1,0 +1,7 @@
+pre-commit:
+  parallel: false
+  commands:
+    oxlint:
+      run: bun run lint
+    oxfmt:
+      run: bun run format:check

@@ -1,0 +1,25 @@
+# Mapa da adaptação
+
+Base: HolyCodex **0.17.0 em desenvolvimento**, commit `089e8f27c6d63a2303b78d4e92eae9cca567e6d4`. Os símbolos abaixo estão no [arquivo público de política](https://github.com/davidbasilefilho/holycodex/blob/089e8f27c6d63a2303b78d4e92eae9cca567e6d4/crates/holycodex-policy/src/lib.rs), salvo indicação contrária. Este mapa descreve o código consultado; não certifica a integração ou o funcionamento do runtime completo do HolyCodex.
+
+| Fonte pública                                                | Adaptação no holydot                                                                           | Limite                                                                                 |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `instructions/root.md`                                       | Coordenação responsável pela relação com o usuário, decisões materiais, integração e conclusão | Orientação, não controle de acesso                                                     |
+| `instructions/specialist.md`                                 | Trabalho limitado, preservação de trabalho concorrente e resultado com evidências              | Só é aplicável se o ambiente oferecer especialistas reais                              |
+| `Intent`, `update_intent`                                    | Objetivo, escopo aceito, requisitos e revisão do contrato                                      | Acompanhamento textual; sem persistência automática                                    |
+| `Assignment`, `AssignmentMetadata`                           | Escopo limitado, restrições, critérios, evidências, dependências e recursos autorizados        | Modelo simplificado; sem compatibilidade de serialização                               |
+| `RoleTask`, `RoutePolicy`                                    | Explorador, pesquisador, executor, validador e revisor                                         | Categorias resumidas; sem reproduzir as 18 rotas como APIs                             |
+| `validate_dispatch`                                          | Dependências devem ter sucesso; evitar escritas simultâneas sobre recursos sobrepostos         | Não há bloqueio de filesystem ou exclusão mútua implementados aqui                     |
+| `select_specialist`, `specialist_compatible`                 | Reutilizar contexto apenas quando livre e compatível, se suportado                             | Não fornece reatribuição de papéis ou permissões                                       |
+| `independent_from`                                           | Revisor independente não pode ser autor da implementação avaliada                              | Sem separação real, declarar autocheck                                                 |
+| `AssignmentStatus`, `finish_assignment`, `validate_followup` | Registrar resultado terminal e não substituir trabalho em andamento                            | Sem máquina de estados executável                                                      |
+| `allocate_model`, `effective_context`, `PolicyConfig`        | Não portados                                                                                   | Seleção de modelos, esforço, janelas de contexto e capacidades são do runtime original |
+| Orientação original do holydot                               | Autonomia de baixo risco com autorização explícita de escopo e publicação                      | Não concede autorização permanente nem dispensa aprovações do ambiente                 |
+
+## Decisões específicas desta adaptação
+
+O holydot usa instruções curtas e modelos Markdown. Não distribui o código Rust, patches do Codex, CLI de assistente, ferramentas de automação do dot ou serviços em segundo plano. As ferramentas de manutenção e release verificam e distribuem apenas este pacote. Também não transfere detalhes de implantação do HolyCodex para o ChatGPT.
+
+O código original possui verificações estruturais determinísticas. Aqui elas inspiram critérios de trabalho que dependem da execução e da revisão humana. Por exemplo, escrever um caminho em um contrato não impede tecnicamente que um agente altere outro caminho.
+
+A permissão para corrigir e publicar deve vir do usuário que usa o pacote, para um destino e escopo definidos. A licença deste projeto permite reutilizar o texto; não autoriza ações em contas ou repositórios de terceiros.

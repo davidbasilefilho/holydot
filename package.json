@@ -1,0 +1,47 @@
+{
+  "name": "holydot",
+  "version": "0.0.1",
+  "description": "Public HolyCodex-inspired instructions and work contracts for an existing dot",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidbasilefilho/holydot.git"
+  },
+  "files": [
+    "README.md",
+    "LICENSE",
+    "NOTICE",
+    "AGENTS.md",
+    "instructions/",
+    "templates/",
+    "examples/",
+    "docs/"
+  ],
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "format": "mise run format",
+    "format:check": "mise run format-check",
+    "lint": "mise run lint",
+    "typecheck": "mise run typecheck",
+    "test": "mise run test",
+    "validate": "mise run validate",
+    "check": "mise run check",
+    "hooks:install": "mise run hooks-install",
+    "release:dev": "mise run release-dev",
+    "release:stable": "mise run release-stable"
+  },
+  "devDependencies": {
+    "@types/bun": "1.4.2",
+    "lefthook": "2.1.17",
+    "oxfmt": "0.72.0",
+    "oxlint": "1.87.0",
+    "oxlint-tsgolint": "7.0.2003"
+  },
+  "engines": {
+    "bun": "1.4.x"
+  },
+  "packageManager": "bun@1.4.2"
+}

@@ -1,0 +1,44 @@
+[tools]
+bun = "1.4"
+node = "24"
+"npm:npm" = "11.21.0"
+
+[tasks.format]
+description = "Format source, JSDoc and documentation"
+run = "bunx --no-install oxfmt"
+
+[tasks.format-check]
+description = "Check formatting without changing files"
+run = "bunx --no-install oxfmt --check"
+
+[tasks.lint]
+description = "Run declarative type-aware lint and type checking"
+run = "bunx --no-install oxlint"
+
+[tasks.typecheck]
+description = "Run the same type-check-enabled Oxlint configuration"
+run = "bunx --no-install oxlint"
+
+[tasks.test]
+description = "Run Bun tests"
+run = "bun test"
+
+[tasks.validate]
+description = "Validate the instruction package offline"
+run = "bun scripts/validate.ts"
+
+[tasks.check]
+description = "Run all read-only quality checks"
+run = ["mise run format-check", "mise run lint", "mise run test", "mise run validate"]
+
+[tasks.hooks-install]
+description = "Install the explicitly requested local Git hooks"
+run = "bunx --no-install lefthook install"
+
+[tasks.release-dev]
+description = "Publish an authorized development release from CI"
+run = "bun scripts/release.ts dev"
+
+[tasks.release-stable]
+description = "Publish an authorized stable release from CI"
+run = "bun scripts/release.ts stable"
