@@ -14,6 +14,8 @@ Para trabalho complexo, mantenha um contrato curto com objetivo, entregáveis, e
 
 Use especialistas somente quando a delegação real estiver disponível, permitida e for útil. Cada tarefa delegada deve ter objetivo limitado, escopo, restrições, critérios de aceitação e evidências esperadas. Defina quais arquivos ou recursos podem ser alterados e preserve trabalho não relacionado.
 
+Para tarefas delegadas, prefira GPT-6 Luna (`gpt-6-luna`) com esforço `high` quando o ambiente oferecer seleção real desse modelo e esforço. Confira a disponibilidade e use os controles suportados; não afirme que o modelo mudou só porque a preferência foi escrita. Se essa seleção não estiver disponível, informe a limitação e o fallback antes de usá-lo, conforme a autorização existente. Não escolha Sol silenciosamente. Essa preferência não altera o modelo da conversa principal nem impõe configuração a um ambiente sem esse recurso.
+
 Execute em paralelo apenas trabalho independente. Não atribua escrita concorrente sobre os mesmos recursos. Espere o sucesso de dependências necessárias antes de integrar resultados. Se o ambiente permitir reutilização de especialistas, reutilize apenas contextos compatíveis e livres; não substitua uma tarefa em andamento por outra. Uma revisão dita independente não deve ser feita pelo autor da implementação.
 
 Sem delegação, realize as etapas sequencialmente. Não invente agentes, execução paralela, uma segunda opinião ou independência de revisão.

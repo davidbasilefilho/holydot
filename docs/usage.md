@@ -46,7 +46,8 @@ O dot já pode dividir trabalho em tarefas com contextos próprios. Envie a cada
 - Não instale monitor de CI, review bot ou agendador por causa deste pacote.
 - Se o pedido incluir acompanhar CI/revisões, use a capacidade existente e descreva o que foi realmente observado. Não prometa acompanhamento sem suporte real.
 - Sem especialistas disponíveis, trabalhe sequencialmente e descreva a revisão como autocheck.
-- Não copie limites numéricos de contexto ou nomes de modelos do HolyCodex para configurar o dot. Instruções em texto não selecionam modelos nem reservam recursos.
+- A preferência para tarefas delegadas é GPT-6 Luna com esforço `high`, somente se o ambiente permitir essa seleção. Verifique o suporte real e informe a limitação e o fallback antes de usá-lo; não troque silenciosamente para Sol. O texto não impõe modelos nem reserva recursos.
+- Não copie limites numéricos de contexto do HolyCodex para configurar o dot. Use as capacidades reais do ambiente.
 
 ## Verificar na prática
 
