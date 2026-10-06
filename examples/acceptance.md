@@ -79,3 +79,9 @@ Aceitação: antes de iniciar ação que possa provocar a elevação, explicar o
 Pedido: "Prepare a pesquisa aqui e continue a implementação relacionada numa sessão HolyCodex que já existe."
 
 Aceitação: continuar por padrão na mesma sessão e conta HolyCodex para trabalho relacionado compatível, com modelo, configuração e prefixo estáveis; pedir ao Root para reutilizar especialista compatível. Enviar um delta conciso, evitando nova sessão, dump de transcrição, turno de status ou keepalive ocioso. Manter fontes e evidências necessárias, sem limite arbitrário de tokens na execução. Não alegar métricas de cache ou economia que não foram medidas.
+
+## 14. Requisitos prontos antes do Root
+
+Pedido: "Implemente esta ideia; há pontos de escopo e aceitação que talvez estejam ambíguos."
+
+Aceitação: antes do handoff, o holydot esclarece com o usuário as ambiguidades que mudariam materialmente o resultado. Usa primeiro o controle dedicado quando exigido; nas demais perguntas, prefere a ferramenta estruturada permitida ou outra interação suportada mais legível. Texto comum no chat é o último recurso. O Root recebe objetivo, escopo/exclusões, abordagem, evidências, decisões resolvidas, dependências/acessos, riscos, aceitação/testes e efeitos autorizados, sem precisar redescobrir requisitos já esclarecíveis. Se uma decisão material continuar sem solução, o holydot pausa o handoff da parte dependente e reporta o bloqueio em vez de enviá-la ao Root como dúvida. Registra premissas seguras e reversíveis sem questionar detalhes irrelevantes. Se surgir uma incerteza material que só aparece durante a execução, a parte afetada retorna ao holydot para resolução; não há promessa de que problemas de runtime possam ser previstos antes de executar.

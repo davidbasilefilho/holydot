@@ -85,6 +85,103 @@ describe("local setup CLI", () => {
     expect(readdirSync(root)).toEqual(["holydot.config.json"]);
   });
 
+  test("setup initializes an empty directory atomically with safe defaults and the full host handoff", () => {
+    const root = fixture();
+    const output = runCli(["setup"], root);
+    const config = parseConfig(
+      JSON.parse(readFileSync(join(root, "holydot.config.json"), "utf8")) as unknown,
+    );
+    expect(output).toContain("Created holydot.config.json atomically from safe defaults");
+    expect(output).toContain("The CLI has applied no account rules");
+    expect(output).toContain("# Setup guiado de regras da conta");
+    expect(output).toContain("needs-input");
+    expect(output).toContain("Regras aplicadas pelo CLI: nenhuma");
+    expect(output).toContain("Use Standard como padrão");
+    expect(config).toEqual(DEFAULT_CONFIG);
+    expect(readdirSync(root)).toEqual(["holydot.config.json"]);
+  });
+
+  test("setup can be repeated and setup flags preview without changing existing config", () => {
+    const root = fixture();
+    runCli(["setup"], root);
+    const path = join(root, "holydot.config.json");
+    const original = readFileSync(path, "utf8");
+    const repeated = runCli(["setup"], root);
+    expect(repeated).toContain("Reusing valid holydot.config.json without changing it");
+    expect(readFileSync(path, "utf8")).toBe(original);
+
+    const preview = runCli(
+      [
+        "setup",
+        "--speed",
+        "fast",
+        "--repository",
+        "example/project",
+        "--branch",
+        "work",
+        "--rule-mode",
+        "requested",
+      ],
+      root,
+    );
+    expect(preview).toContain("Velocidade solicitada: fast");
+    expect(preview).toContain("example/project");
+    expect(preview).toContain("ainda não aplicada");
+    expect(readFileSync(path, "utf8")).toBe(original);
+    expect(readdirSync(root)).toEqual(["holydot.config.json"]);
+  });
+
+  test("first setup options are stored as local preferences, not account-rule grants", () => {
+    const root = fixture();
+    const output = runCli(
+      [
+        "setup",
+        "--speed",
+        "fast",
+        "--repository",
+        "example/project",
+        "--branch",
+        "release/v1",
+        "--rule-mode",
+        "requested",
+      ],
+      root,
+    );
+    const config = parseConfig(
+      JSON.parse(readFileSync(join(root, "holydot.config.json"), "utf8")) as unknown,
+    );
+    expect(config.delegation.speed).toBe("fast");
+    expect(config.accountRules).toEqual({
+      repository: "example/project",
+      branch: "release/v1",
+      mode: "requested",
+    });
+    expect(output).toContain("needs-host");
+    expect(output).toContain("ainda não aplicada");
+    expect(output).toContain("Regras aplicadas pelo CLI: nenhuma");
+  });
+
+  test("setup validates flags before creation and leaves invalid or symlink configs untouched", () => {
+    const empty = fixture();
+    expect(() => runCli(["setup", "--speed", "unlimited"], empty)).toThrow();
+    expect(readdirSync(empty)).toEqual([]);
+
+    const invalid = fixture();
+    const invalidPath = join(invalid, "holydot.config.json");
+    writeFileSync(invalidPath, "{invalid json");
+    expect(() => runCli(["setup"], invalid)).toThrow();
+    expect(readFileSync(invalidPath, "utf8")).toBe("{invalid json");
+
+    const linked = fixture();
+    const target = join(fixture(), "target.json");
+    const targetContent = JSON.stringify(DEFAULT_CONFIG);
+    writeFileSync(target, targetContent);
+    symlinkSync(target, join(linked, "holydot.config.json"));
+    expect(() => runCli(["setup"], linked)).toThrow("regular file");
+    expect(readFileSync(target, "utf8")).toBe(targetContent);
+    expect(readdirSync(linked)).toEqual(["holydot.config.json"]);
+  });
+
   test("configure previews without writing unless --write is explicit", () => {
     const root = fixture();
     runCli(["init"], root);
@@ -113,7 +210,11 @@ describe("local setup CLI", () => {
     expect(output).toContain("Não encerre conversas em lote");
     expect(output).toContain("Use esta ordem de execução");
     expect(output).toContain("Organize as sessões pelo que o trabalho exige");
-    expect(output).toContain("use a ferramenta estruturada de perguntas do ambiente");
+    expect(output).toContain(
+      "Nas demais perguntas, prefira a ferramenta estruturada disponível e apropriada",
+    );
+    expect(output).toContain("Se a plataforma ou uma regra exigir controle dedicado de aprovação");
+    expect(output).toContain("Texto comum no chat é o último recurso");
     expect(output).toContain("Use visualizações proativamente");
     expect(output).toContain(
       "a coordenação principal é responsável pelo ciclo de validação visual",
@@ -151,6 +252,28 @@ describe("local setup CLI", () => {
     expect(output).toContain(
       "Não alegue ganhos medidos de cache ou custo sem benchmarks e dados do host",
     );
+  });
+
+  test("render resolves material requirements before Root handoff without promising runtime certainty", () => {
+    const root = fixture();
+    runCli(["init"], root);
+    const output = runCli(["render"], root);
+    expect(output).toContain("Preparação antes do HolyCodex Root");
+    expect(output).toContain("holydot deve orquestrar a preparação");
+    expect(output).toContain("Não encaminhe ao Root uma questão de requisito");
+    expect(output).toContain("use a ferramenta estruturada permitida e apropriada");
+    expect(output).toContain(
+      "Use primeiro o controle dedicado sempre que a plataforma ou uma regra o exigir",
+    );
+    expect(output.indexOf("Se a plataforma ou uma regra exigir controle dedicado")).toBeLessThan(
+      output.indexOf("Nas demais perguntas, prefira a ferramenta estruturada disponível"),
+    );
+    expect(output).toContain("Texto comum é o último recurso");
+    expect(output).toContain("premissas seguras e reversíveis");
+    expect(output).toContain("pause o handoff da parte dependente");
+    expect(output).toContain("em vez de transferir a dúvida ao Root");
+    expect(output).toContain("Não prometa eliminar incertezas de runtime");
+    expect(output).toContain("devolva-a ao holydot para esclarecer ou decidir");
   });
 
   test("render includes authorized-project, UAC, review, and capability policies", () => {

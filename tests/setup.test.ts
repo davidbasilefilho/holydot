@@ -13,6 +13,9 @@ describe("owner-scoped account setup", () => {
     const output = renderSetup("Policies", DEFAULT_RULE_SCOPE);
     expect(output).toContain("needs-input");
     expect(output).toContain("Regras aplicadas pelo CLI: nenhuma");
+    expect(output).toContain("use primeiro o controle dedicado");
+    expect(output).toContain("Nas demais perguntas, prefira a ferramenta estruturada permitida");
+    expect(output).toContain("Texto comum é o último recurso");
     expect(output).toContain("gerenciador real de regras");
     expect(output).toContain("bloqueado: nenhuma regra aplicada");
   });

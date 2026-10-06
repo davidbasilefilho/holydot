@@ -12,21 +12,21 @@ Informe um repositório e uma branch de trabalho exatos, sem curingas, e escolha
 O padrão para os três campos é `null`: nenhuma escolha ou concessão ampla é presumida. Preferências de modelo continuam separadas de autorização de conta.
 
 ```sh
-bunx --no-install holydot init --repository example/project --branch work --rule-mode requested
+bunx holydot@X.Y.Z setup --repository example/project --branch work --rule-mode requested
 ```
 
-`init` cria a configuração e já imprime o plano de setup guiado. Para uma configuração existente:
+Troque `X.Y.Z` pela versão efetivamente publicada que você revisou; `@latest` só funciona depois da primeira publicação estável no npm. O primeiro `setup` cria uma configuração local segura atomicamente, guarda as opções explícitas e imprime o plano completo. Isso não aceita nem aplica regras. Para uma configuração existente:
 
 ```sh
-bunx --no-install holydot configure --repository example/project --branch work --rule-mode requested --write
-bunx --no-install holydot setup
+bunx holydot@latest configure --repository example/project --branch work --rule-mode requested --write
+bunx holydot@latest setup
 ```
 
-`setup` também aceita esses parâmetros para preparar uma proposta sem salvar as escolhas. Execute o comando por um host ao qual você pediu o setup, ou forneça a saída inteira ao seu dot com esse pedido. Isso é um handoff único, não uma instalação automática na conta feita pelo npm.
+`setup` também aceita esses parâmetros numa configuração existente para preparar uma proposta sem salvar as escolhas; use `configure --write` se quiser persistir. Para reprodução, troque `latest` por uma versão exata publicada, como `X.Y.Z`. Execute o comando por um host ao qual você pediu o setup, ou forneça a saída inteira ao seu dot com esse pedido. Isso é um handoff único, não uma instalação automática na conta feita pelo npm.
 
 ## O que o host deve fazer automaticamente no fluxo
 
-1. Perguntar apenas pelas escolhas faltantes, usando o recurso estruturado disponível.
+1. Perguntar apenas pelas escolhas faltantes: primeiro use o controle dedicado quando a plataforma exigir aprovação, autenticação ou decisão de conta; para outras perguntas, prefira a ferramenta estruturada permitida, outra interação suportada mais legível e texto comum só como último recurso.
 2. Verificar um gerenciador real de regras da conta. Se não existir, relatar bloqueado e nenhuma aplicação.
 3. Ler regras atuais, comparar escopo e comportamento, evitar duplicatas e preservar regras não relacionadas.
 4. Verificar os limites e formatos que o host realmente aceita. Se o texto gerado não couber, preparar uma versão concisa que preserve escopo e significado ou, se necessário, dividir em propostas menores, cada uma com aprovação própria. Nunca truncar, ampliar ou dividir silenciosamente para contornar limites. Apresentar o texto final exato no formulário de aprovação dedicado do produto e esperar sua aceitação. Se não houver versão compatível, relatar bloqueado e não aplicar.

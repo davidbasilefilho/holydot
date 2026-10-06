@@ -223,6 +223,18 @@ describe("release workflow security", () => {
     const dev = await load("dev");
     const stable = await load("stable");
     const validation = await load("validation");
+    expect(validation).toHaveProperty("jobs.check.strategy.fail-fast", false);
+    expect(validation).toHaveProperty("jobs.check.strategy.matrix.os", [
+      "ubuntu-latest",
+      "windows-latest",
+    ]);
+    const checkSteps = (
+      validation as {
+        jobs: { check: { steps: Array<{ uses?: string; run?: string }> } };
+      }
+    ).jobs.check.steps;
+    expect(checkSteps[1]?.uses).toMatch(/^jdx\/mise-action@/);
+    expect(checkSteps[3]?.run).toBe("bun run check");
     expect(dev).toHaveProperty("on.push.branches", ["**"]);
     expect(dev).toHaveProperty("on.push.tags-ignore", ["v*"]);
     expect(stable).toHaveProperty("on.push.tags", ["v*"]);

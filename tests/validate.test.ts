@@ -35,6 +35,43 @@ describe("offline package validation", () => {
     expect(usage).toContain("não fixe multiplicadores nesta instrução");
   });
 
+  test("task contract contains the information needed for a Root handoff", () => {
+    const template = readFileSync(new URL("../templates/task.md", import.meta.url), "utf8");
+    for (const field of [
+      "Objetivo e resultado pretendido, em termos claros",
+      "Escopo aceito e entregáveis",
+      "Fora do escopo e exclusões",
+      "Abordagem viável",
+      "Fontes consultadas e evidências disponíveis",
+      "Decisões materiais resolvidas antes do handoff",
+      "Dependências, acessos e permissões necessários",
+      "Riscos e impactos relevantes",
+      "Critérios de aceitação, testes e verificações",
+      "Efeitos externos já autorizados",
+    ]) {
+      expect(template).toContain(field);
+    }
+  });
+
+  test("quickstart uses bunx without requiring a project dependency and qualifies release tags", () => {
+    const readme = readFileSync(new URL("../README.md", import.meta.url), "utf8");
+    const setup = readFileSync(new URL("../docs/setup.md", import.meta.url), "utf8");
+    expect(readme).toContain("bunx holydot@latest setup");
+    expect(readme).toContain("Depois da primeira versão estável publicada no npm");
+    expect(readme).toContain("sem `bun add`, instalação global ou dependência no seu projeto");
+    expect(setup).toContain("bunx holydot@X.Y.Z setup");
+    expect(setup).toContain(
+      "use `bunx holydot@dev setup` somente quando a tag `dev` estiver publicada",
+    );
+    expect(setup).toContain("sem instalação global, dependência no projeto");
+    expect(setup).toContain("cria `holydot.config.json` atomicamente");
+    expect(setup).toContain(
+      "Se o diretório não for gravável ou o sistema de arquivos não oferecer suporte a hard links",
+    );
+    expect(setup).toContain("não tenta uma gravação não atômica como alternativa");
+    expect(setup).not.toContain("bun add --dev holydot@");
+  });
+
   test("accepts a complete fixture and its local and external links", () => {
     const root = fixture();
     writeFileSync(

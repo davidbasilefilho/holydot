@@ -4,7 +4,19 @@ Políticas de trabalho do HolyCodex 0.17 adaptadas para um dot que você já usa
 
 O objetivo é simples: definir o resultado esperado, dividir trabalho quando isso ajudar e aceitar entregas com evidências verificáveis. O pacote não recria capacidades que o ambiente já oferece.
 
-## Comece aqui
+## Comece pelo CLI
+
+Requer Bun 1.4. Depois da primeira versão estável publicada no npm, rode:
+
+```sh
+bunx holydot@latest setup
+```
+
+`bunx` executa o pacote sem `bun add`, instalação global ou dependência no seu projeto. A tag `latest` aponta para a versão estável atual; use `bunx holydot@X.Y.Z setup` com a versão exata publicada quando quiser reprodução estável. A tag `dev` é separada e só pode ser usada se houver uma pré-versão publicada. Consulte [instalação e configuração](docs/setup.md) para opções, limitações e persistência local.
+
+Isso cria ou reutiliza uma configuração local e imprime o plano completo assistido pelo host. O CLI não aplica regras nem muda sua conta. A presença do código neste repositório, sozinha, não significa que um pacote ou uma tag npm já exista.
+
+## Use as instruções diretamente
 
 1. Leia [limites e uso](docs/usage.md).
 2. Copie [as instruções principais](instructions/holydot.md) para uma mensagem na conversa do seu dot e peça que sejam usadas na tarefa atual.
@@ -13,9 +25,9 @@ O objetivo é simples: definir o resultado esperado, dividir trabalho quando iss
 
 Isso não instala nada. Uma mensagem não garante aplicação permanente. Se seu ambiente oferecer um campo apropriado de instruções, você pode usar o mesmo texto ali, respeitando os limites e as regras desse ambiente. Este projeto não pressupõe um menu específico nem uma API de configuração de dots.
 
-## Configuração opcional
+## Preferências locais opcionais
 
-Com Bun 1.4 instalado, consulte [instalação e configuração](docs/setup.md) para criar preferências locais e gerar as instruções completas. O padrão é GPT-6 Luna, esforço high e velocidade Standard. Fast é opt-in e pode ser alterado depois. O CLI prepara um setup assistido pelo host: quando houver controles reais, o host deve apresentar as aprovações, aplicar regras aceitas e verificar o estado. O CLI sozinho não altera a conta.
+Consulte [instalação e configuração](docs/setup.md) para ajustar o modelo delegado, esforço e velocidade. O padrão é GPT-6 Luna, esforço high e velocidade Standard. Fast é opt-in e pode ser alterado depois. O CLI prepara um setup assistido pelo host: quando houver controles reais, o host deve apresentar as aprovações, aplicar regras aceitas e verificar o estado. O CLI sozinho não altera a conta.
 
 ## Conteúdo
 

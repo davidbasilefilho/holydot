@@ -109,8 +109,9 @@ export function renderSetup(instructions: string, input: RuleScope): string {
     `Estado deste plano local: ${state}. Regras aplicadas pelo CLI: nenhuma.\n\n- ${decisions}\n\n` +
     "Ao receber este plano em uma solicitação de setup do dono, conduza o fluxo abaixo proativamente. " +
     "Não peça que ele copie cada regra manualmente quando o ambiente puder apresentar os controles reais.\n\n" +
-    "1. Se faltarem projeto, branch ou escolha de confirmação, faça apenas essas perguntas pela ferramenta estruturada disponível. " +
-    "Não infira escopo amplo ou autorização pelo download/leitura do pacote.\n" +
+    "1. Se faltarem projeto, branch ou escolha de confirmação, use primeiro o controle dedicado quando a plataforma exigir aprovação, autenticação ou decisão de conta. " +
+    "Nas demais perguntas, prefira a ferramenta estruturada permitida e respeite os tipos aceitos; se não houver uma ferramenta adequada, use outra interação suportada mais legível. " +
+    "Texto comum é o último recurso. Não infira escopo amplo ou autorização pelo download/leitura do pacote.\n" +
     "2. Verifique se há um gerenciador real de regras da conta, autenticado e apropriado. " +
     "Se não houver, informe bloqueado: nenhuma regra aplicada. Não invente API, formulário ou sucesso.\n" +
     "3. Leia as regras atuais pelos controles suportados. Compare escopo e comportamento para evitar duplicatas; " +

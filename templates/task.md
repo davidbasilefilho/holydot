@@ -3,12 +3,19 @@
 Modelo simplificado e modificado a partir de Intent, Assignment e AssignmentMetadata do HolyCodex 0.17.0. Não é um formato serializável compatível com o runtime original.
 
 - Identificador e revisão:
-- Objetivo:
+- Objetivo e resultado pretendido, em termos claros:
 - Escopo aceito e entregáveis:
-- Fora do escopo:
+- Fora do escopo e exclusões:
+- Abordagem viável e premissas seguras/reversíveis:
+- Fontes consultadas e evidências disponíveis:
+- Decisões materiais resolvidas antes do handoff:
+- Dependências, acessos e permissões necessários:
+- Riscos e impactos relevantes:
+- Critérios de aceitação, testes e verificações:
+- Efeitos externos já autorizados:
 - Restrições e autorizações já concedidas:
-- Critérios de aceitação observáveis:
-- Evidências necessárias:
+
+Use o contrato completo somente quando a complexidade ou o handoff exigir; deixe de fora campos sem efeito nesta tarefa. Para uma tarefa simples, uma frase pode bastar. Antes de uma execução grande pelo HolyCodex Root, resolva no holydot as dúvidas materiais de requisitos que possam ser esclarecidas e não deixe o Root redescobrir decisões já disponíveis.
 
 Preencha a seção abaixo somente se houver delegação real ou múltiplas etapas que precisem de coordenação.
 
