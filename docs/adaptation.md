@@ -15,6 +15,7 @@ Base: HolyCodex **0.17.0 em desenvolvimento**, commit `089e8f27c6d63a2303b78d4e9
 | `AssignmentStatus`, `finish_assignment`, `validate_followup` | Registrar resultado terminal e não substituir trabalho em andamento                            | Sem máquina de estados executável                                                                                                         |
 | `allocate_model`, `effective_context`, `PolicyConfig`        | Não portados como mecanismos executáveis                                                       | A preferência textual Luna/high depende dos controles reais do ambiente; alocação, janelas de contexto e capacidades continuam no runtime |
 | Orientação original do holydot                               | Autonomia de baixo risco com autorização explícita de escopo e publicação                      | Não concede autorização permanente nem dispensa aprovações do ambiente                                                                    |
+| Orientação original do holydot                               | Execução cloud-first, com uso local apenas por dependência real                                | Depende de ambientes existentes e acesso autorizado; não cria infraestrutura                                                              |
 
 ## Decisões específicas desta adaptação
 

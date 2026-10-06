@@ -55,3 +55,9 @@ Aceitação: examinar cada achado relevante contra a versão atual, corrigir o q
 Pedido: "Delegue a pesquisa usando a preferência padrão do holydot."
 
 Aceitação: selecionar GPT-6 Luna com esforço `high` apenas quando o ambiente disponibilizar esse controle. Sem suporte, explicar a limitação e o fallback antes de executá-lo, respeitando a autorização existente. Não afirmar que uma instrução trocou o modelo, não escolher Sol silenciosamente e não alterar o modelo da conversa principal.
+
+## 10. Preferir o ambiente cloud
+
+Pedido: "Verifique este projeto e corrija um link na documentação."
+
+Aceitação: usar os recursos cloud disponíveis para ler, editar e verificar o projeto. Não usar o computador do usuário só porque ele está conectado. Se uma etapa depender de uma sessão ou recurso exclusivamente local, explicar essa dependência e usar apenas o acesso autorizado necessário para a etapa.

@@ -40,6 +40,8 @@ Substitua os campos antes de solicitar a regra. Esse exemplo cobre trabalhos que
 
 ## Ajustar sem duplicar o ambiente
 
+A execução é cloud-first: código, pesquisa e operações GitHub devem ficar no cloud quando isso for viável. O computador do usuário só é necessário para dependências genuinamente locais, como um arquivo, hardware ou sessão autenticada sem alternativa cloud, ou uma verificação específica do desktop. Disponibilidade, acesso e permissões precisam ser reais; o pacote não cria um ambiente cloud nem conecta computadores.
+
 O dot já pode dividir trabalho em tarefas com contextos próprios. Envie a cada tarefa o objetivo e as fontes necessárias; não suponha que ela recebeu toda a conversa. Confira o resultado efetivo, pois uma execução encerrada não comprova por si só a entrega. Veja [tarefas e memória](https://learn.chatgpt.com/docs/dots/tasks-and-memory). Conexões de aplicativos e computadores são separadas, conforme o [guia inicial](https://learn.chatgpt.com/docs/dots/getting-started).
 
 - Mantenha as capacidades de pesquisa, execução, delegação e GitHub oferecidas pelo ambiente.
