@@ -26,6 +26,8 @@ Também foram consultadas, em 2026-10-06, as páginas oficiais [controles](https
 
 As orientações sobre consumo também se apoiam nas páginas oficiais [dots](https://learn.chatgpt.com/docs/dots) e [preços e limites](https://learn.chatgpt.com/docs/pricing), consultadas em 2026-10-06. Não são reproduzidas cotas ou estimativas fixas; consulte a documentação atual e os controles da sua conta.
 
+A página oficial [Visualizations](https://learn.chatgpt.com/docs/visualizations), consultada em 2026-10-06, fundamenta a escolha de formatos visuais e seus limites de superfície. O ciclo de validação da interface real é orientação de qualidade original do holydot, não uma afirmação sobre APIs de instalação ou garantias do produto.
+
 ## Atualizações futuras
 
 Antes de mudar a versão-base, leia os arquivos públicos no novo commit, revise o mapa de adaptação e as licenças, atualize as referências fixadas e repita a validação. Não substitua uma base auditável por um link apenas para `main` ou `next`.

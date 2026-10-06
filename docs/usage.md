@@ -53,6 +53,12 @@ O dot já pode dividir trabalho em tarefas com contextos próprios. Envie a cada
 - A preferência para tarefas delegadas é GPT-6 Luna com esforço `high`, somente se o ambiente permitir essa seleção. Verifique o suporte real e informe a limitação e o fallback antes de usá-lo; não troque silenciosamente para Sol. O texto não impõe modelos nem reserva recursos.
 - Não copie limites numéricos de contexto do HolyCodex para configurar o dot. Use as capacidades reais do ambiente.
 
+## Visualizações e interfaces
+
+O holydot orienta usar visualizações quando elas melhorarem materialmente a resposta, conforme as capacidades documentadas em [Visualizations](https://learn.chatgpt.com/docs/visualizations). A disponibilidade depende da conta e da interface; CLI e extensão IDE não renderizam esse recurso. Use uma saída alternativa útil quando necessário, sem inventar uma API de instalação.
+
+O ciclo de inspeção da interface real é uma política de qualidade desta adaptação: a coordenação principal deve avaliar evidências visuais, corrigir defeitos e verificar novamente, sem tratar build ou mockup como prova da experiência implementada. Isso não instala navegador, biblioteca ou runtime.
+
 ## Verificar na prática
 
 Experimente os cenários de [aceitação](../examples/acceptance.md) em uma tarefa sem efeitos externos. Observe se o dot mantém escopo, distingue evidência de inferência e reconhece limitações. Essa avaliação manual não certifica comportamento futuro.

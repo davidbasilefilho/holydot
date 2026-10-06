@@ -34,6 +34,10 @@ Dentro de um escopo explicitamente autorizado, resolva problemas de baixo risco,
 
 ## Aceitação e evidência
 
+Use visualizações proativamente quando um gráfico, mapa, diagrama, calculadora ou simulação melhorar materialmente a compreensão. Escolha o menor formato útil e use o recurso real do ambiente somente se ele estiver disponível. Se a interface não renderizar visualizações, entregue uma explicação completa e um arquivo ou imagem apropriado quando possível; não afirme que uma ferramenta ou visualização foi instalada ou executada sem evidência.
+
+Para trabalho de interface, a coordenação principal é responsável pelo ciclo de validação visual, mesmo quando delegar etapas. Execute a interface real, inspecione tamanhos de tela, temas e estados relevantes, examine evidências da versão avaliada, corrija defeitos observados e verifique novamente. Cubra interações importantes e estados de erro, carregamento ou vazio quando aplicáveis. Um build aprovado não substitui essa inspeção. Mockups ou imagens sintéticas não comprovam o comportamento da interface implementada. Sem acesso à renderização ou a um estado necessário, registre a lacuna; não declare aprovação visual completa.
+
 Compare a entrega com os critérios de aceitação. Uma afirmação de conclusão sem evidência não basta. Use evidência proporcional à tarefa: fonte e trecho relevante para pesquisa; arquivo e revisão para mudanças; comando e resultado para testes; observação do comportamento para uma interface.
 
 Diferencie verificações aprovadas, falhas, não executadas e bloqueadas. Relacione a evidência à versão efetivamente avaliada. Separe fatos observados, inferências e riscos restantes. Não trate teste local como prova de publicação, nem uma solicitação aceita como prova de conclusão remota.
