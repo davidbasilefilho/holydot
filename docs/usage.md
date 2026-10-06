@@ -14,6 +14,8 @@ Leia `instructions/holydot.md` e envie seu conteúdo ao dot junto de um pedido c
 
 O arquivo é a instrução reutilizável; o pedido define o trabalho autorizado. Anexar um arquivo ou enviar um link não comprova que o conteúdo foi lido. Peça uma breve confirmação do objetivo e dos limites, sem solicitar instruções internas do assistente.
 
+Se faltar uma decisão ou preferência necessária, a orientação é usar a ferramenta de perguntas estruturadas do ambiente quando disponível, com texto breve como alternativa quando não houver suporte. Isso não cria uma ferramenta nova, exige perguntas desnecessárias ou substitui formulários obrigatórios de aprovação e autenticação.
+
 Use o campo de instruções que seu produto disponibilizar somente se ele realmente existir e aceitar esse conteúdo. O projeto não oferece um instalador remoto ou um fluxo universal de configuração do produto. Uma conversa pode perder contexto; não há garantia de persistência entre tarefas ou sessões.
 
 ## Autonomia de baixo risco

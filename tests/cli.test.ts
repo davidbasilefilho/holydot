@@ -113,6 +113,7 @@ describe("local setup CLI", () => {
     expect(output).toContain("Não encerre conversas em lote");
     expect(output).toContain("Priorize seu ambiente cloud");
     expect(output).toContain("Poupe sessões e recursos");
+    expect(output).toContain("use a ferramenta estruturada de perguntas do ambiente");
     expect(output).toContain("Use visualizações proativamente");
     expect(output).toContain(
       "a coordenação principal é responsável pelo ciclo de validação visual",
