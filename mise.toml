@@ -37,8 +37,8 @@ run = "bunx --no-install lefthook install"
 
 [tasks.release-dev]
 description = "Publish an authorized development release from CI"
-run = "bun scripts/release.ts dev"
+run = "mise exec npm:npm@11.21.0 -- bun scripts/release.ts dev"
 
 [tasks.release-stable]
 description = "Publish an authorized stable release from CI"
-run = "bun scripts/release.ts stable"
+run = "mise exec npm:npm@11.21.0 -- bun scripts/release.ts stable"

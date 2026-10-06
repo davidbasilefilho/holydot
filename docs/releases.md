@@ -22,7 +22,7 @@ Automatic publication needs a maintainer-owned npm package and [npm trusted publ
 2. In the package's npm settings, add GitHub Actions trusted publishers for owner `davidbasilefilho`, repository `holydot`, and workflow filenames `dev.yml` and `stable.yml`. Enable direct `npm publish` for each. No GitHub environment name is used by these workflows.
 3. Complete the first successful publication within npm's two-day validation window for a new publisher connection. Rerun the corresponding failed GitHub workflow after setup.
 
-The maintainer must approve and perform required account/security configuration. Repository code does not create credentials, establish trusted publishers, or accept account terms. The pinned npm CLI supports OIDC; separate dist-tag management permission is unnecessary because tags are set by `npm publish` itself.
+The maintainer must approve and perform required account/security configuration. Repository code does not create credentials, establish trusted publishers, or accept account terms. The release tasks explicitly select the pinned npm tool with mise so Node’s bundled npm cannot shadow it. The pinned npm CLI supports OIDC; separate dist-tag management permission is unnecessary because tags are set by `npm publish` itself.
 
 ## Recovery and integrity
 

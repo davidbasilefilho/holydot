@@ -257,3 +257,9 @@ describe("release workflow security", () => {
     expect(dev).toContain('tags-ignore:\n      - "v*"');
   });
 });
+
+test("release tasks explicitly select the pinned npm instead of Node bundled npm", async () => {
+  const config = await readFile(new URL("../mise.toml", import.meta.url), "utf8");
+  expect(config).toContain('run = "mise exec npm:npm@11.21.0 -- bun scripts/release.ts dev"');
+  expect(config).toContain('run = "mise exec npm:npm@11.21.0 -- bun scripts/release.ts stable"');
+});
