@@ -1,6 +1,6 @@
 # Releases
 
-holydot is a text instruction package. Releases do not deploy an assistant, connect accounts, or run a service.
+holydot distributes instructions and a local Bun configuration generator. Releases do not deploy an assistant, connect accounts, or run a service. The npm allowlist includes scripts/cli.ts; executable package changes require review and CLI tests as well as document checks.
 
 ## Versions and triggers
 

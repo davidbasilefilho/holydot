@@ -7,6 +7,9 @@
     "type": "git",
     "url": "git+https://github.com/davidbasilefilho/holydot.git"
   },
+  "bin": {
+    "holydot": "scripts/cli.ts"
+  },
   "files": [
     "README.md",
     "LICENSE",
@@ -15,7 +18,8 @@
     "instructions/",
     "templates/",
     "examples/",
-    "docs/"
+    "docs/",
+    "scripts/cli.ts"
   ],
   "type": "module",
   "publishConfig": {

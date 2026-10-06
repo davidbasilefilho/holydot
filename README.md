@@ -1,6 +1,6 @@
 # holydot
 
-Políticas de trabalho do HolyCodex 0.17 adaptadas para um dot que você já usa no ChatGPT. Um pacote de instruções e contratos reutilizáveis, sem aplicativo, servidor ou runtime próprio.
+Políticas de trabalho do HolyCodex 0.17 adaptadas para um dot que você já usa no ChatGPT. Um pacote de instruções e contratos reutilizáveis, sem aplicativo de assistente, servidor ou runtime de orquestração próprio. Inclui um gerador local de configuração e instruções.
 
 O objetivo é simples: definir o resultado esperado, dividir trabalho quando isso ajudar e aceitar entregas com evidências verificáveis. O pacote não recria capacidades que o ambiente já oferece.
 
@@ -12,6 +12,10 @@ O objetivo é simples: definir o resultado esperado, dividir trabalho quando iss
 4. Confira a resposta com [os exemplos de aceitação](examples/acceptance.md).
 
 Isso não instala nada. Uma mensagem não garante aplicação permanente. Se seu ambiente oferecer um campo apropriado de instruções, você pode usar o mesmo texto ali, respeitando os limites e as regras desse ambiente. Este projeto não pressupõe um menu específico nem uma API de configuração de dots.
+
+## Configuração opcional
+
+Com Bun 1.4 instalado, consulte [instalação e configuração](docs/setup.md) para criar preferências locais e gerar as instruções completas. O padrão é GPT-6 Luna, esforço high e velocidade Standard. Fast é opt-in e pode ser alterado depois. O gerador não configura sua conta ou seu dot automaticamente.
 
 ## Conteúdo
 

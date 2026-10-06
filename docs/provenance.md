@@ -14,7 +14,7 @@ O manifesto declara 0.17.0 e as notas de terceiros descrevem essa versão como e
 
 ## Modificações e atribuição
 
-`instructions/holydot.md`, `instructions/specialist.md` e `templates/task.md` modificam e simplificam as instruções e contratos públicos para uso como orientação textual. Os demais guias, exemplos e a verificação local são material original desta adaptação.
+`instructions/holydot.md`, `instructions/specialist.md` e `templates/task.md` modificam e simplificam as instruções e contratos públicos para uso como orientação textual. Os demais guias, exemplos, o gerador de configuração e a verificação local são material original desta adaptação.
 
 O texto Apache-2.0 escolhido na criação deste repositório é preservado em [LICENSE](../LICENSE). A atribuição da fonte permanece em NOTICE. [NOTICE](../NOTICE) preserva a atribuição aplicável a OpenAI Codex e identifica HolyCodex como fonte da adaptação. O holydot não incorpora código Ratatui, o codec toon-rs ou binários do Codex; as atribuições a esses componentes no repositório original não descrevem componentes distribuídos por este pacote.
 
@@ -23,6 +23,8 @@ O pacote de instruções não tem runtime próprio. A manutenção usa Bun, Type
 ## Documentação pública do produto
 
 Também foram consultadas, em 2026-10-06, as páginas oficiais [controles](https://learn.chatgpt.com/docs/dots/controls), [tarefas e memória](https://learn.chatgpt.com/docs/dots/tasks-and-memory) e [início de uso](https://learn.chatgpt.com/docs/dots/getting-started). Elas fundamentam o uso por instrução na conversa, a separação entre regras e acesso e a necessidade de conferir resultados. Nenhuma delas é tratada como documentação de um instalador npm de dots.
+
+As orientações sobre consumo também se apoiam nas páginas oficiais [dots](https://learn.chatgpt.com/docs/dots) e [preços e limites](https://learn.chatgpt.com/docs/pricing), consultadas em 2026-10-06. Não são reproduzidas cotas ou estimativas fixas; consulte a documentação atual e os controles da sua conta.
 
 ## Atualizações futuras
 

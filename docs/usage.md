@@ -14,7 +14,7 @@ Leia `instructions/holydot.md` e envie seu conteúdo ao dot junto de um pedido c
 
 O arquivo é a instrução reutilizável; o pedido define o trabalho autorizado. Anexar um arquivo ou enviar um link não comprova que o conteúdo foi lido. Peça uma breve confirmação do objetivo e dos limites, sem solicitar instruções internas do assistente.
 
-Use o campo de instruções que seu produto disponibilizar somente se ele realmente existir e aceitar esse conteúdo. O projeto não documenta um instalador ou um fluxo universal de configuração. Uma conversa pode perder contexto; não há garantia de persistência entre tarefas ou sessões.
+Use o campo de instruções que seu produto disponibilizar somente se ele realmente existir e aceitar esse conteúdo. O projeto não oferece um instalador remoto ou um fluxo universal de configuração do produto. Uma conversa pode perder contexto; não há garantia de persistência entre tarefas ou sessões.
 
 ## Autonomia de baixo risco
 
@@ -41,6 +41,8 @@ Substitua os campos antes de solicitar a regra. Esse exemplo cobre trabalhos que
 ## Ajustar sem duplicar o ambiente
 
 A execução é cloud-first: código, pesquisa e operações GitHub devem ficar no cloud quando isso for viável. O computador do usuário só é necessário para dependências genuinamente locais, como um arquivo, hardware ou sessão autenticada sem alternativa cloud, ou uma verificação específica do desktop. Disponibilidade, acesso e permissões precisam ser reais; o pacote não cria um ambiente cloud nem conecta computadores.
+
+Cloud-first não significa uso gratuito: a documentação distingue conversas com o dot das tarefas Work/Codex, que seguem os limites dos respectivos produtos. Uso local e cloud compartilham a franquia aplicável. Prefira ferramentas diretas para consultas simples, reúna etapas úteis em tarefas existentes e evite sessões e níveis de velocidade desnecessários. Consulte [uso de dots](https://learn.chatgpt.com/docs/dots) e [limites e preços atuais](https://learn.chatgpt.com/docs/pricing); este pacote não garante economia nem monitora sua franquia.
 
 O dot já pode dividir trabalho em tarefas com contextos próprios. Envie a cada tarefa o objetivo e as fontes necessárias; não suponha que ela recebeu toda a conversa. Confira o resultado efetivo, pois uma execução encerrada não comprova por si só a entrega. Veja [tarefas e memória](https://learn.chatgpt.com/docs/dots/tasks-and-memory). Conexões de aplicativos e computadores são separadas, conforme o [guia inicial](https://learn.chatgpt.com/docs/dots/getting-started).
 
