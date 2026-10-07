@@ -8,7 +8,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { Effect, Exit } from "effect";
 import { runCli } from "../scripts/cli";
 import { DEFAULT_CONFIG, parseConfig, resolveCodexHome } from "../scripts/config";
@@ -88,9 +88,11 @@ describe("settings and configured UTF-8 render", () => {
     expect(config.delegation.specialist).toEqual({ model: "gpt-6-luna", effort: "high" });
     expect(config.delegation.speed).toBe("standard");
     expect(config.statusUpdates.intervalMinutes).toBe(30);
-    expect(resolveCodexHome(config, "/chosen", "/home/test")).toBe("/chosen");
-    expect(resolveCodexHome(config, null, "/home/test")).toBe("/home/test/.codex");
-    expect(resolveCodexHome({ ...config, codexHome: "/override" }, "/chosen")).toBe("/override");
+    expect(resolveCodexHome(config, "/chosen", "/home/test")).toBe(resolve("/chosen"));
+    expect(resolveCodexHome(config, null, "/home/test")).toBe(resolve("/home/test", ".codex"));
+    expect(resolveCodexHome({ ...config, codexHome: "/override" }, "/chosen")).toBe(
+      resolve("/override"),
+    );
   });
   test("initial setup persists choices and returns only short completion guidance", async () => {
     const root = directory();
