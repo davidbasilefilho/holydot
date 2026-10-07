@@ -41,8 +41,7 @@ export const REQUIRED_FILES = [
   ".oxfmtrc.json",
   "lefthook.yml",
   ".github/workflows/validation.yml",
-  ".github/workflows/dev.yml",
-  ".github/workflows/stable.yml",
+  ".github/workflows/publish.yml",
 ] as const;
 
 /** Directories outside the package-validation scope. */

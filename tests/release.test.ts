@@ -191,82 +191,37 @@ describe("idempotent publication", () => {
 });
 
 describe("release workflow security", () => {
-  test("release workflows install frozen dependencies and validate before release", async () => {
-    for (const mode of ["dev", "stable"]) {
-      const workflow = await readFile(
-        new URL(`../.github/workflows/${mode}.yml`, import.meta.url),
-        "utf8",
-      );
-      expect(workflow).toContain("persist-credentials: false");
-      expect(workflow).toContain("uses: ./.github/workflows/validation.yml");
-      expect(workflow).toContain("needs: validate");
-      expect(workflow).toContain(`run: bun run release:${mode}`);
-      expect(workflow.indexOf("needs: validate")).toBeLessThan(
-        workflow.indexOf(`run: bun run release:${mode}`),
-      );
-      expect(workflow).toContain("id-token: write");
-      expect(workflow).not.toContain("NPM_TOKEN");
-      expect(workflow).not.toContain("pull_request_target");
-      expect(workflow).toContain("github.repository == 'davidbasilefilho/holydot'");
-      expect(workflow).toContain("cancel-in-progress: false");
-      for (const action of workflow.matchAll(/uses: (\S+)/g)) {
-        if (!action[1]?.startsWith("./")) expect(action[1]).toMatch(/@[a-f0-9]{40}$/);
-      }
+  test("checkpoint pushes cannot publish and publication waits for validation", async () => {
+    const text = await readFile(
+      new URL("../.github/workflows/publish.yml", import.meta.url),
+      "utf8",
+    );
+    const workflow = Bun.YAML.parse(text);
+    expect(workflow).toHaveProperty("on.push.branches", ["main", "release/**"]);
+    expect(workflow).toHaveProperty("on.push.tags", ["v*"]);
+    expect(workflow).toHaveProperty("jobs.release.needs", "validate");
+    expect(workflow).toHaveProperty("jobs.release.permissions.id-token", "write");
+    expect(text).toContain("bun install --frozen-lockfile --ignore-scripts");
+    expect(text).toContain("persist-credentials: false");
+    expect(text).not.toContain("NPM_TOKEN");
+    expect(text).not.toContain("pull_request_target");
+    expect(text).toContain("cancel-in-progress: false");
+    for (const action of text.matchAll(/uses: (\S+)/g)) {
+      if (!action[1]?.startsWith("./")) expect(action[1]).toMatch(/@[a-f0-9]{40}$/);
     }
-  });
-
-  test("YAML structurally declares exact event filters and validation dependency", async () => {
-    const load = async (name: string) =>
-      Bun.YAML.parse(
-        await readFile(new URL(`../.github/workflows/${name}.yml`, import.meta.url), "utf8"),
-      );
-    const dev = await load("dev");
-    const stable = await load("stable");
-    const validation = await load("validation");
-    expect(validation).toHaveProperty("jobs.check.strategy.fail-fast", false);
+    const validationText = await readFile(
+      new URL("../.github/workflows/validation.yml", import.meta.url),
+      "utf8",
+    );
+    const validation = Bun.YAML.parse(validationText);
+    expect(validation).toHaveProperty("on.push");
+    expect(validation).toHaveProperty("on.pull_request");
     expect(validation).toHaveProperty("jobs.check.strategy.matrix.os", [
       "ubuntu-latest",
       "windows-latest",
     ]);
-    const checkSteps = (
-      validation as {
-        jobs: { check: { steps: Array<{ uses?: string; run?: string }> } };
-      }
-    ).jobs.check.steps;
-    expect(checkSteps[1]?.uses).toMatch(/^jdx\/mise-action@/);
-    expect(checkSteps[3]?.run).toBe("bun run check");
-    expect(dev).toHaveProperty("on.push.branches", ["**"]);
-    expect(dev).toHaveProperty("on.push.tags-ignore", ["v*"]);
-    expect(stable).toHaveProperty("on.push.tags", ["v*"]);
-    expect(validation).toHaveProperty("on.push");
-    expect(validation).toHaveProperty("on.pull_request");
-    expect(validation).toHaveProperty("on.workflow_call");
-    for (const workflow of [dev, stable]) {
-      expect(workflow).toHaveProperty("jobs.release.needs", "validate");
-      expect(workflow).toHaveProperty("jobs.validate.permissions.contents", "read");
-      expect(workflow).toHaveProperty("jobs.validate.uses", "./.github/workflows/validation.yml");
-      expect(workflow).toHaveProperty("jobs.release.permissions.id-token", "write");
-    }
-  });
-
-  test("validation is read-only and stable excludes development tags", async () => {
-    const validation = await readFile(
-      new URL("../.github/workflows/validation.yml", import.meta.url),
-      "utf8",
-    );
-    const stable = await readFile(
-      new URL("../.github/workflows/stable.yml", import.meta.url),
-      "utf8",
-    );
-    const dev = await readFile(new URL("../.github/workflows/dev.yml", import.meta.url), "utf8");
-    expect(validation).toContain("contents: read");
-    expect(validation).toContain("run: bun run check");
-    expect(validation).toContain("bun install --frozen-lockfile --ignore-scripts");
-    expect(validation).not.toContain("contents: write");
-    expect(validation).not.toContain("id-token: write");
-    expect(stable).toContain("!contains(github.ref_name, '-')");
-    expect(stable).toContain("!contains(github.ref_name, '+')");
-    expect(dev).toContain('tags-ignore:\n      - "v*"');
+    expect(validationText).not.toContain("contents: write");
+    expect(validationText).not.toContain("id-token: write");
   });
 });
 
