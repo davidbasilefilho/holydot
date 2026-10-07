@@ -59,7 +59,7 @@ export function applyOverrides(
         ? null
         : (overrides["--codex-home"] ?? current.codexHome),
   };
-  if (interval !== undefined && !/^\d{1,4}$/.test(interval)) {
+  if (interval !== undefined && !/^\d{1,4}(?![\s\S])/.test(interval)) {
     return Effect.fail(
       new HolydotError({ message: "Status interval must be a whole number of minutes (1–1440)." }),
     );

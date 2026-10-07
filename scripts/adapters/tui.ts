@@ -21,7 +21,9 @@ export function editorConfig(values: EditorValues): unknown {
       speed: values.speed,
     },
     statusUpdates: {
-      intervalMinutes: /^\d{1,4}$/.test(values.interval) ? Number(values.interval) : Number.NaN,
+      intervalMinutes: /^\d{1,4}(?![\s\S])/.test(values.interval)
+        ? Number(values.interval)
+        : Number.NaN,
     },
     codexHome: values.codexHome === "" ? null : values.codexHome,
   };

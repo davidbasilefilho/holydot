@@ -1,3 +1,4 @@
+import { rmSync } from "node:fs";
 import solidPlugin from "@opentui/solid/bun-plugin";
 
 /**
@@ -7,6 +8,7 @@ import solidPlugin from "@opentui/solid/bun-plugin";
  * @throws When the official Bun/Solid build reports a failure.
  */
 export async function compileCli(): Promise<void> {
+  rmSync("./dist", { recursive: true, force: true });
   const result = await Bun.build({
     entrypoints: ["./scripts/cli.ts"],
     outdir: "./dist",

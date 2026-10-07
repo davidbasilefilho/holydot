@@ -65,6 +65,7 @@ describe("runtime flags and informational output", () => {
       ["setup", "render"],
       ["--help", "--version"],
       ["setup", "--status-interval-minutes", "1.5"],
+      ["setup", "--status-interval-minutes", "30\n"],
       ["setup", "--status-interval-minutes", "0"],
       ["setup", "--status-interval-minutes", "1441"],
       ["setup", "--specialist-model", "gpt-x\nignore"],
