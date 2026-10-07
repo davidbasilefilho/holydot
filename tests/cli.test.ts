@@ -33,8 +33,11 @@ describe("configuration validation", () => {
   test("defaults to Luna high Standard and returns independent copies", () => {
     const copy = parseConfig(DEFAULT_CONFIG);
     expect(copy.delegation).toEqual({ model: "gpt-6-luna", effort: "high", speed: "standard" });
+    expect(copy.statusUpdates.intervalMinutes).toBe(30);
     copy.delegation.speed = "fast";
+    copy.statusUpdates.intervalMinutes = 60;
     expect(DEFAULT_CONFIG.delegation.speed).toBe("standard");
+    expect(DEFAULT_CONFIG.statusUpdates.intervalMinutes).toBe(30);
   });
 
   test.each(
@@ -54,6 +57,26 @@ describe("configuration validation", () => {
         delegation: { model: "gpt-6-luna", effort: "maximum", speed: "standard" },
       },
       { schemaVersion: 1, delegation: { model: "gpt-6-luna", effort: "high", speed: "ultrafast" } },
+      {
+        schemaVersion: 1,
+        delegation: DEFAULT_CONFIG.delegation,
+        statusUpdates: { intervalMinutes: 0 },
+      },
+      {
+        schemaVersion: 1,
+        delegation: DEFAULT_CONFIG.delegation,
+        statusUpdates: { intervalMinutes: 1441 },
+      },
+      {
+        schemaVersion: 1,
+        delegation: DEFAULT_CONFIG.delegation,
+        statusUpdates: { intervalMinutes: 30.5 },
+      },
+      {
+        schemaVersion: 1,
+        delegation: DEFAULT_CONFIG.delegation,
+        statusUpdates: { intervalMinutes: 30, unexpected: true },
+      },
     ].map((value) => ({ value })),
   )("rejects invalid or unknown config %j", ({ value }) => {
     expect(() => parseConfig(value)).toThrow();
@@ -62,6 +85,9 @@ describe("configuration validation", () => {
   test("Fast is only selected by an explicit option", () => {
     expect(configure([], DEFAULT_CONFIG).delegation.speed).toBe("standard");
     expect(configure(["--speed", "fast"], DEFAULT_CONFIG).delegation.speed).toBe("fast");
+    expect(
+      configure(["--status-interval-minutes", "60"], DEFAULT_CONFIG).statusUpdates.intervalMinutes,
+    ).toBe(60);
     expect(DEFAULT_CONFIG.delegation.speed).toBe("standard");
   });
 
@@ -70,6 +96,10 @@ describe("configuration validation", () => {
     { args: ["--other", "fast"] },
     { args: ["--speed", "fast", "--speed", "standard"] },
     { args: ["--effort", "unknown"] },
+    { args: ["--status-interval-minutes"] },
+    { args: ["--status-interval-minutes", "30.5"] },
+    { args: ["--status-interval-minutes", "1441"] },
+    { args: ["--status-interval-minutes", "60", "--status-interval-minutes", "90"] },
   ])("rejects malformed CLI options %j", ({ args }) =>
     expect(() => configure(args, DEFAULT_CONFIG)).toThrow(),
   );
@@ -97,6 +127,9 @@ describe("local setup CLI", () => {
     expect(output).toContain("needs-input");
     expect(output).toContain("Regras aplicadas pelo CLI: nenhuma");
     expect(output).toContain("Use Standard como padrão");
+    expect(output).toContain("Intervalo local solicitado: 30 min por projeto");
+    expect(output).toContain("Estado do agendamento: não configurado pelo CLI");
+    expect(output).toContain("não cria cron, daemon ou serviço de fundo");
     expect(config).toEqual(DEFAULT_CONFIG);
     expect(readdirSync(root)).toEqual(["holydot.config.json"]);
   });
@@ -121,11 +154,14 @@ describe("local setup CLI", () => {
         "work",
         "--rule-mode",
         "requested",
+        "--status-interval-minutes",
+        "60",
       ],
       root,
     );
     expect(preview).toContain("Velocidade solicitada: fast");
     expect(preview).toContain("example/project");
+    expect(preview).toContain("Intervalo solicitado de status por projeto: 60 min");
     expect(preview).toContain("ainda não aplicada");
     expect(readFileSync(path, "utf8")).toBe(original);
     expect(readdirSync(root)).toEqual(["holydot.config.json"]);
@@ -144,6 +180,8 @@ describe("local setup CLI", () => {
         "release/v1",
         "--rule-mode",
         "requested",
+        "--status-interval-minutes",
+        "60",
       ],
       root,
     );
@@ -156,6 +194,7 @@ describe("local setup CLI", () => {
       branch: "release/v1",
       mode: "requested",
     });
+    expect(config.statusUpdates.intervalMinutes).toBe(60);
     expect(output).toContain("needs-host");
     expect(output).toContain("ainda não aplicada");
     expect(output).toContain("Regras aplicadas pelo CLI: nenhuma");
@@ -163,8 +202,14 @@ describe("local setup CLI", () => {
 
   test("setup validates flags before creation and leaves invalid or symlink configs untouched", () => {
     const empty = fixture();
-    expect(() => runCli(["setup", "--speed", "unlimited"], empty)).toThrow();
-    expect(readdirSync(empty)).toEqual([]);
+    for (const args of [
+      ["setup", "--speed", "unlimited"],
+      ["setup", "--status-interval-minutes", "0"],
+      ["setup", "--status-interval-minutes", "1441"],
+    ]) {
+      expect(() => runCli(args, empty)).toThrow();
+      expect(readdirSync(empty)).toEqual([]);
+    }
 
     const invalid = fixture();
     const invalidPath = join(invalid, "holydot.config.json");

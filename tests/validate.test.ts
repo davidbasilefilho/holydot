@@ -89,6 +89,24 @@ describe("offline package validation", () => {
     }
   });
 
+  test("project status cadence is configurable and host scheduling is not claimed by the CLI", () => {
+    const instructions = readFileSync(
+      new URL("../instructions/holydot.md", import.meta.url),
+      "utf8",
+    );
+    const usage = readFileSync(new URL("../docs/usage.md", import.meta.url), "utf8");
+    const setup = readFileSync(new URL("../docs/setup.md", import.meta.url), "utf8");
+    expect(instructions).toContain("mudança substancial em cada projeto");
+    expect(instructions).toContain("mensagens separadas por projeto");
+    expect(instructions).toContain("estado (em andamento, concluído ou bloqueado)");
+    expect(instructions).toContain("Não invente progresso");
+    expect(instructions).toContain("não instala nem inicia um agendador");
+    expect(usage).toContain("padrão é uma atualização curta por projeto ativo a cada 30 minutos");
+    expect(setup).toContain('"intervalMinutes": 30');
+    expect(setup).toContain("--status-interval-minutes 60");
+    expect(setup).toContain("O CLI não cria cron, daemon ou serviço de fundo");
+  });
+
   test("accepts a complete fixture and its local and external links", () => {
     const root = fixture();
     writeFileSync(

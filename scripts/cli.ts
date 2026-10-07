@@ -13,7 +13,15 @@ import {
 } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { DEFAULT_RULE_SCOPE, parseRuleScope, renderSetup, type RuleScope } from "./setup";
+import {
+  DEFAULT_RULE_SCOPE,
+  DEFAULT_STATUS_INTERVAL_MINUTES,
+  MAX_STATUS_INTERVAL_MINUTES,
+  MIN_STATUS_INTERVAL_MINUTES,
+  parseRuleScope,
+  renderSetup,
+  type RuleScope,
+} from "./setup";
 
 /** Reasoning preference requested from a host that supports explicit selection. */
 export type Effort = "low" | "medium" | "high";
@@ -35,6 +43,11 @@ export interface HolydotConfig {
     /** Standard by default; Fast requires an explicit local setting. */
     speed: Speed;
   };
+  /** Reporting preference only; creating a schedule requires a supported host automation tool. */
+  statusUpdates: {
+    /** Requested interval for concise status reports, in minutes. */
+    intervalMinutes: number;
+  };
 }
 
 /** Default delegated preferences, without any paid speed-tier opt-in. */
@@ -42,6 +55,7 @@ export const DEFAULT_CONFIG: HolydotConfig = {
   schemaVersion: 1,
   accountRules: { ...DEFAULT_RULE_SCOPE },
   delegation: { model: "gpt-6-luna", effort: "high", speed: "standard" },
+  statusUpdates: { intervalMinutes: DEFAULT_STATUS_INTERVAL_MINUTES },
 };
 
 /**
@@ -82,7 +96,9 @@ function hasErrorCode(error: unknown, code: string): boolean {
 export function parseConfig(value: unknown): HolydotConfig {
   if (
     (!hasKeys(value, ["schemaVersion", "delegation"]) &&
-      !hasKeys(value, ["schemaVersion", "delegation", "accountRules"])) ||
+      !hasKeys(value, ["schemaVersion", "delegation", "accountRules"]) &&
+      !hasKeys(value, ["schemaVersion", "delegation", "statusUpdates"]) &&
+      !hasKeys(value, ["schemaVersion", "delegation", "accountRules", "statusUpdates"])) ||
     value.schemaVersion !== 1 ||
     !hasKeys(value.delegation, ["model", "effort", "speed"])
   ) {
@@ -101,7 +117,30 @@ export function parseConfig(value: unknown): HolydotConfig {
   const accountRules = Object.hasOwn(value, "accountRules")
     ? parseRuleScope(value.accountRules)
     : { ...DEFAULT_RULE_SCOPE };
-  return { schemaVersion: 1, delegation: { model, effort, speed }, accountRules };
+  let intervalMinutes = DEFAULT_STATUS_INTERVAL_MINUTES;
+  if (Object.hasOwn(value, "statusUpdates")) {
+    if (!hasKeys(value.statusUpdates, ["intervalMinutes"])) {
+      throw new Error("statusUpdates requires only intervalMinutes.");
+    }
+    const candidate = value.statusUpdates.intervalMinutes;
+    if (
+      typeof candidate !== "number" ||
+      !Number.isInteger(candidate) ||
+      candidate < MIN_STATUS_INTERVAL_MINUTES ||
+      candidate > MAX_STATUS_INTERVAL_MINUTES
+    ) {
+      throw new Error(
+        `Status interval must be an integer from ${MIN_STATUS_INTERVAL_MINUTES} to ${MAX_STATUS_INTERVAL_MINUTES} minutes.`,
+      );
+    }
+    intervalMinutes = candidate;
+  }
+  return {
+    schemaVersion: 1,
+    delegation: { model, effort, speed },
+    accountRules,
+    statusUpdates: { intervalMinutes },
+  };
 }
 
 /**
@@ -112,11 +151,13 @@ export function parseConfig(value: unknown): HolydotConfig {
  * @returns Markdown text that the user may provide to a dot; no host setting is changed.
  */
 export function renderInstructions(base: string, config: HolydotConfig): string {
-  const { model, effort, speed } = parseConfig(config).delegation;
+  const parsed = parseConfig(config);
+  const { model, effort, speed } = parsed.delegation;
+  const statusInterval = parsed.statusUpdates.intervalMinutes;
   return (
     `${base.trim()}\n\n## Preferências explícitas desta configuração\n\n` +
-    `Esta seção substitui apenas as preferências padrão de delegação do texto acima.\n\n` +
-    `- Modelo delegado solicitado: ${model}\n- Esforço solicitado: ${effort}\n- Velocidade solicitada: ${speed}\n\n` +
+    `Esta seção ajusta as preferências de delegação e o intervalo local de status; não configura uma agenda no host.\n\n` +
+    `- Modelo delegado solicitado: ${model}\n- Esforço solicitado: ${effort}\n- Velocidade solicitada: ${speed}\n- Intervalo solicitado de status por projeto: ${statusInterval} min\n\n` +
     (speed === "fast"
       ? "Fast foi escolhido explicitamente nesta configuração e pode consumir mais franquia ou créditos.\n\n"
       : "Use Standard como padrão; Fast não foi autorizado por esta configuração.\n\n") +
@@ -144,7 +185,15 @@ export function configure(args: readonly string[], current: HolydotConfig): Holy
       !key ||
       !value ||
       seen.has(key) ||
-      !["--model", "--effort", "--speed", "--repository", "--branch", "--rule-mode"].includes(key)
+      ![
+        "--model",
+        "--effort",
+        "--speed",
+        "--repository",
+        "--branch",
+        "--rule-mode",
+        "--status-interval-minutes",
+      ].includes(key)
     ) {
       throw new Error(
         "Use each supported preference or rule-scope option at most once, with a value.",
@@ -161,6 +210,10 @@ export function configure(args: readonly string[], current: HolydotConfig): Holy
     else if (key === "--rule-mode") {
       if (value !== "ask" && value !== "requested") throw new Error("Invalid rule mode.");
       config.accountRules.mode = value;
+    } else if (key === "--status-interval-minutes") {
+      if (!/^\d{1,4}$/.test(value))
+        throw new Error("Status interval must be a whole number of minutes.");
+      config.statusUpdates.intervalMinutes = Number(value);
     } else {
       if (value !== "standard" && value !== "fast") throw new Error("Invalid speed.");
       config.delegation.speed = value;
@@ -265,10 +318,10 @@ export function runCli(args: readonly string[], directory: string): string {
   const path = resolve(directory, "holydot.config.json");
   if (!command || command === "--help" || command === "help") {
     return (
-      "holydot init [--model ID] [--effort low|medium|high] [--speed standard|fast]\n" +
-      "holydot configure [--model ID] [--effort low|medium|high] [--speed standard|fast] [--write]\n" +
+      "holydot init [--model ID] [--effort low|medium|high] [--speed standard|fast] [--status-interval-minutes N]\n" +
+      "holydot configure [--model ID] [--effort low|medium|high] [--speed standard|fast] [--status-interval-minutes N] [--write]\n" +
       "holydot render > holydot.instructions.md\n" +
-      "holydot setup [--model ID] [--effort low|medium|high] [--speed standard|fast] [--repository owner/repo] [--branch NAME] [--rule-mode ask|requested]\n\n" +
+      "holydot setup [--model ID] [--effort low|medium|high] [--speed standard|fast] [--status-interval-minutes N] [--repository owner/repo] [--branch NAME] [--rule-mode ask|requested]\n\n" +
       "Setup creates safe defaults when needed and reuses valid config without overwriting it.\n" +
       "Defaults: gpt-6-luna / high / standard. Local text generation only; no dot settings are changed.\n"
     );
@@ -282,7 +335,11 @@ export function runCli(args: readonly string[], directory: string): string {
     );
     return (
       "Created holydot.config.json. The following host-assisted setup is prepared, not applied.\n\n" +
-      renderSetup(renderInstructions(base, config), config.accountRules)
+      renderSetup(
+        renderInstructions(base, config),
+        config.accountRules,
+        config.statusUpdates.intervalMinutes,
+      )
     );
   }
   if (command === "setup") {
@@ -312,7 +369,11 @@ export function runCli(args: readonly string[], directory: string): string {
       fileURLToPath(new URL("../instructions/holydot.md", import.meta.url)),
       "utf8",
     );
-    return `${status}\n\n${renderSetup(renderInstructions(base, selected), selected.accountRules)}`;
+    return `${status}\n\n${renderSetup(
+      renderInstructions(base, selected),
+      selected.accountRules,
+      selected.statusUpdates.intervalMinutes,
+    )}`;
   }
   if (command !== "configure" && command !== "render")
     throw new Error("Unknown command. Use holydot --help.");

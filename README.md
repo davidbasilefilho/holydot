@@ -27,7 +27,7 @@ Isso não instala nada. Uma mensagem não garante aplicação permanente. Se seu
 
 ## Preferências locais opcionais
 
-Consulte [instalação e configuração](docs/setup.md) para ajustar o modelo delegado, esforço e velocidade. O padrão é GPT-6 Luna, esforço high e velocidade Standard. Fast é opt-in e pode ser alterado depois. O CLI prepara um setup assistido pelo host: quando houver controles reais, o host deve apresentar as aprovações, aplicar regras aceitas e verificar o estado. O CLI sozinho não altera a conta.
+Consulte [instalação e configuração](docs/setup.md) para ajustar o modelo delegado, esforço, velocidade e intervalo de status por projeto (30 minutos por padrão). Fast é opt-in e pode ser alterado depois. A preferência de intervalo não instala um agendador; quando o host tiver automação real, autorizada e verificável, o dot pode usá-la para enviar mensagens separadas por projeto. O CLI prepara um setup assistido pelo host: quando houver controles reais, o host deve apresentar as aprovações, aplicar regras aceitas e verificar o estado. O CLI sozinho não altera a conta.
 
 ## Conteúdo
 
@@ -42,7 +42,7 @@ Consulte [instalação e configuração](docs/setup.md) para ajustar o modelo de
 
 ## O que o pacote não faz
 
-Não escolhe modelos, altera esforço de raciocínio, instala ferramentas, concede acesso, cria agentes ou impõe isolamento. Não inclui monitor de CI, review bot ou agendador para o dot. Os workflows deste próprio repositório verificam e distribuem o pacote; não monitoram outros projetos. Quando disponíveis e autorizadas, essas funções continuam sendo responsabilidade do ambiente existente.
+Não escolhe modelos, altera esforço de raciocínio, instala ferramentas, concede acesso, cria agentes ou impõe isolamento. Não inclui monitor de CI, review bot ou agendador próprio para o dot. Relatórios periódicos dependem da automação real do host, quando disponível e autorizada. Os workflows deste próprio repositório verificam e distribuem o pacote; não monitoram outros projetos.
 
 As instruções são orientação comportamental, não garantias executáveis. A validação local verifica a integridade deste pacote, não o comportamento de um modelo.
 

@@ -42,6 +42,9 @@ O padrão delegado é:
     "repository": null,
     "branch": null,
     "mode": null
+  },
+  "statusUpdates": {
+    "intervalMinutes": 30
   }
 }
 ```
@@ -53,6 +56,14 @@ bunx holydot@latest setup --repository example/project --branch work --rule-mode
 ```
 
 Com uma configuração já existente, opções passadas a `setup` afetam somente aquela prévia e não salvam mudanças. Para persistir uma alteração, use `configure --write` explicitamente. `init` continua disponível como alternativa que se recusa a sobrescrever um arquivo já existente.
+
+O intervalo local de status por projeto começa em 30 minutos e pode ser configurado entre 1 e 1440 minutos:
+
+```sh
+bunx holydot@latest setup --status-interval-minutes 60
+```
+
+Em uma configuração existente, `setup --status-interval-minutes 60` apenas mostra a prévia; salve com `configure --status-interval-minutes 60 --write`. Esse número é uma preferência de frequência, não um agendamento instalado. O holydot orienta o host a usar uma ferramenta real de automação/agendamento se disponível e autorizada, emitir uma mensagem separada por projeto e verificar o resultado. O CLI não cria cron, daemon ou serviço de fundo, e não afirma que uma agenda foi ativada pelo texto gerado. Se o host não oferecer esse recurso, a orientação é informar a limitação e manter atualizações por mudanças substanciais e pedidos de status enquanto a conversa estiver ativa.
 
 ## Escolher Fast explicitamente
 
@@ -76,6 +87,7 @@ Para salvar explicitamente:
 
 ```sh
 bunx holydot@latest configure --speed fast --write
+bunx holydot@latest configure --status-interval-minutes 60 --write
 bunx holydot@latest render > holydot.instructions.md
 ```
 

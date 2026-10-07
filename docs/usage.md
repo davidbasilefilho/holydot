@@ -16,6 +16,12 @@ O arquivo é a instrução reutilizável; o pedido define o trabalho autorizado.
 
 Se a plataforma exigir aprovação, autenticação ou controle de conta dedicado, use-o primeiro; uma pergunta genérica não o substitui. Nas demais perguntas materiais ou de preferência, prefira a ferramenta estruturada permitida e adequada. Respeite os tipos de pergunta permitidos. Texto comum no chat é o último recurso, somente se não houver alternativa adequada mais legível.
 
+## Atualizações de status por projeto
+
+O padrão é uma atualização curta por projeto ativo a cada 30 minutos, configurável nas preferências locais entre 1 e 1440 minutos. Envie também uma atualização assim que houver uma mudança substancial, sem esperar o intervalo. Se o usuário pedir status, responda imediatamente com uma mensagem separada por projeto. Cada resumo inclui estado, mudança/evidência verificada, próxima etapa e verificações pendentes; se nada mudou, diga isso. Nunca invente progresso.
+
+O intervalo local não cria um agendador. Use uma automação periódica somente por uma ferramenta existente, autorizada e suportada pelo host, e confira o estado salvo antes de afirmar que está ativa. Se não houver esse recurso, informe a limitação; não instale cron, daemon, serviço ou monitor no projeto.
+
 Use o campo de instruções que seu produto disponibilizar somente se ele realmente existir e aceitar esse conteúdo. O projeto não oferece um instalador remoto ou um fluxo universal de configuração do produto. Uma conversa pode perder contexto; não há garantia de persistência entre tarefas ou sessões.
 
 ## Autonomia de baixo risco
@@ -59,7 +65,7 @@ Modelo de estimativa para manutenção: use como hipótese para HolyCodex e holy
 O dot já pode dividir trabalho em tarefas com contextos próprios. Envie a cada tarefa o objetivo e as fontes necessárias; não suponha que ela recebeu toda a conversa. Confira o resultado efetivo, pois uma execução encerrada não comprova por si só a entrega. Veja [tarefas e memória](https://learn.chatgpt.com/docs/dots/tasks-and-memory). Conexões de aplicativos e computadores são separadas, conforme o [guia inicial](https://learn.chatgpt.com/docs/dots/getting-started).
 
 - Mantenha as capacidades de pesquisa, execução, delegação e GitHub oferecidas pelo ambiente.
-- Não instale monitor de CI, review bot ou agendador por causa deste pacote.
+- Não instale monitor de CI, review bot, cron, daemon ou serviço de agendamento por causa deste pacote. Relatórios periódicos pedidos pelo usuário dependem da automação já oferecida pelo host.
 - Se o pedido incluir acompanhar CI/revisões, use a capacidade existente e descreva o que foi realmente observado. Não prometa acompanhamento sem suporte real.
 - Para a execução de uma tarefa grande, verifique a integração HolyCodex Root real. Se não estiver disponível, continue diretamente apenas com o que for viável e autorizado, sem alegar orquestração ou revisão independente. Não use Codex Cloud ou o computador do usuário como substituto automático só pelo porte; explique limitações e siga apenas por uma alternativa suportada.
 - A preferência para tarefas delegadas é GPT-6 Luna com esforço `high`, somente se o ambiente permitir essa seleção. Verifique o suporte real e informe a limitação e o fallback antes de usá-lo; não troque silenciosamente para Sol. O texto não impõe modelos nem reserva recursos.

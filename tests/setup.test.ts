@@ -16,6 +16,8 @@ describe("owner-scoped account setup", () => {
     expect(output).toContain("use primeiro o controle dedicado");
     expect(output).toContain("Nas demais perguntas, prefira a ferramenta estruturada permitida");
     expect(output).toContain("Texto comum é o último recurso");
+    expect(output).toContain("Intervalo local solicitado: 30 min por projeto");
+    expect(output).toContain("Estado do agendamento: não configurado pelo CLI");
     expect(output).toContain("gerenciador real de regras");
     expect(output).toContain("bloqueado: nenhuma regra aplicada");
   });
@@ -83,6 +85,18 @@ describe("owner-scoped account setup", () => {
   test("legacy delegation-only config migrates safely to missing scope", () => {
     const config = parseConfig({ schemaVersion: 1, delegation: DEFAULT_CONFIG.delegation });
     expect(config.accountRules).toEqual(DEFAULT_RULE_SCOPE);
+    expect(config.statusUpdates.intervalMinutes).toBe(30);
+  });
+
+  test("host schedule failures remain explicit and invalid intervals fail closed", () => {
+    expect(() => renderSetup("Policies", DEFAULT_RULE_SCOPE, 0)).toThrow("Status interval");
+    expect(() => renderSetup("Policies", DEFAULT_RULE_SCOPE, 1441)).toThrow("Status interval");
+    const output = renderSetup("Policies", DEFAULT_RULE_SCOPE, 60);
+    expect(output).toContain("Intervalo local solicitado: 60 min por projeto");
+    expect(output).toContain("não configurado pelo CLI");
+    expect(output).toContain("use somente uma ferramenta de automação/agendamento real do host");
+    expect(output).toContain("não cria cron, daemon ou serviço de fundo");
+    expect(output).toContain("uma mensagem separada por projeto");
   });
 
   test("explicit options preserve preferences and build scoped setup", () => {

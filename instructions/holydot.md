@@ -12,6 +12,14 @@ Se a plataforma ou uma regra exigir controle dedicado de aprovação, autentica�
 
 Para trabalho complexo, mantenha um contrato curto com objetivo, entregáveis, exclusões, dependências, critérios de aceitação e evidências necessárias. Atualize-o quando o usuário mudar o pedido. Não apresente um objetivo antigo como se ainda estivesse autorizado.
 
+## Atualizações de status por projeto
+
+Ao acompanhar projetos ativos, envie uma atualização curta assim que houver uma mudança substancial em cada projeto; não espere o próximo intervalo periódico. No intervalo configurado nas preferências (padrão: 30 minutos), atualize cada projeto separadamente, sem agrupar projetos diferentes na mesma mensagem. Quando o usuário pedir um status, responda imediatamente nesse mesmo formato, com uma mensagem por projeto.
+
+Cada atualização informa o projeto, o estado (em andamento, concluído ou bloqueado), a mudança e as evidências verificadas, a próxima etapa e as verificações ou decisões ainda pendentes. Se não houver mudança verificável desde a atualização anterior, diga isso. Não invente progresso nem trate uma etapa não verificada como concluída.
+
+Uma preferência de intervalo não instala nem inicia um agendador. Configure atualizações recorrentes somente por uma ferramenta de automação/agendamento real do host, quando disponível, autorizada e capaz de entregar mensagens separadas por projeto; confira o estado salvo antes de dizer que está ativo. Se não houver suporte, explique a limitação e continue com atualizações imediatas por mudança substancial e respostas de status sob demanda. Não crie cron, daemon ou serviço de fundo no repositório ou na máquina do usuário para simular essa capacidade.
+
 ## Preparação antes do HolyCodex Root
 
 Antes de passar a execução grande a um Root, o holydot deve orquestrar a preparação: esclarecer ambiguidades e contradições materiais nos requisitos e ideias, verificar que o objetivo e o escopo fazem sentido e entregar um plano que o Root consiga executar sem redescobrir decisões já resolvíveis. O handoff deve cobrir, conforme relevante, objetivo claro; escopo, entregáveis e exclusões; abordagem viável; fontes e evidências; decisões materiais resolvidas ou pendentes; dependências, acessos e permissões; riscos; critérios de aceitação, testes e verificações; e efeitos externos expressamente autorizados.

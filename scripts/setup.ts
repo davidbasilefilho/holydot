@@ -14,6 +14,13 @@ export interface RuleScope {
 /** Safe setup defaults: no project, branch or autonomy choice is inferred. */
 export const DEFAULT_RULE_SCOPE: RuleScope = { repository: null, branch: null, mode: null };
 
+/** Default interval for per-project status updates requested through the instructions. */
+export const DEFAULT_STATUS_INTERVAL_MINUTES = 30;
+/** Smallest configurable status interval, in minutes. */
+export const MIN_STATUS_INTERVAL_MINUTES = 1;
+/** Largest configurable status interval, in minutes. */
+export const MAX_STATUS_INTERVAL_MINUTES = 1440;
+
 /**
  * Validate explicit owner choices without granting any account permission.
  *
@@ -93,9 +100,25 @@ export function createRuleProposal(input: RuleScope): string | null {
  *
  * @param instructions - Complete rendered holydot policies and selected delegation preferences.
  * @param input - Explicit project/branch/confirmation choices or safe null defaults.
+ * @param statusIntervalMinutes - Local preference for periodic status reports; it is not a
+ *   schedule.
  * @returns A prepared needs-input/needs-host plan; it does not contact or mutate an account.
+ * @throws If the interval is outside the supported range.
  */
-export function renderSetup(instructions: string, input: RuleScope): string {
+export function renderSetup(
+  instructions: string,
+  input: RuleScope,
+  statusIntervalMinutes = DEFAULT_STATUS_INTERVAL_MINUTES,
+): string {
+  if (
+    !Number.isInteger(statusIntervalMinutes) ||
+    statusIntervalMinutes < MIN_STATUS_INTERVAL_MINUTES ||
+    statusIntervalMinutes > MAX_STATUS_INTERVAL_MINUTES
+  ) {
+    throw new Error(
+      `Status interval must be an integer from ${MIN_STATUS_INTERVAL_MINUTES} to ${MAX_STATUS_INTERVAL_MINUTES} minutes.`,
+    );
+  }
   const scope = parseRuleScope(input);
   const proposal = createRuleProposal(scope);
   const state = proposal === null ? "needs-input" : "needs-host";
@@ -105,7 +128,11 @@ export function renderSetup(instructions: string, input: RuleScope): string {
     `Modo de confirmação: ${scope.mode ?? "não escolhido"}`,
   ].join("\n- ");
   return (
-    `${instructions.trim()}\n\n# Setup guiado de regras da conta\n\n` +
+    `${instructions.trim()}\n\n# Atualizações periódicas de status\n\n` +
+    `Intervalo local solicitado: ${statusIntervalMinutes} min por projeto. Estado do agendamento: não configurado pelo CLI.\n\n` +
+    "Quando o usuário pedir atualizações periódicas, identifique os projetos ativos ou acompanhados com base em contexto verificável e use somente uma ferramenta de automação/agendamento real do host, se estiver disponível e autorizada. Emita uma mensagem separada por projeto; não agrupe projetos diferentes. Verifique a configuração e o destinatário pelo próprio host antes de afirmar que o agendamento está ativo. Se não houver suporte, informe essa limitação; o CLI não cria cron, daemon ou serviço de fundo e este texto, por si só, não agenda nada. Continue enviando as atualizações imediatas por mudança substancial e os status sob demanda quando houver suporte de conversa.\n\n" +
+    "Cada status deve informar o estado (em andamento, concluído ou bloqueado), a mudança e evidência verificadas, a próxima etapa e qualquer verificação pendente. Se não houve mudança verificável no intervalo, diga isso claramente. Não invente progresso nem confirme verificações que não foram realizadas.\n\n" +
+    `# Setup guiado de regras da conta\n\n` +
     `Estado deste plano local: ${state}. Regras aplicadas pelo CLI: nenhuma.\n\n- ${decisions}\n\n` +
     "Ao receber este plano em uma solicitação de setup do dono, conduza o fluxo abaixo proativamente. " +
     "Não peça que ele copie cada regra manualmente quando o ambiente puder apresentar os controles reais.\n\n" +
