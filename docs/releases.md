@@ -1,37 +1,38 @@
-# Releases
+# Versões e publicação
 
-holydot distributes instructions and a local Bun configuration generator. Releases do not deploy an assistant, connect accounts, or run a service. The npm allowlist includes scripts/cli.ts and scripts/setup.ts; executable package changes require review and CLI tests as well as document checks.
+Versão-base: 0.1.0. Convenção do produto: `0.X.Y-Z`, com manutenção `-Z` opcional. Scripts de desenvolvimento Bun/mise:
 
-## Versions and triggers
+```sh
+bun run bump:x
+bun run bump:y
+bun run bump:z
+```
 
-The stable source version lives in `package.json`, initially `0.0.1`. Update it before tagging a new stable version. npm versions never include a leading `v`.
+X incrementa o segundo campo e reinicia Y e manutenção: `0.1.2-3 → 0.2.0`. Y incrementa o terceiro e reinicia manutenção: `0.1.2-3 → 0.1.3`. Z incrementa a manutenção: `0.1.2-3 → 0.1.2-4`; quando ausente, começa em 1: `0.1.0 → 0.1.0-1`. Os scripts editam somente package.json com backup. Não fazem commit, push, tag ou publicação.
 
-- `validation.yml`: every push and pull request runs frozen Bun installation and `bun run check`, including formatting, declarative type-aware lint/typecheck, Bun tests and offline validation. Release workflows reuse this read-only job.
-- `dev.yml`: any branch push or non-`v*` tag push creates npm `0.0.1-dev-<12-character-commit-SHA>` with dist-tag `dev`, and GitHub prerelease `v0.0.1-dev-<12-character-commit-SHA>`.
-- `stable.yml`: a `v*` tag push must be exactly `v` plus the stable `package.json` version. It publishes that npm version with dist-tag `latest` and the matching stable GitHub release. Prerelease/build tags are excluded.
+## Canais deliberados
 
-Only non-deletion pushes to `davidbasilefilho/holydot` publish. Forks and pull requests only validate. Creating a development tag does not recursively trigger stable publication: the tag is excluded explicitly, and GitHub's `GITHUB_TOKEN` does not trigger another push workflow.
+| Canal          | Versão npm                                 | dist-tag npm | GitHub     |
+| -------------- | ------------------------------------------ | ------------ | ---------- |
+| Dev            | `BASE-dev-SHORTSHA`                        | `dev`        | prerelease |
+| Produto stable | `BASE`, inclusive manutenção numérica `-Z` | `latest`     | release    |
 
-Every workflow uses the [mise GitHub Action](https://mise.jdx.dev/continuous-integration.html). Bun 1.4, Node and npm versions are declared in `mise.toml`. Action dependencies are pinned to verified commit SHAs. Validation has read-only permissions; only the publication job receives `contents: write` and `id-token: write`.
+`-Z` tem sintaxe de prerelease em SemVer. O produto usa esse sufixo para manutenção e escolhe `latest` explicitamente. Consumidores devem usar a versão exata ou a dist-tag desejada; uma faixa SemVer comum pode excluir manutenção com sufixo. O canal dev conserva toda a base (`0.1.2-3-dev-SHORTSHA`) e não é consumido recursivamente por tags dev.
 
-## One-time npm setup
+## Workflows
 
-Automatic publication needs a maintainer-owned npm package and [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/). The repository contains no npm token or fallback credential.
+Um único `publish.yml` publica dev/stable e chama `validation.yml` antes das operações externas. Mise-action instala ferramentas; release usa npm 11.21.0 com trusted publishing e `id-token: write`, sem NPM_TOKEN.
 
-1. Verify that the npm account can publish the unscoped name `holydot`. A registry 404 does not reserve the name or guarantee availability. If the package does not exist, a maintainer must complete its initial authenticated publication. Use a separate bootstrap-only prerelease, such as `0.0.0-bootstrap.0` with dist-tag `bootstrap`, rather than consuming a planned stable version.
-2. In the package's npm settings, add GitHub Actions trusted publishers for owner `davidbasilefilho`, repository `holydot`, and workflow filenames `dev.yml` and `stable.yml`. Enable direct `npm publish` for each. No GitHub environment name is used by these workflows.
-3. Complete the first successful publication within npm's two-day validation window for a new publisher connection. Rerun the corresponding failed GitHub workflow after setup.
+- Push autorizado em `main` ou `release/**`: dev.
+- Push autorizado da tag exatamente `v{package.version}`: produto stable.
+- Checkpoints em `codex/**`, `work/**` ou `feature/**`: apenas validation.yml, nunca publicação.
 
-The maintainer must approve and perform required account/security configuration. Repository code does not create credentials, establish trusted publishers, or accept account terms. The release tasks explicitly select the pinned npm tool with mise so Node’s bundled npm cannot shadow it. The pinned npm CLI supports OIDC; separate dist-tag management permission is unnecessary because tags are set by `npm publish` itself.
+A fonte deve estar limpa e no SHA exato do evento. O planner rejeita branches de checkpoint também no código. Pacote npm existente precisa ter a mesma integridade; conflitos não são sobrescritos. Uma operação interrompida preserva draft verificável no GitHub; atrasos de visibilidade só repetem leituras, nunca npm publish. Uma repetição idêntica não retrocede dist-tags.
 
-## Recovery and integrity
+## Aprovação e autenticação
 
-Publication validates a clean checkout of the event commit, packs the allowlisted public files, and records the full source SHA plus SHA-512 tarball integrity. It reserves the matching GitHub tag and draft, publishes npm, verifies registry integrity with bounded read-only visibility retries, and finally publishes the GitHub release.
+Preparar ou validar o candidato não autoriza publicação. Push nas branches de release, tags, merge, rerun de publicação e npm publish exigem autorização correspondente. Não repita o bootstrap já publicado para resolver atraso de visibilidade.
 
-An npm authentication failure can leave a tag and draft. An interruption after npm publication can leave a published npm version and an unpublished GitHub draft. Rerun the same workflow after fixing the blocker: identical npm content is skipped, matching drafts resume, and existing completed releases are verified. npm versions are immutable. Conflicting content, tag targets or release metadata fail closed and need maintainer review; nothing is overwritten. An already-published identical rerun does not move npm dist-tags backward. Publishing an older snapshot for the first time can move its channel tag to that snapshot; choose such reruns deliberately.
+O publisher esperado no npm aponta para GitHub Actions, `davidbasilefilho/holydot`, `publish.yml`; environment deve corresponder ao workflow (atualmente nenhum). É necessário permitir publicação direta pelo publisher. Não afirme que o formulário foi salvo ou que OIDC funciona sem evidência real. A CLI não altera essa conta.
 
-Publish jobs are serialized per channel and running publications are never canceled by concurrency. GitHub may replace an older pending run with a newer pending run; rerun a skipped commit's workflow if that specific snapshot is needed.
-
-GitHub can reject tag/release creation for a branch whose workflow files differ from the default branch because it requires workflow-write permission unavailable to `GITHUB_TOKEN`. The script reports this as a permission blocker rather than releasing another commit. Merge the intended workflow changes through the authorized process before retrying; do not add a broad personal token as a workaround. See [GitHub release permissions](https://docs.github.com/en/rest/releases/releases#create-a-release) and [workflow trigger behavior](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow).
-
-Local tests cover version/ref guards, immutable-content conflicts, draft recovery policy and parsed workflow structure. They do not prove that live npm/GitHub authorization is configured. A successful live publication is the final integration check.
+Depois de publicação autorizada, verifique versão/dist-tag e integridade no npm, tag/SHA e release GitHub, então entregue comandos bunx com versão realmente disponível.

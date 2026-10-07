@@ -1,52 +1,35 @@
 # Desenvolvimento
 
-O conteúdo para o dot é Markdown. O CLI Bun gera configuração e instruções locais. As demais ferramentas mantêm, validam e distribuem o pacote; nenhuma executa um assistente.
-
-## Preparar um checkout
-
-Instale [mise](https://mise.jdx.dev/getting-started.html) e revise o `mise.toml` antes de executar suas tarefas:
+Use Bun 1.4 e ferramentas de `mise.toml`. Os scripts de package.json chamam mise tasks, mantendo local e CI no mesmo fluxo. Instale dependências do lockfile sem scripts de instalação de terceiros:
 
 ```sh
-mise install
-mise exec -- bun install --frozen-lockfile
-mise exec -- bun run check
-mise exec -- bun run hooks:install
+bun install --frozen-lockfile --ignore-scripts
+bun run check
+bun run hooks:install
 ```
 
-O projeto solicita Bun 1.4 e registra dependências exatas no `bun.lock`. `package.json` encaminha os scripts para tarefas do mise. Node 24 e npm são usados para publicação npm com os mecanismos de autenticação compatíveis; os testes e o validador usam Bun.
+`check` executa Oxfmt/JSDoc, Oxlint declarativo type-aware/type-check com oxlint-tsgolint, Bun tests, integridade do pacote, gate arquitetural e build installável. Lefthook repete lint e formatação no commit. Não altere configurações de conta ou instale monitores de CI.
 
-Os hooks são opt-in: `hooks:install` instala Lefthook no checkout atual. O pre-commit executa Oxlint e a verificação Oxfmt, sem formatar ou adicionar arquivos automaticamente. Isso evita alterar o conjunto de mudanças preparado por você.
+## Effect e fronteiras
 
-## Comandos
+Configurações, flags, migração, render, versões e planejamento de release retornam Effect com erros tipados. Effect Schema valida dados de runtime antes de efeitos. `scripts/adapters/` concentra APIs nativas e bibliotecas externas: filesystem, OpenTUI, parser OXC e operações de publicação. Async/Promises e try/catch nativos são permitidos nessas fronteiras; não devem se espalhar pelo domínio. Os pontos de entrada executam um único programa Effect e traduzem o resultado para stdout/stderr.
 
-| Script                 | Efeito                                                               |
-| ---------------------- | -------------------------------------------------------------------- |
-| `bun run format`       | Formata arquivos e comentários JSDoc com Oxfmt                       |
-| `bun run format:check` | Verifica formatação sem escrever                                     |
-| `bun run lint`         | Oxlint com análise de tipos, checagem de tipos e regras JSDoc        |
-| `bun run typecheck`    | Executa a mesma configuração Oxlint com checagem de tipos habilitada |
-| `bun run test`         | Executa `bun test`                                                   |
-| `bun run validate`     | Verifica integridade do pacote offline                               |
-| `bun run check`        | Formatação, lint com tipos, testes e integridade, em sequência       |
+O gate usa AST para rejeitar async, await, new Promise, throw e try/catch nativos no domínio, preservando adaptadores legítimos e a execução no ponto de entrada. Também exige JSDoc de símbolos exportados e membros de interfaces expostas. Funções, tipos, interfaces, classes, constantes e membros públicos devem explicar comportamento e falhas pertinentes; não duplique tipos TypeScript em tags.
 
-Execute dentro de `mise exec --` se as ferramentas não estiverem no seu PATH.
+## Dependências
 
-## Configuração declarativa e JSDoc
+As dependências diretas usam caret e bun.lock reproduzível. OpenTUI/Solid é a base da TUI; tuiparts não é necessário para este editor. A faixa de Solid começa com caret e tem limite `<1.9.13`, pois 1.9.12 é o peer exato de OpenTUI 0.5.16. O limite mantém uma única implementação reativa também na instalação do consumidor, sem override incompatível com npm pack. Atualize o par somente após verificar compatibilidade. TypeScript 7 é a ferramenta de linguagem; OXC fornece o parser de AST, sem depender da antiga API JavaScript do compilador TypeScript.
 
-`.oxlintrc.json` habilita `options.typeAware` e `options.typeCheck`, com `oxlint-tsgolint` instalado. `.oxfmtrc.json` habilita `jsdoc`. As políticas ficam nos arquivos, sem flags de CLI para escolher regras ou opções de estilo. A flag operacional `--check` apenas escolhe verificação em vez de escrita.
+## Pacote instalável
 
-Documente com JSDoc toda API pública, exposta ou exportada conforme [AGENTS.md](../AGENTS.md). As regras nativas escolhidas validam tags, parâmetros e retornos documentados; não representam cobertura completa de toda ausência possível de comentário. A revisão continua verificando esse requisito. Não se usa uma regra nativa `require-jsdoc` inexistente nesta configuração.
+`bun run build` produz JavaScript em dist/ com o plugin oficial Solid e chunks separados. A ordem de carga mantém o preload concluído antes de importar consumidores Solid. Isso evita depender do bunfig.toml ou da transformação de TSX dentro de node_modules no computador receptor. `prepack` chama o build via mise; o adaptador de release também constrói explicitamente antes de npm pack --ignore-scripts.
 
-Referências oficiais: [tipos no Oxlint](https://oxc.rs/docs/guide/usage/linter/type-aware), [configuração Oxlint](https://oxc.rs/docs/guide/usage/linter/config), [JSDoc no Oxfmt](https://oxc.rs/docs/guide/usage/formatter/config-file-reference), [tarefas mise](https://mise.jdx.dev/tasks/toml-tasks.html) e [Lefthook](https://lefthook.dev/).
+## Verificação real
 
-## O que os testes provam
+Além dos testes de domínio, execute setup inicial, edição, cancelamento, erros, migração, mouse/teclado, resize, render redirecionado e pacote instalado em ambiente limpo. Guarde evidências de terminal fora dos arquivos distribuídos. Linux e Windows têm gates separados em validation.yml; um teste local Linux não comprova resultado Windows.
 
-O validador verifica arquivos essenciais, links Markdown inline locais, referências fixadas e marcadores da licença. Os testes exercitam casos válidos e inválidos, incluindo links fora do pacote. Ele não é um parser Markdown completo, não verifica links externos nem confirma conformidade jurídica, ausência de segredos ou comportamento de um modelo. A revisão humana de conteúdo e privacidade continua necessária.
+## Checkpoints
 
-## Distribuição
+Faça commits e pushes dos checkpoints autorizados e confirme o SHA remoto. Branches `codex/**`, `work/**` e `feature/**` não acionam publish.yml. Branches `main`, `release/**` e tags `v*` podem publicar e exigem autorização de publicação antes de push. Nunca coloque handoffs privados, credenciais ou estado pessoal no pacote.
 
-O pacote npm distribui documentação, instruções, modelos, exemplos e o CLI de configuração e handoff de setup `holydot`, que exige Bun 1.4. Não oferece servidor ou API própria de conta: a aplicação de regras aceitas pertence ao host autenticado e seus controles reais. Consulte [configuração](setup.md). Para contribuir, use o checkout GitHub com as ferramentas de desenvolvimento; a distribuição npm é voltada ao consumo do texto.
-
-Os workflows deste repositório usam a action oficial do mise. `validation.yml` contém a verificação, incluindo `bun test`; `dev.yml` trata pushes de desenvolvimento e `stable.yml` tags estáveis `v*`. A publicação depende das permissões e da configuração do responsável no GitHub/npm. Não há monitoramento ou review bot para outros repositórios.
-
-Consulte [publicação e recuperação](releases.md) para versões dev/stable, bootstrap do pacote npm e configuração de trusted publishers pelo responsável.
+Os bumps de X/Y/Z estão em [versões e publicação](releases.md); não são comandos públicos da CLI.

@@ -1,63 +1,39 @@
 # holydot
 
-Políticas de trabalho do HolyCodex 0.17 adaptadas para um dot que você já usa no ChatGPT. Um pacote de instruções e contratos reutilizáveis, sem aplicativo de assistente, servidor ou runtime de orquestração próprio. Inclui um gerador local de configuração e instruções.
+Instruções reutilizáveis e configuração local para um dot existente. O holydot pesquisa, prepara, executa e coordena trabalho dentro do escopo autorizado, com eficiência, mergeability, qualidade e autonomia. Não exige HolyCodex instalado.
 
-O objetivo é simples: definir o resultado esperado, dividir trabalho quando isso ajudar e aceitar entregas com evidências verificáveis. O pacote não recria capacidades que o ambiente já oferece.
+## Uso
 
-## Comece pelo CLI
-
-Requer Bun 1.4. Depois da primeira versão estável publicada no npm, rode:
+A versão-base do produto é **0.1.0**. Depois de publicada, use a versão exata disponível no npm, sem instalação global ou dependência no seu projeto:
 
 ```sh
-bunx holydot@latest setup
+bunx holydot@0.1.0 setup
+bunx holydot@0.1.0 render > holydot.instructions.md
 ```
 
-`bunx` executa o pacote sem `bun add`, instalação global ou dependência no seu projeto. A tag `latest` aponta para a versão estável atual; use `bunx holydot@X.Y.Z setup` com a versão exata publicada quando quiser reprodução estável. A tag `dev` é separada e só pode ser usada se houver uma pré-versão publicada. Consulte [instalação e configuração](docs/setup.md) para opções, limitações e persistência local.
-
-Isso cria ou reutiliza uma configuração local e imprime o plano completo assistido pelo host. O CLI não aplica regras nem muda sua conta. A presença do código neste repositório, sozinha, não significa que um pacote ou uma tag npm já exista.
-
-## Use as instruções diretamente
-
-1. Leia [limites e uso](docs/usage.md).
-2. Copie [as instruções principais](instructions/holydot.md) para uma mensagem na conversa do seu dot e peça que sejam usadas na tarefa atual.
-3. Descreva a tarefa usando [o contrato](templates/task.md). Para uma pergunta simples, uma frase basta.
-4. Confira a resposta com [os exemplos de aceitação](examples/acceptance.md).
-
-Isso não instala nada. Uma mensagem não garante aplicação permanente. Se seu ambiente oferecer um campo apropriado de instruções, você pode usar o mesmo texto ali, respeitando os limites e as regras desse ambiente. Este projeto não pressupõe um menu específico nem uma API de configuração de dots.
-
-## Preferências locais opcionais
-
-Consulte [instalação e configuração](docs/setup.md) para ajustar o modelo delegado, esforço, velocidade e intervalo de status por projeto (30 minutos por padrão). O dot envia panoramas periódicos e não avisa sobre progresso a cada mudança; a exceção é uma notificação de pronto para merge pedida explicitamente. Decisões e aprovações iniciais usam controles estruturados. Fast é opt-in e pode ser alterado depois. A preferência de intervalo não instala um agendador; quando o host tiver automação real, autorizada e verificável, o dot pode usá-la para enviar mensagens separadas por projeto. O CLI prepara um setup assistido pelo host: quando houver controles reais, o host deve apresentar as aprovações, aplicar regras aceitas e verificar o estado. O CLI sozinho não altera a conta.
-
-## Conteúdo
-
-- [Instruções principais](instructions/holydot.md): coordenação, escopo e aceitação
-- [Especialistas](instructions/specialist.md): contrato opcional para delegação real
-- [Contrato de tarefa](templates/task.md): intenção, critérios e evidências
-- [Relatório de resultado](templates/result.md): resultado, verificações e limites
-- [Mapa da adaptação](docs/adaptation.md): o que veio do HolyCodex e o que não foi portado
-- [Proveniência](docs/provenance.md): fontes públicas fixadas e licença
-- [Índice de políticas](docs/policy-index.md): cobertura e limites de cada política
-- [Regras da conta](docs/account-rules.md): setup guiado, aprovação e verificação pelo host
-
-## O que o pacote não faz
-
-Não impõe seleção de modelo ou esforço de raciocínio, instala ferramentas, concede acesso, cria agentes ou impõe isolamento. As preferências de Root e especialista dependem dos controles de roteamento reais do host e não são prova de seleção efetiva. Não inclui monitor de CI, review bot ou agendador próprio para o dot. Relatórios periódicos dependem da automação real do host, quando disponível e autorizada. Os workflows deste próprio repositório verificam e distribuem o pacote; não monitoram outros projetos.
-
-As instruções são orientação comportamental, não garantias executáveis. A validação local verifica a integridade deste pacote, não o comportamento de um modelo.
-
-## Verificação local
-
-Em um checkout Git deste repositório, com [mise](https://mise.jdx.dev/) instalado:
+Estes comandos descrevem o candidato 0.1.0; a existência deste checkout não comprova publicação. O bootstrap anterior tem outra interface. Para avaliar o checkout local:
 
 ```sh
-mise install
-mise exec -- bun install --frozen-lockfile
-mise exec -- bun run check
+bun scripts/cli.ts setup
+bun scripts/cli.ts render > holydot.instructions.md
+bun scripts/cli.ts -h
+bun scripts/cli.ts --version
 ```
 
-Esses comandos são para desenvolver e verificar o pacote. Para apenas usar o texto, não é necessário instalar ferramentas. Consulte [desenvolvimento](docs/development.md) para testes, JSDoc, hooks e publicação. Nenhuma instalação configura o seu dot automaticamente.
+`setup` abre um editor OpenTUI + Solid, cria ou altera `holydot.config.json` e salva somente quando você escolhe Save. Esc/Cancel cancela. Ao terminar, orienta executar `render`; não imprime as instruções completas. `render` imprime o texto configurado em UTF-8, sem alterar a conta ou o host.
 
-## Origem e licença
+Padrões: coordenação de sessões delegadas GPT-6.1 Sol / medium; especialistas GPT-6 Luna / high; Standard, com Fast opt-in; panorama de 30 minutos como preferência, sem criar agendamento. Repositório e branch pertencem a cada tarefa, não ao setup geral.
 
-Adaptação independente do [HolyCodex 0.17.0](https://github.com/davidbasilefilho/holycodex/tree/ff1b9ff5c2f35100095f19a4b55802bb931f6434), com fonte fixada em commit, sob [Apache-2.0](LICENSE). Consulte [NOTICE](NOTICE). Não é um produto oficial da OpenAI e não implica endosso.
+## Documentação
+
+- [Setup, edição e migração](docs/setup.md)
+- [Uso e limites do host](docs/usage.md)
+- [Permissões e regras de conta](docs/account-rules.md)
+- [Adaptação e atribuição](docs/adaptation.md)
+- [Proveniência pública](docs/provenance.md)
+- [Desenvolvimento e arquitetura Effect](docs/development.md)
+- [Versões e publicação](docs/releases.md)
+- [Mapa de políticas e evidências](docs/policy-index.md)
+- [Aceitação real](examples/acceptance.md)
+
+Licença Apache-2.0. Preserve [LICENSE](LICENSE) e [NOTICE](NOTICE) ao redistribuir materiais derivados.

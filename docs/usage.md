@@ -1,86 +1,29 @@
-# Uso e limites
+# Uso e responsabilidade
 
-## Base no produto existente
+O holydot funciona pelas instruções e ferramentas do dot existente. Não depende do HolyCodex 0.17 para pesquisar, preparar trabalho, executar etapas compatíveis e coordenar especialistas disponíveis.
 
-A documentação oficial recomenda dar instruções claras na conversa e definir o escopo das ações. Regras customizadas são opcionais e não concedem acesso a aplicativos nem removem salvaguardas. Consulte [controles do dot](https://learn.chatgpt.com/docs/dots/controls).
+## Execução
 
-Baixar este repositório ou instalar sua distribuição npm apenas entrega arquivos. Para aplicar o holydot, forneça as instruções ao seu dot e defina a tarefa ou responsabilidade a que elas se aplicam. `AGENTS.md` orienta contribuições neste repositório; não é um mecanismo de importação global para o dot na nuvem.
+Priorize capacidades adequadas nesta ordem: dot, subagentes nativos e computador cloud do dot; Codex Cloud quando necessário; outro computador somente para dependências reais daquele ambiente. O tamanho da tarefa não escolhe o ambiente sozinho. Verifique capacidade, permissão e conexão reais.
 
-## Aplicar a uma tarefa
+Autonomia leva o trabalho autorizado ao resultado combinado. Não inventa autorização para publicar, fazer merge, implantar, enviar mensagens ou alterar contas. Aproveite aprovações informadas ainda válidas para a mesma ação e escopo. Uma ordem de parada interrompe novas ações e atribuições; preserve checkpoints e distinga solicitação de confirmação de parada.
 
-Leia `instructions/holydot.md` e envie seu conteúdo ao dot junto de um pedido concreto. Exemplo:
+## Coordenação e especialistas
 
-> Use estas orientações nesta tarefa, dentro das suas permissões atuais. Revise a documentação deste projeto. Entregue as correções propostas e as fontes usadas; não publique ainda.
+Os papéis são distintos: coordenação de sessões delegadas prefere GPT-6.1 Sol / medium; especialistas preferem GPT-6 Luna / high. Standard é padrão e Fast é opt-in. Essas escolhas só valem quando suportadas por controles reais; uma configuração salva não comprova roteamento. Não altere o modelo principal do dot.
 
-O arquivo é a instrução reutilizável; o pedido define o trabalho autorizado. Anexar um arquivo ou enviar um link não comprova que o conteúdo foi lido. Peça uma breve confirmação do objetivo e dos limites, sem solicitar instruções internas do assistente.
+Use atribuições delimitadas, critérios de aceitação e propriedade de arquivos. Reutilize agentes compatíveis e preserve o trabalho concorrente. Um revisor independente deve ser distinto do autor; se só houver autocheck, declare essa limitação.
 
-Se a plataforma exigir aprovação, autenticação ou controle de conta dedicado, use-o primeiro; uma pergunta genérica não o substitui. Decisões, opiniões, pedidos de ação e aprovações iniciais usam formulário, controle dedicado ou ferramenta estruturada de perguntas apropriada. Nunca apresente opções em texto comum. Se nenhum controle adequado estiver disponível, informe o bloqueio sem pedir a decisão por texto.
+## Perguntas e comunicação
 
-## Atualizações de status por projeto
+Agrupe perguntas relacionadas em lotes numerados, com alternativas concisas e possibilidade de resposta personalizada. Prefira um controle estruturado efetivamente funcional. Sem ele, o lote pode ser apresentado em texto; controles obrigatórios de aprovação/autenticação/conta continuam obrigatórios. Não trate uma chamada aceita como formulário exibido ou resposta recebida.
 
-O padrão é um panorama breve por projeto ativo a cada 30 minutos, configurável nas preferências locais entre 1 e 1440 minutos. Não envie atualizações proativas de progresso fora desse intervalo, mesmo diante de mudança substancial; inclua mudanças no próximo panorama. A única exceção é uma notificação imediata de pronto para merge que o usuário tenha pedido explicitamente. Se o usuário pedir status, responda imediatamente com uma mensagem separada por projeto. Cada resumo inclui estado, mudanças desde o último panorama, evidências verificadas, próxima etapa e verificações pendentes. Se nada mudou, diga isso brevemente. Para decisão/opinião/ação/aprovação necessária, use formulário, controle dedicado ou ferramenta estruturada de perguntas apropriada, sem esperar o panorama. Nunca reporte opções em texto comum. Não trate pedido aceito por uma ferramenta como prova de exibição. Lembretes de intervenção são mensagens breves, separadas do panorama, e só ocorrem no intervalo para projetos com pedido essencial ainda sem resposta ou ciência; limite-os a esses pedidos. Não repita pedidos respondidos, reconhecidos, cancelados, resolvidos ou substituídos, e não envie lembrete quando não houver pendência essencial. Nunca invente progresso.
+Entregue o resultado primeiro. Respostas curtas não precisam de introduções artificiais; respostas extensas usam headings Markdown reais, títulos em negrito e ênfase discreta no corpo. Preserve UTF-8 e confira a renderização real quando houver sinais de corrupção.
 
-O intervalo local não cria um agendador. Use uma automação periódica somente por uma ferramenta existente, autorizada e suportada pelo host, e confira o estado salvo antes de afirmar que está ativa. Se não houver esse recurso, informe a limitação; não instale cron, daemon, serviço ou monitor no projeto.
+## Status
 
-Use o campo de instruções que seu produto disponibilizar somente se ele realmente existir e aceitar esse conteúdo. O projeto não oferece um instalador remoto ou um fluxo universal de configuração do produto. Uma conversa pode perder contexto; não há garantia de persistência entre tarefas ou sessões.
+O padrão é uma preferência configurável de panorama de 30 minutos. Isso não cria acompanhamento nem agenda pessoal. Use uma ferramenta real e autorizada antes de afirmar que está ativo. Em panoramas efetivos, dê uma mensagem curta por projeto ainda ativo; remova concluídos dos seguintes. Responda imediatamente a pedidos de status. Decisões necessárias, urgências e notificações imediatas explicitamente pedidas podem exigir comunicação fora da cadência.
 
-## Autonomia de baixo risco
+## Evidência
 
-Você pode autorizar diagnóstico, correção, testes e publicação para um projeto delimitado. Defina destino, tipo de mudança e exclusões. Por exemplo:
-
-> No repositório example-org/example-project, pode corrigir erros de documentação, verificar links e publicar essas correções em uma branch de trabalho com PR em rascunho, sem pedir nova confirmação a cada etapa. Não faça merge, release, implantação, alteração de permissões, dependências ou conteúdo confidencial. Se o impacto sair desse escopo, me consulte.
-
-Esse exemplo é fictício: substitua o destino e ajuste a autorização. Não o trate como uma autorização já concedida. Uma autorização para publicar conteúdo não autoriza conceder acesso ou divulgar dados sensíveis. A avaliação deve considerar impacto e reversibilidade; "baixo risco" não significa ausência de risco. Aprovações exigidas pela plataforma continuam necessárias.
-
-Sem autorização de publicação, prepare a proposta e obtenha a decisão necessária antes de torná-la pública. Não repita pedidos já resolvidos se ação, destino, dados e risco permanecerem dentro da autorização.
-
-## Regras customizadas opcionais
-
-No produto documentado, elas ficam em Settings > Personalization > Permissions > Custom rules. Use a [documentação oficial de controles](https://learn.chatgpt.com/docs/dots/controls) para o fluxo atual. Instruções de coordenação continuam na conversa; uma regra define quando uma ação pode ser tomada.
-
-Se seu dot oferecer regras customizadas para confirmações, use [o setup guiado](account-rules.md) para que ele apresente as propostas nos controles reais, aplique somente mudanças aceitas e verifique o resultado. Você também pode pedir explicitamente uma regra ajustada ao seu projeto. Confira e aprove o texto exato antes de aceitar. As instruções deste repositório, por si só, não criam uma regra nem autorizam ações.
-
-Exemplo genérico:
-
-> Em [owner/repo], permita corrigir problemas de baixo risco, testar e publicar na branch [branch] quando eu solicitar esse trabalho. Não faça merge, release ou deploy, nem altere acessos, custos ou dados sensíveis. Consulte-me se o escopo ou o risco mudar materialmente. Respeite as aprovações obrigatórias da plataforma.
-
-Substitua os campos antes de solicitar a regra. Esse exemplo cobre trabalhos que você solicitar no destino escolhido; não autoriza procurar e publicar mudanças arbitrárias. Cada pessoa precisa optar pela própria regra. Ela trata de confirmação de ações; os contratos deste pacote tratam de coordenação e qualidade. Não tente usar uma regra para contornar limites de segurança. Se o recurso não estiver disponível, mantenha a autorização explícita no pedido da tarefa.
-
-## Ajustar sem duplicar o ambiente
-
-A ordem de execução considera capacidades, permissões e dependências. Faça tarefas pequenas e preparação no dot, usando subagentes nativos do holydot quando disponíveis e compatíveis com essa etapa. Eles não são especialistas geridos por HolyCodex Root e não substituem nem contornam o Root na execução grande. Entregue o plano e as evidências a um HolyCodex Root real quando a execução grande começar e a integração estiver disponível e autorizada; esse Root coordena seus especialistas. Use Roots adicionais somente para frentes grandes independentes que precisem de execução paralela e tenham suporte real. Priorize o trabalho direto do dot, seus subagentes nativos compatíveis e seu próprio computador cloud antes de Codex Cloud; o computador cloud do dot é distinto de uma sessão Codex Cloud. Recorra ao Codex em outro computador por último e só para uma dependência real de sessão, arquivo, hardware ou comportamento local, com acesso autorizado. O porte da tarefa não determina o encaminhamento. Verifique integrações e capacidades antes de usá-las ou alegar que existem; o futuro preset embedding do HolyCodex não está implementado por este pacote. Sem Root disponível, explique a limitação e só prossiga por uma alternativa suportada e autorizada.
-
-Use o computador do usuário somente quando uma etapa depender realmente de sessão, arquivo, hardware ou comportamento exclusivamente local e dentro das permissões concedidas. Prefira o dot e seu cloud quando puderem realizar a mesma etapa. Uma conexão existente não justifica operar a máquina, e o CLI não cria acesso a ela.
-
-Quando navegador, computador ou conexão de aplicativo forem relevantes, confira disponibilidade e acesso reais; não assuma disponibilidade ou indisponibilidade sem verificar. Evite pedir conexão local quando as ferramentas do dot/cloud bastarem. Se uma dependência exclusiva local existir e o acesso estiver autorizado, use a máquina apenas para essa etapa e continue o trabalho independente.
-
-Cloud-first não significa uso gratuito: a documentação distingue conversas com o dot das tarefas Work/Codex, que seguem os limites dos respectivos produtos. Uso local e cloud compartilham a franquia aplicável. Prefira ferramentas diretas para consultas simples, reúna etapas úteis em tarefas existentes e evite sessões e níveis de velocidade desnecessários. Consulte [uso de dots](https://learn.chatgpt.com/docs/dots) e [limites e preços atuais](https://learn.chatgpt.com/docs/pricing); este pacote não garante economia nem monitora sua franquia.
-
-No HolyCodex, continue normalmente na mesma sessão e conta quando o trabalho relacionado for compatível, mantendo modelo, configuração e prefixo estáveis. Peça ao Root que reutilize especialistas compatíveis. Inicie outra sessão somente quando o trabalho ou o host exigir; não crie turnos ociosos de keepalive. Mantenha instruções estáveis, busque apenas fontes pertinentes e envie handoffs concisos com o delta necessário; evite dumps de transcrições e turnos de status redundantes. Preserve o material e as verificações necessários, sem impor limites de tokens à execução. Eficiência deve ser medida externamente e não alegada sem benchmarks e dados do host.
-
-Nota de manutenção: a documentação da [OpenAI sobre cache de prompts](https://developers.openai.com/api/docs/guides/prompt-caching) exige prefixo de tokens estável para cache hit; reutilizar uma sessão sozinho não o garante, e compactar/reformular o prefixo pode mudar o resultado. Os [diagnósticos](https://developers.openai.com/api/docs/guides/prompt-caching/diagnostics) descrevem `usage.input_tokens_details.cached_tokens`. Cache pode expirar, mas este pacote não promete janelas de tempo nem cria keepalives. A documentação de API não prova que o dot ou o Codex exponham o mesmo controle ou métricas. Em avaliações externas, compare input novo/em cache e o total do trabalho concluído, além da qualidade e latência; não altere configurações do host nem alegue economia sem suporte e benchmark representativos.
-
-Modelo de estimativa para manutenção: use como hipótese para HolyCodex e holydot um custo ponderado API-equivalente, somando input novo, input em cache e output com os respectivos pesos documentados para a API. Essa aproximação orienta comparações de fluxo; não é a fórmula confirmada do Pro, não prevê saldo restante nem reproduz necessariamente o uso incluído na assinatura. Mantenha os pesos vinculados à documentação atual, não fixe multiplicadores nesta instrução e trate qualquer ganho como não medido até que benchmarks representativos o confirmem.
-
-O dot já pode dividir trabalho em tarefas com contextos próprios. Envie a cada tarefa o objetivo e as fontes necessárias; não suponha que ela recebeu toda a conversa. Confira o resultado efetivo, pois uma execução encerrada não comprova por si só a entrega. Veja [tarefas e memória](https://learn.chatgpt.com/docs/dots/tasks-and-memory). Conexões de aplicativos e computadores são separadas, conforme o [guia inicial](https://learn.chatgpt.com/docs/dots/getting-started).
-
-- Mantenha as capacidades de pesquisa, execução, delegação e GitHub oferecidas pelo ambiente.
-- Não instale monitor de CI, review bot, cron, daemon ou serviço de agendamento por causa deste pacote. Relatórios periódicos pedidos pelo usuário dependem da automação já oferecida pelo host.
-- Se o pedido incluir acompanhar CI/revisões, use a capacidade existente e descreva o que foi realmente observado. Não prometa acompanhamento sem suporte real.
-- Para a execução de uma tarefa grande, verifique a integração HolyCodex Root real. Se não estiver disponível, continue diretamente apenas com o que for viável e autorizado, sem alegar orquestração ou revisão independente. Não use Codex Cloud ou o computador do usuário como substituto automático só pelo porte; explique limitações e siga apenas por uma alternativa suportada.
-- A preferência para Roots coordenadores é GPT-6.1 Sol com esforço `medium`; para especialistas delegados, GPT-6 Luna com esforço `high`. Use os controles reais e confira evidência de roteamento efetivo antes de atribuir a tarefa. Se não houver suporte, informe a limitação e use somente um fallback suportado e autorizado, sem trocar silenciosamente os papéis. O texto não impõe modelos nem reserva recursos.
-- Não copie limites numéricos de contexto do HolyCodex para configurar o dot. Use as capacidades reais do ambiente.
-
-## Visualizações e interfaces
-
-Use renderização rica nativa/DIL, visualizações, cartões de fontes e imagens quando os recursos reais da interface melhorarem compreensão, exploração, comparação, navegação ou comunicação. Escolha entre gráficos, tabelas, mapas, linhas do tempo, diagramas, cartões de entidades, mídia e carrosséis conforme a tarefa; confira a renderização efetiva e lide com falhas de entrega de modo específico. Ao pesquisar na web, apresente cartões nativos de fontes/resultados ao final quando o host oferecer suporte, com links descritivos. Apresente resultados de imagens pelos mecanismos de renderização disponíveis e posicione as imagens conforme o assunto e o layout: para assuntos reconhecíveis, prefira uma imagem forte perto do início, use texto fluindo ao redor quando suportado e considere galerias quando ajudarem. A disponibilidade depende da conta e da interface. Use uma saída alternativa útil quando necessário e não invente uma API de instalação nem alegue execução sem evidência. Consulte [Visualizations](https://learn.chatgpt.com/docs/visualizations) para os recursos documentados.
-
-O ciclo de inspeção da interface real é uma política de qualidade desta adaptação: a coordenação principal deve avaliar evidências visuais, corrigir defeitos e verificar novamente, sem tratar build ou mockup como prova da experiência implementada. Isso não instala navegador, biblioteca ou runtime.
-
-## Verificar na prática
-
-Experimente os cenários de [aceitação](../examples/acceptance.md) em uma tarefa sem efeitos externos. Observe se o dot mantém escopo, distingue evidência de inferência e reconhece limitações. Essa avaliação manual não certifica comportamento futuro.
-
-## Atualizar ou remover
-
-Substitua o texto que você inseriu, ou peça para deixar de aplicá-lo às próximas tarefas. Se usou um campo de instruções persistentes, remova-o nesse mesmo campo. Isso não desfaz ações já realizadas e não altera as regras do produto.
+Teste o comportamento relevante, os caminhos de erro e a interface implementada. Build, imagem sintética e testes de texto não substituem aceitação visual. Diferencie gates aprovados, falhos, bloqueados e não executados, bem como commit local, commit remoto, CI e pacote publicado. Não alegue ganhos de cache, custo, gratuidade ou consumo sem evidência do host.

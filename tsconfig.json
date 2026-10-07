@@ -9,8 +9,11 @@
     "exactOptionalPropertyTypes": true,
     "verbatimModuleSyntax": true,
     "noEmit": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "jsx": "preserve",
+    "jsxImportSource": "@opentui/solid",
+    "allowImportingTsExtensions": true
   },
-  "include": ["scripts/**/*.ts", "tests/**/*.ts"],
+  "include": ["scripts/**/*.ts", "scripts/**/*.tsx", "tests/**/*.ts", "tests/**/*.tsx"],
   "exclude": ["node_modules", "dist"]
 }

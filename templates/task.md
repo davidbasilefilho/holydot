@@ -15,7 +15,7 @@ Modelo simplificado e modificado a partir de Intent, Assignment e AssignmentMeta
 - Efeitos externos já autorizados:
 - Restrições e autorizações já concedidas:
 
-Use o contrato completo somente quando a complexidade ou o handoff exigir; deixe de fora campos sem efeito nesta tarefa. Para uma tarefa simples, uma frase pode bastar. Antes de uma execução grande pelo HolyCodex Root, resolva no holydot as dúvidas materiais de requisitos que possam ser esclarecidas e não deixe o Root redescobrir decisões já disponíveis.
+Use o contrato completo somente quando a complexidade ou o handoff exigir; deixe de fora campos sem efeito nesta tarefa. Para uma tarefa simples, uma frase pode bastar. Antes de delegar uma execução, resolva as dúvidas materiais de requisitos que possam ser esclarecidas; agrupe decisões relacionadas em lotes numerados e não deixe o executor redescobrir decisões já disponíveis. HolyCodex não é dependência operacional deste contrato.
 
 Preencha a seção abaixo somente se houver delegação real ou múltiplas etapas que precisem de coordenação.
 
