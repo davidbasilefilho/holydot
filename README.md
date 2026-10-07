@@ -27,7 +27,7 @@ Isso não instala nada. Uma mensagem não garante aplicação permanente. Se seu
 
 ## Preferências locais opcionais
 
-Consulte [instalação e configuração](docs/setup.md) para ajustar o modelo delegado, esforço, velocidade e intervalo de status por projeto (30 minutos por padrão). Fast é opt-in e pode ser alterado depois. A preferência de intervalo não instala um agendador; quando o host tiver automação real, autorizada e verificável, o dot pode usá-la para enviar mensagens separadas por projeto. O CLI prepara um setup assistido pelo host: quando houver controles reais, o host deve apresentar as aprovações, aplicar regras aceitas e verificar o estado. O CLI sozinho não altera a conta.
+Consulte [instalação e configuração](docs/setup.md) para ajustar o modelo delegado, esforço, velocidade e intervalo de status por projeto (30 minutos por padrão). O dot envia panoramas periódicos, sem mensagens proativas de progresso a cada mudança; pedidos necessários ao usuário usam o controle de pergunta/aprovação adequado. Fast é opt-in e pode ser alterado depois. A preferência de intervalo não instala um agendador; quando o host tiver automação real, autorizada e verificável, o dot pode usá-la para enviar mensagens separadas por projeto. O CLI prepara um setup assistido pelo host: quando houver controles reais, o host deve apresentar as aprovações, aplicar regras aceitas e verificar o estado. O CLI sozinho não altera a conta.
 
 ## Conteúdo
 

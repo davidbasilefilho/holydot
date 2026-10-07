@@ -96,15 +96,54 @@ describe("offline package validation", () => {
     );
     const usage = readFileSync(new URL("../docs/usage.md", import.meta.url), "utf8");
     const setup = readFileSync(new URL("../docs/setup.md", import.meta.url), "utf8");
-    expect(instructions).toContain("mudança substancial em cada projeto");
-    expect(instructions).toContain("mensagens separadas por projeto");
-    expect(instructions).toContain("estado (em andamento, concluído ou bloqueado)");
-    expect(instructions).toContain("Não invente progresso");
-    expect(instructions).toContain("não instala nem inicia um agendador");
-    expect(usage).toContain("padrão é uma atualização curta por projeto ativo a cada 30 minutos");
+    const statusSection =
+      instructions.split("## Panorama periódico de status por projeto")[1]?.split("\n## ")[0] ?? "";
+    expect(statusSection).toContain(
+      "Não envie mensagens proativas de andamento fora do intervalo configurado",
+    );
+    expect(statusSection).toContain("mesmo quando houver mudança substancial");
+    expect(statusSection).toContain("padrão é 30 minutos");
+    expect(statusSection).toContain("uma mensagem por projeto");
+    expect(statusSection).toContain("mudanças desde o último panorama e evidências verificadas");
+    expect(statusSection).toContain("responda imediatamente nesse mesmo formato");
+    expect(statusSection).toContain(
+      "No panorama periódico, lembre somente pedidos de intervenção ainda pendentes",
+    );
+    expect(statusSection).toContain("não inclua seção de ação do usuário");
+    expect(statusSection).toContain("use primeiro o formulário/controle dedicado quando exigido");
+    expect(statusSection).toContain("ferramenta estruturada permitida e apropriada");
+    expect(statusSection).toContain(
+      "nunca substitua um controle obrigatório nem vire uma lista de opções improvisada",
+    );
+    expect(statusSection).toContain("relate falha ou incerteza honestamente");
+    expect(statusSection).toContain("Não invente progresso");
+    expect(statusSection).not.toContain("atualização imediata");
+    expect(statusSection).not.toContain("mensagens imediatas");
+    expect(statusSection).toContain("não instala nem inicia um agendador");
+    expect(usage).toContain(
+      "padrão é um panorama de status curto por projeto ativo a cada 30 minutos",
+    );
     expect(setup).toContain('"intervalMinutes": 30');
     expect(setup).toContain("--status-interval-minutes 60");
     expect(setup).toContain("O CLI não cria cron, daemon ou serviço de fundo");
+    expect(setup).toContain("Não envie progresso proativo fora do intervalo");
+    expect(setup).toContain("decisão, opinião, ação ou aprovação for necessária");
+    expect(setup).toContain("lembre apenas intervenções pendentes");
+    expect(setup).toContain("não repita pedidos resolvidos, cancelados ou substituídos");
+  });
+
+  test("status acceptance examples suppress progress churn and track only pending interventions", () => {
+    const acceptance = readFileSync(new URL("../examples/acceptance.md", import.meta.url), "utf8");
+    const panoramaPolicy = [
+      "não enviar mensagens proativas de andamento fora do intervalo de 30 minutos configurado",
+      "Inícios de verificação, login confirmado, push na fila, CI intermediária e transferências não viram avisos separados",
+      "Um pedido direto de status recebe resposta imediata, uma por projeto",
+      "lembre apenas pedidos ainda pendentes sem resposta/ciência",
+      "omita a seção de ação do usuário quando não houver pendência",
+      "Um pedido aceito pela ferramenta não prova que foi exibido",
+    ];
+    for (const rule of panoramaPolicy) expect(acceptance).toContain(rule);
+    expect(acceptance).toContain("não repita os respondidos, cancelados ou substituídos");
   });
 
   test("accepts a complete fixture and its local and external links", () => {

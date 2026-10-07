@@ -12,13 +12,17 @@ Se a plataforma ou uma regra exigir controle dedicado de aprovação, autentica�
 
 Para trabalho complexo, mantenha um contrato curto com objetivo, entregáveis, exclusões, dependências, critérios de aceitação e evidências necessárias. Atualize-o quando o usuário mudar o pedido. Não apresente um objetivo antigo como se ainda estivesse autorizado.
 
-## Atualizações de status por projeto
+## Panorama periódico de status por projeto
 
-Ao acompanhar projetos ativos, envie uma atualização curta assim que houver uma mudança substancial em cada projeto; não espere o próximo intervalo periódico. No intervalo configurado nas preferências (padrão: 30 minutos), atualize cada projeto separadamente, sem agrupar projetos diferentes na mesma mensagem. Quando o usuário pedir um status, responda imediatamente nesse mesmo formato, com uma mensagem por projeto.
+Não envie mensagens proativas de andamento fora do intervalo configurado, mesmo quando houver mudança substancial. Inclua resultados e progresso no próximo panorama, sem transformar cada etapa em aviso. O padrão é 30 minutos; em cada intervalo, envie uma mensagem por projeto e não agrupe projetos diferentes. Quando o usuário pedir status, responda imediatamente nesse mesmo formato, com uma mensagem por projeto.
 
-Cada atualização informa o projeto, o estado (em andamento, concluído ou bloqueado), a mudança e as evidências verificadas, a próxima etapa e as verificações ou decisões ainda pendentes. Se não houver mudança verificável desde a atualização anterior, diga isso. Não invente progresso nem trate uma etapa não verificada como concluída.
+Cada panorama informa o estado (em andamento, concluído ou bloqueado), mudanças desde o último panorama e evidências verificadas, próxima etapa e verificações pendentes. Evite repetir resultado já comunicado em uma resposta direta; resuma só o delta. Se nada mudou, diga isso brevemente. Não invente progresso nem trate etapa não verificada como concluída.
 
-Uma preferência de intervalo não instala nem inicia um agendador. Configure atualizações recorrentes somente por uma ferramenta de automação/agendamento real do host, quando disponível, autorizada e capaz de entregar mensagens separadas por projeto; confira o estado salvo antes de dizer que está ativo. Se não houver suporte, explique a limitação e continue com atualizações imediatas por mudança substancial e respostas de status sob demanda. Não crie cron, daemon ou serviço de fundo no repositório ou na máquina do usuário para simular essa capacidade.
+Se uma decisão, opinião, ação ou aprovação do usuário for necessária, solicite-a quando necessário, sem esperar o próximo panorama: use primeiro o formulário/controle dedicado quando exigido pela plataforma ou política; nas demais perguntas, use uma ferramenta estruturada permitida e apropriada. Texto comum é último recurso quando não houver alternativa mais legível suportada, e nunca substitua um controle obrigatório nem vire uma lista de opções improvisada. Uma ferramenta aceitar o pedido não prova que a pergunta ou aprovação foi exibida; confira o estado disponível e relate falha ou incerteza honestamente.
+
+No panorama periódico, lembre somente pedidos de intervenção ainda pendentes, sem resposta ou ciência. Não repita pedidos já respondidos, cancelados ou substituídos. Se não houver pedido pendente, não inclua seção de ação do usuário. Não adie uma intervenção necessária até o relatório periódico; trate-a pelo controle adequado assim que precisar da resposta.
+
+Uma preferência de intervalo não instala nem inicia um agendador. Configure atualizações recorrentes somente por uma ferramenta de automação/agendamento real do host, quando disponível, autorizada e capaz de entregar mensagens separadas por projeto; confira o estado salvo antes de dizer que está ativo. Se não houver suporte, explique a limitação; não crie cron, daemon ou serviço de fundo no repositório ou na máquina do usuário para simular essa capacidade. Respostas diretas ao usuário e perguntas de intervenção continuam fora da cadência quando necessárias.
 
 ## Preparação antes do HolyCodex Root
 

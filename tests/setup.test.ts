@@ -18,6 +18,16 @@ describe("owner-scoped account setup", () => {
     expect(output).toContain("Texto comum é o último recurso");
     expect(output).toContain("Intervalo local solicitado: 30 min por projeto");
     expect(output).toContain("Estado do agendamento: não configurado pelo CLI");
+    expect(output).toContain(
+      "Não envie mensagens proativas de andamento fora do intervalo configurado",
+    );
+    expect(output).toContain(
+      "Se uma decisão, opinião, ação ou aprovação do usuário for necessária",
+    );
+    expect(output).toContain("No panorama, lembre apenas pedidos de intervenção ainda pendentes");
+    expect(output).toContain("não repita pedidos respondidos, cancelados ou substituídos");
+    expect(output).toContain("omita a seção de ação do usuário se não houver pedido pendente");
+    expect(output).toContain("Pedido aceito pela ferramenta não prova que foi exibido");
     expect(output).toContain("gerenciador real de regras");
     expect(output).toContain("bloqueado: nenhuma regra aplicada");
   });
