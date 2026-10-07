@@ -14,6 +14,7 @@ import { runCli } from "../scripts/cli";
 import { DEFAULT_CONFIG, parseConfig, resolveCodexHome } from "../scripts/config";
 import { parseFlags } from "../scripts/flags";
 import type { SetupPrompt } from "../scripts/setup";
+import manifest from "../package.json";
 
 const directories: string[] = [];
 /**
@@ -48,7 +49,7 @@ describe("runtime flags and informational output", () => {
     [["-v"], ["--version"], ["setup", "--version"], ["render", "-v"]].map((args) => ({ args })),
   )("version %j reads actual manifest", async ({ args }) => {
     const root = directory();
-    expect(await Effect.runPromise(runCli(args, root, cancel))).toBe("0.1.0\n");
+    expect(await Effect.runPromise(runCli(args, root, cancel))).toBe(`${manifest.version}\n`);
     expect(readdirSync(root)).toEqual([]);
   });
   test.each(
@@ -177,6 +178,66 @@ describe("settings and configured UTF-8 render", () => {
     ]) {
       expect(() => Effect.runSync(parseConfig(value))).toThrow();
     }
+  });
+  test.each([
+    { label: "null config", value: null },
+    { label: "array config", value: [] },
+    { label: "wrong schema version", value: { ...DEFAULT_CONFIG, schemaVersion: 3 } },
+    {
+      label: "delegation excess key",
+      value: { ...DEFAULT_CONFIG, delegation: { ...DEFAULT_CONFIG.delegation, extra: true } },
+    },
+    {
+      label: "coordinator excess key",
+      value: {
+        ...DEFAULT_CONFIG,
+        delegation: {
+          ...DEFAULT_CONFIG.delegation,
+          coordinator: { ...DEFAULT_CONFIG.delegation.coordinator, extra: true },
+        },
+      },
+    },
+    {
+      label: "specialist excess key",
+      value: {
+        ...DEFAULT_CONFIG,
+        delegation: {
+          ...DEFAULT_CONFIG.delegation,
+          specialist: { ...DEFAULT_CONFIG.delegation.specialist, extra: true },
+        },
+      },
+    },
+    {
+      label: "status excess key",
+      value: { ...DEFAULT_CONFIG, statusUpdates: { ...DEFAULT_CONFIG.statusUpdates, extra: true } },
+    },
+    ...["coordinator", "specialist"].flatMap((role) =>
+      ["extreme", null, 3].map((effort) => ({
+        label: `${role} invalid effort ${String(effort)}`,
+        value: {
+          ...DEFAULT_CONFIG,
+          delegation: {
+            ...DEFAULT_CONFIG.delegation,
+            [role]: { ...DEFAULT_CONFIG.delegation.coordinator, effort },
+          },
+        },
+      })),
+    ),
+    ...[0, -1, 1441, 30.5, "30", null, true].map((intervalMinutes) => ({
+      label: `invalid stored interval ${String(intervalMinutes)}`,
+      value: { ...DEFAULT_CONFIG, statusUpdates: { intervalMinutes } },
+    })),
+  ])("stored v2 schema rejects $label before prompt or writes", async ({ value }) => {
+    expect(Exit.isFailure(Effect.runSyncExit(parseConfig(value)))).toBe(true);
+    const root = directory();
+    const path = join(root, "holydot.config.json");
+    const original = JSON.stringify(value);
+    writeFileSync(path, original);
+    const forbiddenPrompt: SetupPrompt = () => Effect.die("invalid stored config reached prompt");
+    await expectFailure(runCli(["setup"], root, forbiddenPrompt));
+    await expectFailure(runCli(["render"], root, forbiddenPrompt));
+    expect(readFileSync(path, "utf8")).toBe(original);
+    expect(readdirSync(root)).toEqual(["holydot.config.json"]);
   });
   test("explicit config path works for setup/render and help needs no settings", async () => {
     const root = directory();

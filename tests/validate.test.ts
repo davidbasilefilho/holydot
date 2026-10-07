@@ -48,6 +48,32 @@ describe("offline package validation", () => {
     expect(instructions).toContain("licença Apache-2.0");
   });
 
+  test("adoption uses real rename and readback, preserves profile appearance and qualifies status claims", () => {
+    const instructions = readFileSync(
+      new URL("../instructions/holydot.md", import.meta.url),
+      "utf8",
+    );
+    const adoption = instructions.split("## Identidade e adoção")[1]!.split("\n## ")[0]!;
+    expect(adoption).toContain("Quando o dono pedir para adotar ou instalar");
+    expect(adoption).toContain("cloud_threads.change_orbit_name");
+    expect(adoption).toContain("definindo **holydot**");
+    expect(adoption).toContain("cloud_threads.get_orbit_profile");
+    expect(adoption).toContain("só afirme que o nome mudou se o resultado confirmar **holydot**");
+    expect(adoption).toContain("Preserve o avatar e as cores atuais");
+    expect(adoption).toContain("Não altere pet, imagem, cor, nem outras configurações do perfil");
+    expect(adoption).toContain("Diferencie instruções em uso de nome de perfil verificado");
+    expect(adoption).toContain("Se a alteração ou a verificação falhar ou não estiver disponível");
+    expect(adoption).toContain("o que continua pendente, com o próximo passo suportado");
+    expect(adoption).toContain("não comprova a mudança");
+    expect(adoption).toContain("sem pedir que o usuário repita uma autorização já explícita");
+    const status = instructions.split("## Atualizações de status")[1]!.split("\n## ")[0]!;
+    expect(status).toContain("Uma preferência de intervalo não cria um agendamento");
+    expect(status).toContain("confirme sua configuração antes de afirmar que está ativo");
+    expect(status).toContain("uma mensagem curta por projeto ainda ativo");
+    expect(status).toContain("verificação pendente");
+    expect(status).toContain("Responda imediatamente a pedidos de status");
+  });
+
   test("accepts a complete fixture and its local and external links", () => {
     const root = fixture();
     writeFileSync(

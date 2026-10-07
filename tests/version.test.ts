@@ -1,8 +1,8 @@
 import { expect, test } from "bun:test";
 import { Effect, Exit } from "effect";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { bumpManifest, bumpVersion } from "../scripts/version";
 
 test("X/Y reset lower axes and Z increments maintenance from absent or numeric suffix", () => {
@@ -42,3 +42,29 @@ test("manifest bump preserves unrelated fields and does not mutate an invalid re
     rmSync(root, { recursive: true, force: true });
   }
 });
+
+test.each(["x", "y", "z"])(
+  "bump %s keeps the CLI version suite valid in an isolated project",
+  (axis) => {
+    const root = mkdtempSync(join(tmpdir(), "holydot-bump-cli-"));
+    const source = resolve(import.meta.dir, "..");
+    try {
+      for (const entry of ["scripts", "instructions", "package.json", "bunfig.toml"])
+        cpSync(join(source, entry), join(root, entry), { recursive: true });
+      cpSync(join(source, "tests", "cli.test.ts"), join(root, "tests", "cli.test.ts"));
+      symlinkSync(join(source, "node_modules"), join(root, "node_modules"), "junction");
+      const before = JSON.parse(readFileSync(join(root, "package.json"), "utf8")).version;
+      const expected = Effect.runSync(bumpVersion(before, axis));
+      const bumped = Bun.spawnSync([process.execPath, "scripts/version.ts", axis], { cwd: root });
+      expect(bumped.exitCode).toBe(0);
+      expect(bumped.stdout.toString().trim()).toBe(expected);
+      expect(JSON.parse(readFileSync(join(root, "package.json"), "utf8")).version).toBe(expected);
+      const checked = Bun.spawnSync([process.execPath, "test", "tests/cli.test.ts"], { cwd: root });
+      expect(checked.stderr.toString()).toContain("0 fail");
+      expect(checked.exitCode).toBe(0);
+      expect(JSON.parse(readFileSync(join(source, "package.json"), "utf8")).version).toBe(before);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  },
+);
