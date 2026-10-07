@@ -28,7 +28,7 @@ No checkout do projeto, durante o desenvolvimento, execute `bun scripts/cli.ts s
 
 A criação atômica usa um hard link no mesmo diretório para não substituir um arquivo que apareça durante a operação. Se o diretório não for gravável ou o sistema de arquivos não oferecer suporte a hard links, o CLI para com uma orientação para corrigir o acesso ou usar um diretório em um sistema de arquivos compatível. Ele não tenta uma gravação não atômica como alternativa.
 
-O padrão delegado é:
+As preferências padrão para especialistas delegados são:
 
 ```json
 {
@@ -63,7 +63,7 @@ O intervalo local de status por projeto começa em 30 minutos e pode ser configu
 bunx holydot@latest setup --status-interval-minutes 60
 ```
 
-Em uma configuração existente, `setup --status-interval-minutes 60` apenas mostra a prévia; salve com `configure --status-interval-minutes 60 --write`. Esse número é uma preferência de frequência, não um agendamento instalado. Não envie progresso proativo fora do intervalo; inclua resultados e mudanças no próximo panorama, com uma mensagem separada por projeto. Responda imediatamente a pedidos diretos de status. Se uma decisão, opinião, ação ou aprovação for necessária, use o controle dedicado quando exigido ou ferramenta estruturada permitida, sem esperar o próximo panorama; texto comum é último recurso e não deve virar lista de opções. No informe periódico, lembre apenas intervenções pendentes e ainda sem resposta/ciência; omita essa seção se não houver nenhuma e não repita pedidos resolvidos, cancelados ou substituídos. O holydot orienta o host a usar uma ferramenta real de automação/agendamento se disponível e autorizada e verificar o resultado. O CLI não cria cron, daemon ou serviço de fundo, e não afirma que uma agenda foi ativada pelo texto gerado. Se o host não oferecer esse recurso, informe a limitação.
+Em uma configuração existente, `setup --status-interval-minutes 60` apenas mostra a prévia; salve com `configure --status-interval-minutes 60 --write`. Esse número é uma preferência de frequência, não um agendamento instalado. Não envie progresso proativo fora do intervalo, mesmo diante de mudança substancial; inclua resultados e mudanças no próximo panorama, com uma mensagem breve por projeto. A única exceção é uma notificação imediata de pronto para merge que o usuário tenha pedido explicitamente. Responda imediatamente a pedidos diretos de status. Para decisão, opinião, ação ou aprovação, use formulário, controle dedicado ou ferramenta estruturada de perguntas apropriada, sem esperar o próximo panorama. Nunca apresente opções em texto comum; se nenhum controle adequado estiver disponível, informe o bloqueio sem pedir a decisão por texto. Um pedido aceito pela ferramenta não comprova exibição. Lembretes de intervenção são mensagens breves, separadas do panorama, e só ocorrem no intervalo para projetos com pedido essencial ainda sem resposta ou ciência. Limite-os a esses pedidos. Não repita pedidos respondidos, reconhecidos, cancelados, resolvidos ou substituídos; sem pendência essencial, não envie lembrete. O holydot orienta o host a usar uma ferramenta real de automação/agendamento se disponível e autorizada e verificar o resultado. O CLI não cria cron, daemon ou serviço de fundo, e não afirma que uma agenda foi ativada pelo texto gerado. Se o host não oferecer esse recurso, informe a limitação.
 
 ## Escolher Fast explicitamente
 

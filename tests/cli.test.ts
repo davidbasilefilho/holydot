@@ -256,10 +256,14 @@ describe("local setup CLI", () => {
     expect(output).toContain("Use esta ordem de execução");
     expect(output).toContain("Organize as sessões pelo que o trabalho exige");
     expect(output).toContain(
-      "Nas demais perguntas, prefira a ferramenta estruturada disponível e apropriada",
+      "Faça perguntas iniciais de decisão, opinião, ação ou aprovação somente por formulário",
     );
     expect(output).toContain("Se a plataforma ou uma regra exigir controle dedicado de aprovação");
-    expect(output).toContain("Texto comum no chat é o último recurso");
+    expect(output).toContain("Nunca apresente opções de decisão em texto comum");
+    expect(output).toContain("GPT-6.1 Sol (`gpt-6.1-sol`) com esforço `medium`");
+    expect(output).toContain("GPT-6 Luna (`gpt-6-luna`) com esforço `high`");
+    expect(output).toContain("evidência de roteamento efetivo");
+    expect(output).toContain("A única exceção é uma notificação imediata de pronto para merge");
     expect(output).toContain("Use visualizações proativamente");
     expect(output).toContain(
       "a coordenação principal é responsável pelo ciclo de validação visual",
@@ -306,14 +310,12 @@ describe("local setup CLI", () => {
     expect(output).toContain("Preparação antes do HolyCodex Root");
     expect(output).toContain("holydot deve orquestrar a preparação");
     expect(output).toContain("Não encaminhe ao Root uma questão de requisito");
-    expect(output).toContain("use a ferramenta estruturada permitida e apropriada");
-    expect(output).toContain(
-      "Use primeiro o controle dedicado sempre que a plataforma ou uma regra o exigir",
-    );
+    expect(output).toContain("ferramenta estruturada de perguntas apropriada");
+    expect(output).toContain("Se a plataforma ou uma regra exigir controle dedicado de aprovação");
     expect(output.indexOf("Se a plataforma ou uma regra exigir controle dedicado")).toBeLessThan(
-      output.indexOf("Nas demais perguntas, prefira a ferramenta estruturada disponível"),
+      output.indexOf("Nas demais perguntas, use formulário ou ferramenta estruturada de perguntas"),
     );
-    expect(output).toContain("Texto comum é o último recurso");
+    expect(output).toContain("Nunca apresente opções em texto comum");
     expect(output).toContain("premissas seguras e reversíveis");
     expect(output).toContain("pause o handoff da parte dependente");
     expect(output).toContain("em vez de transferir a dúvida ao Root");

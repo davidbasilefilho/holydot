@@ -26,7 +26,7 @@ bunx holydot@latest setup
 
 ## O que o host deve fazer automaticamente no fluxo
 
-1. Perguntar apenas pelas escolhas faltantes: primeiro use o controle dedicado quando a plataforma exigir aprovação, autenticação ou decisão de conta; para outras perguntas, prefira a ferramenta estruturada permitida, outra interação suportada mais legível e texto comum só como último recurso.
+1. Perguntar apenas pelas escolhas faltantes: use o controle dedicado quando a plataforma exigir aprovação, autenticação ou decisão de conta; para outras perguntas, use formulário ou ferramenta estruturada de perguntas apropriada. Nunca apresente opções em texto comum. Se nenhum controle adequado estiver disponível, informe o bloqueio sem pedir a decisão por texto.
 2. Verificar um gerenciador real de regras da conta. Se não existir, relatar bloqueado e nenhuma aplicação.
 3. Ler regras atuais, comparar escopo e comportamento, evitar duplicatas e preservar regras não relacionadas.
 4. Verificar os limites e formatos que o host realmente aceita. Se o texto gerado não couber, preparar uma versão concisa que preserve escopo e significado ou, se necessário, dividir em propostas menores, cada uma com aprovação própria. Nunca truncar, ampliar ou dividir silenciosamente para contornar limites. Apresentar o texto final exato no formulário de aprovação dedicado do produto e esperar sua aceitação. Se não houver versão compatível, relatar bloqueado e não aplicar.

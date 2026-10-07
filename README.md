@@ -27,7 +27,7 @@ Isso não instala nada. Uma mensagem não garante aplicação permanente. Se seu
 
 ## Preferências locais opcionais
 
-Consulte [instalação e configuração](docs/setup.md) para ajustar o modelo delegado, esforço, velocidade e intervalo de status por projeto (30 minutos por padrão). O dot envia panoramas periódicos, sem mensagens proativas de progresso a cada mudança; pedidos necessários ao usuário usam o controle de pergunta/aprovação adequado. Fast é opt-in e pode ser alterado depois. A preferência de intervalo não instala um agendador; quando o host tiver automação real, autorizada e verificável, o dot pode usá-la para enviar mensagens separadas por projeto. O CLI prepara um setup assistido pelo host: quando houver controles reais, o host deve apresentar as aprovações, aplicar regras aceitas e verificar o estado. O CLI sozinho não altera a conta.
+Consulte [instalação e configuração](docs/setup.md) para ajustar o modelo delegado, esforço, velocidade e intervalo de status por projeto (30 minutos por padrão). O dot envia panoramas periódicos e não avisa sobre progresso a cada mudança; a exceção é uma notificação de pronto para merge pedida explicitamente. Decisões e aprovações iniciais usam controles estruturados. Fast é opt-in e pode ser alterado depois. A preferência de intervalo não instala um agendador; quando o host tiver automação real, autorizada e verificável, o dot pode usá-la para enviar mensagens separadas por projeto. O CLI prepara um setup assistido pelo host: quando houver controles reais, o host deve apresentar as aprovações, aplicar regras aceitas e verificar o estado. O CLI sozinho não altera a conta.
 
 ## Conteúdo
 
@@ -42,7 +42,7 @@ Consulte [instalação e configuração](docs/setup.md) para ajustar o modelo de
 
 ## O que o pacote não faz
 
-Não escolhe modelos, altera esforço de raciocínio, instala ferramentas, concede acesso, cria agentes ou impõe isolamento. Não inclui monitor de CI, review bot ou agendador próprio para o dot. Relatórios periódicos dependem da automação real do host, quando disponível e autorizada. Os workflows deste próprio repositório verificam e distribuem o pacote; não monitoram outros projetos.
+Não impõe seleção de modelo ou esforço de raciocínio, instala ferramentas, concede acesso, cria agentes ou impõe isolamento. As preferências de Root e especialista dependem dos controles de roteamento reais do host e não são prova de seleção efetiva. Não inclui monitor de CI, review bot ou agendador próprio para o dot. Relatórios periódicos dependem da automação real do host, quando disponível e autorizada. Os workflows deste próprio repositório verificam e distribuem o pacote; não monitoram outros projetos.
 
 As instruções são orientação comportamental, não garantias executáveis. A validação local verifica a integridade deste pacote, não o comportamento de um modelo.
 
@@ -60,4 +60,4 @@ Esses comandos são para desenvolver e verificar o pacote. Para apenas usar o te
 
 ## Origem e licença
 
-Adaptação independente do [HolyCodex 0.17.0](https://github.com/davidbasilefilho/holycodex/tree/089e8f27c6d63a2303b78d4e92eae9cca567e6d4), com fonte fixada em commit, sob [Apache-2.0](LICENSE). Consulte [NOTICE](NOTICE). Não é um produto oficial da OpenAI e não implica endosso.
+Adaptação independente do [HolyCodex 0.17.0](https://github.com/davidbasilefilho/holycodex/tree/ff1b9ff5c2f35100095f19a4b55802bb931f6434), com fonte fixada em commit, sob [Apache-2.0](LICENSE). Consulte [NOTICE](NOTICE). Não é um produto oficial da OpenAI e não implica endosso.

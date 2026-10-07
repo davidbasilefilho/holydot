@@ -1,7 +1,8 @@
 holydot
 An independent textual adaptation of public HolyCodex 0.17.0 instructions
 and policy contracts from davidbasilefilho/holycodex, commit
-089e8f27c6d63a2303b78d4e92eae9cca567e6d4.
+ff1b9ff5c2f35100095f19a4b55802bb931f6434. Adapted public sources include
+the Root instructions, Specialist instructions, and holycodex-policy crate.
 
 Applicable attribution retained from the upstream NOTICE:
 OpenAI Codex

@@ -323,7 +323,7 @@ export function runCli(args: readonly string[], directory: string): string {
       "holydot render > holydot.instructions.md\n" +
       "holydot setup [--model ID] [--effort low|medium|high] [--speed standard|fast] [--status-interval-minutes N] [--repository owner/repo] [--branch NAME] [--rule-mode ask|requested]\n\n" +
       "Setup creates safe defaults when needed and reuses valid config without overwriting it.\n" +
-      "Defaults: gpt-6-luna / high / standard. Local text generation only; no dot settings are changed.\n"
+      "Specialist preference defaults: gpt-6-luna / high / standard. Local text generation only; no dot settings are changed.\n"
     );
   }
   if (command === "init") {

@@ -3,7 +3,7 @@ import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 /** Immutable public HolyCodex source revision used by the instruction adaptation. */
-export const SOURCE_REVISION = "089e8f27c6d63a2303b78d4e92eae9cca567e6d4";
+export const SOURCE_REVISION = "ff1b9ff5c2f35100095f19a4b55802bb931f6434";
 
 /** Files required for a complete reusable instruction and development package. */
 export const REQUIRED_FILES = [

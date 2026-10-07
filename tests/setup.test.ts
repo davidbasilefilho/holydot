@@ -13,9 +13,11 @@ describe("owner-scoped account setup", () => {
     const output = renderSetup("Policies", DEFAULT_RULE_SCOPE);
     expect(output).toContain("needs-input");
     expect(output).toContain("Regras aplicadas pelo CLI: nenhuma");
-    expect(output).toContain("use primeiro o controle dedicado");
-    expect(output).toContain("Nas demais perguntas, prefira a ferramenta estruturada permitida");
-    expect(output).toContain("Texto comum é o último recurso");
+    expect(output).toContain("use o controle dedicado quando a plataforma exigir aprovação");
+    expect(output).toContain(
+      "para as demais, use formulário ou ferramenta estruturada de perguntas apropriada",
+    );
+    expect(output).toContain("Nunca apresente opções em texto comum");
     expect(output).toContain("Intervalo local solicitado: 30 min por projeto");
     expect(output).toContain("Estado do agendamento: não configurado pelo CLI");
     expect(output).toContain(
@@ -24,10 +26,20 @@ describe("owner-scoped account setup", () => {
     expect(output).toContain(
       "Se uma decisão, opinião, ação ou aprovação do usuário for necessária",
     );
-    expect(output).toContain("No panorama, lembre apenas pedidos de intervenção ainda pendentes");
-    expect(output).toContain("não repita pedidos respondidos, cancelados ou substituídos");
-    expect(output).toContain("omita a seção de ação do usuário se não houver pedido pendente");
-    expect(output).toContain("Pedido aceito pela ferramenta não prova que foi exibido");
+    expect(output).toContain("solicite-a imediatamente usando formulário");
+    expect(output).toContain(
+      "Lembretes de intervenção são mensagens breves, separadas do panorama",
+    );
+    expect(output).toContain(
+      "só podem ser enviados no intervalo configurado para projetos com pedido essencial",
+    );
+    expect(output).toContain("Limite o lembrete a esses pedidos");
+    expect(output).toContain(
+      "Não repita pedidos respondidos, reconhecidos, cancelados, resolvidos ou substituídos",
+    );
+    expect(output).toContain("sem pedido essencial pendente, não envie lembrete");
+    expect(output).toContain("Um pedido aceito pela ferramenta não prova que foi exibido");
+    expect(output).toContain("A única exceção é uma notificação imediata de pronto para merge");
     expect(output).toContain("gerenciador real de regras");
     expect(output).toContain("bloqueado: nenhuma regra aplicada");
   });
@@ -106,7 +118,7 @@ describe("owner-scoped account setup", () => {
     expect(output).toContain("não configurado pelo CLI");
     expect(output).toContain("use somente uma ferramenta de automação/agendamento real do host");
     expect(output).toContain("não cria cron, daemon ou serviço de fundo");
-    expect(output).toContain("uma mensagem separada por projeto");
+    expect(output).toContain("uma mensagem breve separada por projeto");
   });
 
   test("explicit options preserve preferences and build scoped setup", () => {

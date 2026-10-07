@@ -102,48 +102,88 @@ describe("offline package validation", () => {
       "Não envie mensagens proativas de andamento fora do intervalo configurado",
     );
     expect(statusSection).toContain("mesmo quando houver mudança substancial");
+    expect(statusSection).toContain(
+      "A única exceção é uma notificação imediata de pronto para merge que o usuário tenha pedido explicitamente",
+    );
     expect(statusSection).toContain("padrão é 30 minutos");
-    expect(statusSection).toContain("uma mensagem por projeto");
+    expect(statusSection).toContain("uma mensagem breve por projeto");
     expect(statusSection).toContain("mudanças desde o último panorama e evidências verificadas");
     expect(statusSection).toContain("responda imediatamente nesse mesmo formato");
     expect(statusSection).toContain(
-      "No panorama periódico, lembre somente pedidos de intervenção ainda pendentes",
+      "Um lembrete periódico de intervenção é uma mensagem breve, separada do panorama de progresso",
     );
-    expect(statusSection).toContain("não inclua seção de ação do usuário");
-    expect(statusSection).toContain("use primeiro o formulário/controle dedicado quando exigido");
-    expect(statusSection).toContain("ferramenta estruturada permitida e apropriada");
     expect(statusSection).toContain(
-      "nunca substitua um controle obrigatório nem vire uma lista de opções improvisada",
+      "só pode ser enviado no intervalo configurado se o projeto tiver pedido essencial ainda sem resposta ou ciência",
     );
+    expect(statusSection).toContain("Limite o lembrete a esses pedidos");
+    expect(statusSection).toContain(
+      "Não repita pedidos respondidos, reconhecidos, cancelados, resolvidos ou substituídos",
+    );
+    expect(statusSection).toContain("se não houver pedido essencial pendente, não envie lembrete");
+    expect(statusSection).toContain(
+      "usando formulário, controle dedicado ou ferramenta estruturada de perguntas apropriada",
+    );
+    expect(statusSection).toContain("Nunca apresente opções em texto comum");
     expect(statusSection).toContain("relate falha ou incerteza honestamente");
     expect(statusSection).toContain("Não invente progresso");
-    expect(statusSection).not.toContain("atualização imediata");
-    expect(statusSection).not.toContain("mensagens imediatas");
+    expect(statusSection).not.toContain("mensagens de progresso imediatas");
     expect(statusSection).toContain("não instala nem inicia um agendador");
-    expect(usage).toContain(
-      "padrão é um panorama de status curto por projeto ativo a cada 30 minutos",
-    );
+    expect(usage).toContain("padrão é um panorama breve por projeto ativo a cada 30 minutos");
     expect(setup).toContain('"intervalMinutes": 30');
     expect(setup).toContain("--status-interval-minutes 60");
     expect(setup).toContain("O CLI não cria cron, daemon ou serviço de fundo");
     expect(setup).toContain("Não envie progresso proativo fora do intervalo");
-    expect(setup).toContain("decisão, opinião, ação ou aprovação for necessária");
-    expect(setup).toContain("lembre apenas intervenções pendentes");
-    expect(setup).toContain("não repita pedidos resolvidos, cancelados ou substituídos");
+    expect(setup).toContain("Para decisão, opinião, ação ou aprovação");
+    expect(setup).toContain("Lembretes de intervenção são mensagens breves, separadas do panorama");
+    expect(setup).toContain("só ocorrem no intervalo para projetos com pedido essencial");
+    expect(setup).toContain("sem pendência essencial, não envie lembrete");
   });
 
   test("status acceptance examples suppress progress churn and track only pending interventions", () => {
     const acceptance = readFileSync(new URL("../examples/acceptance.md", import.meta.url), "utf8");
     const panoramaPolicy = [
-      "não enviar mensagens proativas de andamento fora do intervalo de 30 minutos configurado",
+      "não enviar mensagens proativas de andamento fora do intervalo configurado, que é 30 minutos por padrão",
       "Inícios de verificação, login confirmado, push na fila, CI intermediária e transferências não viram avisos separados",
       "Um pedido direto de status recebe resposta imediata, uma por projeto",
-      "lembre apenas pedidos ainda pendentes sem resposta/ciência",
-      "omita a seção de ação do usuário quando não houver pendência",
       "Um pedido aceito pela ferramenta não prova que foi exibido",
     ];
     for (const rule of panoramaPolicy) expect(acceptance).toContain(rule);
-    expect(acceptance).toContain("não repita os respondidos, cancelados ou substituídos");
+    expect(acceptance).toContain(
+      "Não repita pedidos respondidos, reconhecidos, cancelados, resolvidos ou substituídos",
+    );
+    expect(acceptance).toContain(
+      "A única exceção é uma notificação imediata de pronto para merge pedida explicitamente",
+    );
+    expect(acceptance).toContain(
+      "Lembretes de intervenção são mensagens breves, separadas do panorama",
+    );
+    expect(acceptance).toContain(
+      "só ocorrem no intervalo para projetos com pedido essencial ainda sem resposta ou ciência",
+    );
+    expect(acceptance).toContain("Limite-os a esses pedidos");
+    expect(acceptance).toContain("sem pendência essencial, não envie lembrete");
+  });
+
+  test("model-role preferences require observable host routing and public role guidance", () => {
+    const instructions = readFileSync(
+      new URL("../instructions/holydot.md", import.meta.url),
+      "utf8",
+    );
+    const specialist = readFileSync(
+      new URL("../instructions/specialist.md", import.meta.url),
+      "utf8",
+    );
+    const provenance = readFileSync(new URL("../docs/provenance.md", import.meta.url), "utf8");
+    expect(instructions).toContain("GPT-6.1 Sol (`gpt-6.1-sol`) com esforço `medium`");
+    expect(instructions).toContain("GPT-6 Luna (`gpt-6-luna`) com esforço `high`");
+    expect(instructions).toContain("evidência de roteamento efetivo");
+    expect(instructions).toContain(
+      "Fast é opcional e só deve ser solicitado quando o usuário optar explicitamente",
+    );
+    expect(instructions).toContain("conteúdo de papel no pacote público");
+    expect(specialist).toContain("Execute apenas a tarefa limitada recebida");
+    expect(provenance).toContain("ff1b9ff5c2f35100095f19a4b55802bb931f6434");
+    expect(provenance).not.toContain("writing-instructions/SKILL.md");
   });
 
   test("accepts a complete fixture and its local and external links", () => {

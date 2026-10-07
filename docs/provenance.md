@@ -1,23 +1,21 @@
 # Proveniência pública
 
-Esta adaptação foi preparada a partir de fontes públicas do repositório [davidbasilefilho/holycodex](https://github.com/davidbasilefilho/holycodex), consultadas em 2026-10-06. A base inspecionada e fixada é `089e8f27c6d63a2303b78d4e92eae9cca567e6d4`. Ela não representa necessariamente o estado atual da branch `next`. Os links abaixo usam o commit imutável, não a branch móvel.
+Esta adaptação usa fontes públicas do repositório [davidbasilefilho/holycodex](https://github.com/davidbasilefilho/holycodex), com a base de instruções e política revisada fixada em `ff1b9ff5c2f35100095f19a4b55802bb931f6434`. A versão descrita pela política é 0.17.0 em desenvolvimento; a base não representa necessariamente o estado atual da branch `next`. Os links abaixo usam o commit imutável, não a branch móvel.
 
 ## Fontes
 
-- [Root](https://github.com/davidbasilefilho/holycodex/blob/089e8f27c6d63a2303b78d4e92eae9cca567e6d4/overlay/holycodex/instructions/root.md)
-- [Specialist](https://github.com/davidbasilefilho/holycodex/blob/089e8f27c6d63a2303b78d4e92eae9cca567e6d4/overlay/holycodex/instructions/specialist.md)
-- [Writing instructions: skill público](https://github.com/davidbasilefilho/holycodex/blob/089e8f27c6d63a2303b78d4e92eae9cca567e6d4/overlay/holycodex/skills/writing-instructions/SKILL.md)
-- [Política e contratos Rust](https://github.com/davidbasilefilho/holycodex/blob/089e8f27c6d63a2303b78d4e92eae9cca567e6d4/crates/holycodex-policy/src/lib.rs)
-- [Versão e licença do workspace](https://github.com/davidbasilefilho/holycodex/blob/089e8f27c6d63a2303b78d4e92eae9cca567e6d4/Cargo.toml)
-- [Licença](https://github.com/davidbasilefilho/holycodex/blob/089e8f27c6d63a2303b78d4e92eae9cca567e6d4/LICENSE), [NOTICE](https://github.com/davidbasilefilho/holycodex/blob/089e8f27c6d63a2303b78d4e92eae9cca567e6d4/NOTICE) e [notas de terceiros](https://github.com/davidbasilefilho/holycodex/blob/089e8f27c6d63a2303b78d4e92eae9cca567e6d4/THIRD-PARTY-NOTICES.md)
+- [Root](https://github.com/davidbasilefilho/holycodex/blob/ff1b9ff5c2f35100095f19a4b55802bb931f6434/overlay/holycodex/instructions/root.md)
+- [Specialist](https://github.com/davidbasilefilho/holycodex/blob/ff1b9ff5c2f35100095f19a4b55802bb931f6434/overlay/holycodex/instructions/specialist.md)
+- [Política e contratos Rust](https://github.com/davidbasilefilho/holycodex/blob/ff1b9ff5c2f35100095f19a4b55802bb931f6434/crates/holycodex-policy/src/lib.rs)
+- [Política de modelos](https://github.com/davidbasilefilho/holycodex/blob/ff1b9ff5c2f35100095f19a4b55802bb931f6434/docs/MODEL-POLICY.md)
 
-O manifesto declara 0.17.0 e as notas de terceiros descrevem essa versão como em desenvolvimento. A adaptação não afirma que ela seja uma release estável.
+O manifesto e a política consultados identificam a versão 0.17.0. Esta atribuição não declara que exista uma release estável.
 
 ## Modificações e atribuição
 
-`instructions/holydot.md`, `instructions/specialist.md` e `templates/task.md` modificam e simplificam as instruções e contratos públicos para uso como orientação textual. Os demais guias, exemplos, o gerador de configuração e a verificação local são material original desta adaptação.
+`instructions/holydot.md`, `instructions/specialist.md` e `templates/task.md` adaptam instruções e contratos públicos para orientação textual. A orientação de Root writing do fonte atual substitui qualquer dependência em skill oculta ou distribuída separadamente; o conteúdo de papel usado por Roots e especialistas fica no pacote público. Os demais guias, exemplos, o gerador de configuração e a verificação local são material original desta adaptação.
 
-O texto Apache-2.0 escolhido na criação deste repositório é preservado em [LICENSE](../LICENSE). A atribuição da fonte permanece em NOTICE. [NOTICE](../NOTICE) preserva a atribuição aplicável a OpenAI Codex e identifica HolyCodex como fonte da adaptação. O holydot não incorpora código Ratatui, o codec toon-rs ou binários do Codex; as atribuições a esses componentes no repositório original não descrevem componentes distribuídos por este pacote.
+O texto Apache-2.0 deste pacote é preservado em [LICENSE](../LICENSE). A atribuição pública usada por esta adaptação permanece em [NOTICE](../NOTICE), que identifica HolyCodex e conserva a atribuição aplicável a OpenAI Codex. O holydot não incorpora código Ratatui, o codec toon-rs ou binários do Codex; as atribuições a esses componentes no repositório original não descrevem componentes distribuídos por este pacote.
 
 O pacote de instruções não tem runtime próprio. A manutenção usa Bun, TypeScript e ferramentas de desenvolvimento registradas em package.json e bun.lock; consulte [desenvolvimento](development.md). O uso do texto não depende dessas ferramentas. A existência desta adaptação não implica endosso de OpenAI, HolyCodex ou de seus colaboradores.
 
