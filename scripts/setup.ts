@@ -82,8 +82,8 @@ export function createRuleProposal(input: RuleScope): string | null {
   return (
     `${action} em ${repository}, somente na branch ${branch} e via PR. ` +
     "Não autoriza merge, deploy, gastos, novos acessos ou dados sensíveis. " +
-    "Peça aprovação específica antes de iniciar ação que possa provocar elevação de privilégio, UAC ou alteração de segurança. " +
-    "Se uma solicitação inesperada aparecer, pause e peça aprovação antes de aceitá-la. " +
+    "No meu computador, antes de disparar UAC no Windows, sudo/pkexec no Linux ou elevação equivalente, verifique se já dei aprovação informada para essa mesma ação, dispositivo e escopo; se sim, não pergunte de novo. Se não, explique o comando, o escopo e o motivo, peça aprovação específica e espere minha resposta antes do prompt. " +
+    "A aprovação genérica para baixar ou executar uma tarefa não cobre elevação, a menos que a ação elevada tenha sido informada e incluída no pedido. Peça nova autorização se ação, dispositivo, escopo ou risco mudar materialmente, ou se o host exigir confirmação naquele momento. Se um prompt inesperado ou diferente do autorizado surgir, não o aceite nem digite credenciais; pause e siga os controles do host. Nunca peça senha no chat nem contorne os controles. Esta exigência é para meu computador e não cria uma proibição geral para o cloud do dot. " +
     "Respeite as confirmações obrigatórias do produto."
   );
 }

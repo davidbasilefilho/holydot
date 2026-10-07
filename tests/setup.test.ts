@@ -31,8 +31,20 @@ describe("owner-scoped account setup", () => {
     expect(proposal).toContain("somente na branch release/v1 e via PR");
     expect(proposal).toContain("Não autoriza merge");
     expect(proposal).toContain(
-      "aprovação específica antes de iniciar ação que possa provocar elevação de privilégio, UAC",
+      "antes de disparar UAC no Windows, sudo/pkexec no Linux ou elevação equivalente",
     );
+    expect(proposal).toContain(
+      "se já dei aprovação informada para essa mesma ação, dispositivo e escopo; se sim, não pergunte de novo",
+    );
+    expect(proposal).toContain("peça aprovação específica e espere minha resposta antes do prompt");
+    expect(proposal).toContain(
+      "A aprovação genérica para baixar ou executar uma tarefa não cobre elevação",
+    );
+    expect(proposal).toContain(
+      "Peça nova autorização se ação, dispositivo, escopo ou risco mudar materialmente",
+    );
+    expect(proposal).toContain("Nunca peça senha no chat nem contorne os controles");
+    expect(proposal).toContain("não cria uma proibição geral para o cloud do dot");
     const output = renderSetup("Policies", scope);
     expect(output).toContain("needs-host");
     expect(output).toContain("Apresente o texto final exato no fluxo dedicado de aprovação");

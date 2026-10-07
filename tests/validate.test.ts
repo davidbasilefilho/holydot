@@ -72,6 +72,23 @@ describe("offline package validation", () => {
     expect(setup).not.toContain("bun add --dev holydot@");
   });
 
+  test("public elevation guidance reuses informed approval for the same action and device", () => {
+    const instructions = readFileSync(
+      new URL("../instructions/holydot.md", import.meta.url),
+      "utf8",
+    );
+    const rules = readFileSync(new URL("../docs/account-rules.md", import.meta.url), "utf8");
+    const acceptance = readFileSync(new URL("../examples/acceptance.md", import.meta.url), "utf8");
+    expect(instructions).toContain("Se existir, não peça a mesma aprovação outra vez");
+    expect(rules).toContain("Se sim, não pergunte de novo");
+    expect(acceptance).toContain("prosseguir sem pedir a mesma confirmação de novo");
+    for (const content of [instructions, rules, acceptance]) {
+      expect(content).toContain("ação, dispositivo");
+      expect(content).toContain("senha no chat");
+      expect(content).toContain("cloud do dot");
+    }
+  });
+
   test("accepts a complete fixture and its local and external links", () => {
     const root = fixture();
     writeFileSync(

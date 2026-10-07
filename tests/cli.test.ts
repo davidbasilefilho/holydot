@@ -284,8 +284,21 @@ describe("local setup CLI", () => {
       "Nos projetos HolyCodex e holydot, quando o usuário tiver autorizado a branch",
     );
     expect(output).toContain(
-      "Antes de iniciar uma ação que saiba ou espere que provoque uma solicitação de elevação de privilégio, UAC",
+      "No computador do usuário, antes de iniciar qualquer comando ou ação que possa provocar elevação de privilégio",
     );
+    expect(output).toContain("`sudo` ou `pkexec` no Linux");
+    expect(output).toContain("Se existir, não peça a mesma aprovação outra vez");
+    expect(output).toContain(
+      "Uma autorização genérica para baixar ou executar trabalho não cobre elevação",
+    );
+    expect(output).toContain(
+      "Peça nova autorização se o comando, dispositivo, escopo ou risco mudar materialmente",
+    );
+    expect(output).toContain("ou se o host exigir confirmação de ação naquele momento");
+    expect(output).toContain(
+      "Nunca peça senha no chat nem contorne o prompt ou a política do sistema",
+    );
+    expect(output).toContain("no cloud do dot, siga as permissões e confirmações reais do host");
     expect(output).toContain("Marque uma conversa como resolvida somente quando houver evidência");
     expect(output).toContain(
       "Quando navegador, computador ou outra conexão importar, confira a disponibilidade",
