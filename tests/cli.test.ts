@@ -123,6 +123,14 @@ describe("local setup CLI", () => {
     );
     expect(output).toContain("Created holydot.config.json atomically from safe defaults");
     expect(output).toContain("The CLI has applied no account rules");
+    expect(output).toContain("# Nome de exibição do dot");
+    expect(output).toContain("Defina o nome de exibição deste dot como exatamente `holydot`");
+    expect(output).toContain("controle real de renomeação do host");
+    expect(output).toContain("Respeite as confirmações obrigatórias");
+    expect(output).toContain("Mantenha avatar, mascote e cor inalterados");
+    expect(output).toContain(
+      "O CLI apenas inclui esta instrução no handoff; ele não renomeia a conta",
+    );
     expect(output).toContain("# Setup guiado de regras da conta");
     expect(output).toContain("needs-input");
     expect(output).toContain("Regras aplicadas pelo CLI: nenhuma");
