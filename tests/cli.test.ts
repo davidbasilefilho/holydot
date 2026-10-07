@@ -130,6 +130,14 @@ describe("local setup CLI", () => {
     expect(output).toContain("Intervalo local solicitado: 30 min por projeto");
     expect(output).toContain("Estado do agendamento: não configurado pelo CLI");
     expect(output).toContain("não cria cron, daemon ou serviço de fundo");
+    expect(output).toContain("Responda no idioma mais recente do usuário");
+    expect(output).toContain("use a skill `write-like-me`");
+    expect(output).toContain("pesquise-o com `personal_context.search`");
+    expect(output).toContain("Use a renderização rica nativa/DIL");
+    expect(output).toContain("Coloque cartões de fontes/resultados ao final da resposta");
+    expect(output).toContain("resultados de imagens conforme o assunto e o layout");
+    expect(output).toContain("sugestões, não listas de permissão");
+    expect(output).toContain("Use Standard como padrão");
     expect(config).toEqual(DEFAULT_CONFIG);
     expect(readdirSync(root)).toEqual(["holydot.config.json"]);
   });
@@ -253,7 +261,7 @@ describe("local setup CLI", () => {
     runCli(["init"], root);
     const output = runCli(["render"], root);
     expect(output).toContain("Não encerre conversas em lote");
-    expect(output).toContain("Use esta ordem de execução");
+    expect(output).toContain("Priorize, conforme as capacidades, permissões e dependências reais");
     expect(output).toContain("Organize as sessões pelo que o trabalho exige");
     expect(output).toContain(
       "Faça perguntas iniciais de decisão, opinião, ação ou aprovação somente por formulário",
@@ -264,7 +272,48 @@ describe("local setup CLI", () => {
     expect(output).toContain("GPT-6 Luna (`gpt-6-luna`) com esforço `high`");
     expect(output).toContain("evidência de roteamento efetivo");
     expect(output).toContain("A única exceção é uma notificação imediata de pronto para merge");
-    expect(output).toContain("Use visualizações proativamente");
+    expect(output).toContain("Use a renderização rica nativa/DIL");
+    expect(output).toContain("Preserve exatamente o sentido do usuário");
+    expect(output).toContain(
+      "Trate qualificadores, confiança, contrastes, escopo e distinções como vinculantes",
+    );
+    expect(output).toContain(
+      "Quando faltar contexto pessoal necessário, pesquise-o com `personal_context.search`",
+    );
+    expect(output).toContain("retorne a cópia completa revisada");
+    expect(output).toContain("# **Título**");
+    expect(output).toContain("Mantenha o texto do corpo visualmente calmo");
+    expect(output).toContain("Após cada título, escreva primeiro um parágrafo");
+    expect(output).toContain(
+      "Se a alternativa for genérica, vaga ou desinteressante, pesquise primeiro",
+    );
+    expect(output).toContain("Prefira fontes primárias para fundamentos factuais");
+    expect(output).toContain(
+      "Distinga fato, afirmação da fonte, inferência, divergência, especulação e desconhecido",
+    );
+    expect(output).toContain("Essas fontes são sugestões, não listas de permissão");
+    expect(output).toContain("Trate AP, AFP e Reuters como agências complementares");
+    expect(output).toContain("Para pesquisas em geral, diversifique as fontes");
+    expect(output).toContain("Em notícias de última hora ou contestadas, confronte essas fontes");
+    expect(output).toContain(
+      "Use estas fontes como orientação regional e temática, não como lista exclusiva",
+    );
+    expect(output).toContain("Internacional: AP, AFP, Reuters");
+    expect(output).toContain("Brasil: G1, Folha, Estadão");
+    expect(output).toContain("Economia e mercados: Bloomberg, FT, WSJ, CNBC");
+    expect(output).toContain("filings regulatórios e empresariais");
+    expect(output).toContain("Use a renderização rica nativa/DIL");
+    expect(output).toContain("combine formatos quando isso ajudar");
+    expect(output).toContain("Se a entrega falhar, trate o problema específico");
+    expect(output).toContain("prefira uma imagem forte perto do início");
+    expect(output).toContain("posicionamento superior à direita com texto fluindo ao redor");
+    expect(output).toContain("Coloque cartões de fontes/resultados ao final da resposta");
+    expect(output).toContain(
+      "Explique mecanismos, divergências, incerteza e evidências quantitativas úteis",
+    );
+    expect(output).toContain(
+      "Ao escrever ou revisar instruções, explique o que fazer, quando é útil e qual resultado buscar",
+    );
     expect(output).toContain(
       "a coordenação principal é responsável pelo ciclo de validação visual",
     );
@@ -278,13 +327,20 @@ describe("local setup CLI", () => {
     runCli(["init"], root);
     const output = runCli(["render"], root);
     expect(output).toContain("Faça integralmente no dot as tarefas pequenas");
+    expect(output).toContain("subagentes nativos do holydot para apoiar o trabalho direto do dot");
+    expect(output).toContain("não são especialistas geridos por um HolyCodex Root");
+    expect(output).toContain("próprio computador cloud do dot");
+    expect(output).toContain("Esse computador cloud é distinto de uma sessão Codex Cloud");
+    expect(output).toContain("Use Codex em outro computador");
     expect(output).toContain(
       "entregue esse plano e as evidências a uma instância real do HolyCodex Root",
     );
     expect(output).toContain("Cada Root coordena seus especialistas");
     expect(output).toContain("Use Roots adicionais somente para frentes grandes independentes");
     expect(output).toContain("O tamanho, sozinho, não justifica encaminhar para Codex Cloud");
-    expect(output).toContain("o computador do usuário apenas quando uma etapa realmente depender");
+    expect(output).toContain(
+      "Use Codex em outro computador, inclusive o computador do usuário, por último",
+    );
     expect(output).toContain("Verifique a integração e as capacidades reais antes de usá-las");
     expect(output).toContain("o futuro preset embedding do HolyCodex já existe");
     expect(output).toContain(
