@@ -172,19 +172,19 @@ test("named local object export checks only exposed bindings in a shared declara
   expect(
     inspectSource({
       path: "scripts/adapters/fixture.ts",
-      text: "/** Values. */ const hidden = { secret: true }, value = 1; export { value };",
+      text: "/** Values. */ const hidden = { secret: true }, /** Value. */ value = 1; export { value };",
     }),
   ).toEqual([]);
   expect(
     inspectSource({
       path: "scripts/adapters/fixture.ts",
-      text: "/** Values. */ const hidden = { secret: true }, value = { /** Enabled. */ enabled: true }; export { value };",
+      text: "/** Values. */ const hidden = { secret: true }, /** Value. */ value = { /** Enabled. */ enabled: true }; export { value };",
     }),
   ).toEqual([]);
   expect(
     inspectSource({
       path: "scripts/adapters/fixture.ts",
-      text: "/** Values. */ const first = { /** A. */ a: 1 }, second = { missing: true }; export { first, second };",
+      text: "/** Values. */ const first = { /** A. */ a: 1 }, /** Second. */ second = { missing: true }; export { first, second };",
     }).some((error) => error.includes("object literal members")),
   ).toBe(true);
 });
@@ -278,5 +278,38 @@ test.each([
   "/** API. */ export namespace Api { /** Value. */ export const value = { /** Enabled. */ enabled: true }; }",
   "/** API. */ export namespace Api { /** Options. */ export interface Options { /** Enabled. */ enabled: boolean } }",
 ])("documented namespace direct exports already pass: %s", (text) => {
+  expect(inspectSource({ path: "scripts/adapters/fixture.ts", text })).toEqual([]);
+});
+
+test.each([
+  "/** A. */ export const a = 1, b = 2;",
+  "/** A. */ const a = 1, b = 2; export { a, b };",
+  "/** A. */ const a = 1, b = 2; export default b;",
+  "/** A. */ const a = 1, b = 2; /** Shape. */ export type Shape = typeof b;",
+  "/** A. */ export const { a, b } = { a: 1, b: 2 };",
+  "/** A. */ export const [a, b] = [1, 2];",
+  "/** A. */ export const { a, nested: { b } } = { a: 1, nested: { b: 2 } };",
+  "/** A. */ export const { a, ...b } = { a: 1, /** C. */ c: 2 };",
+])("every public declarator/binding needs its own documentation: %s", (text) => {
+  expect(
+    inspectSource({ path: "scripts/adapters/fixture.ts", text }).some(
+      (error) => error.includes("binding") || error.includes("exported symbol"),
+    ),
+  ).toBe(true);
+});
+test.each([
+  "/** A. */ export const a = 1, /** B. */ b = 2;",
+  "export const /** A. */ a = 1, /** B. */ b = 2;",
+  "/** A. */ const a = 1, /** B. */ b = 2; export { a, b };",
+  "const internal = 1, /** B. */ b = 2; export default b;",
+  "const internal = 1, /** B. */ b = 2; /** Shape. */ export type Shape = typeof b;",
+  "/** A. */ export const { a, /** B. */ b } = { a: 1, b: 2 };",
+  "/** A. */ export const [a, /** B. */ b] = [1, 2];",
+  "/** A. */ export const { a, /** B. */ source: b } = { a: 1, source: 2 };",
+  "/** A. */ export const { a, nested: { /** B. */ b } } = { a: 1, nested: { b: 2 } };",
+  "/** A. */ export const { a, /** B. */ ...b } = { a: 1, /** C. */ c: 2 };",
+  "/** A. */ export const { a, /** B. */ b = 2 } = { a: 1 };",
+  "/** A. */ const a = 1, internal = { secret: true }; export { a };",
+])("per-binding JSDoc accepts inline docs and excludes unexported declarators: %s", (text) => {
   expect(inspectSource({ path: "scripts/adapters/fixture.ts", text })).toEqual([]);
 });

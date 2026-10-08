@@ -6,7 +6,10 @@ import {
   createReleasePlan,
   isIdenticalPublication,
   assertMatchingRelease,
-  verifyPublication,
+  canAdvanceChannel,
+  publishChannelArtifact,
+  type ChannelRelease,
+  type CommitRelation,
   type ExistingRelease,
   type ReleasePlan,
 } from "../release";
@@ -91,6 +94,48 @@ async function publishedIntegrity(version: string): Promise<string | null> {
   return manifest.dist.integrity;
 }
 
+async function publishedChannel(tag: "dev" | "latest"): Promise<ChannelRelease | null> {
+  const response = await fetch(`${registry}/holydot`, {
+    headers: { Accept: "application/json", "Cache-Control": "no-cache" },
+    redirect: "error",
+    signal: AbortSignal.timeout(30_000),
+  });
+  if (response.status === 404) return null;
+  if (!response.ok)
+    throw new Error(`npm channel lookup failed (${response.status}); refusing publication.`);
+  const packument = (await response.json()) as {
+    name?: unknown;
+    "dist-tags"?: Record<string, unknown>;
+    versions?: Record<string, { version?: unknown; holydotCommit?: unknown }>;
+  };
+  if (packument.name !== "holydot" || !packument["dist-tags"] || !packument.versions)
+    throw new Error("Malformed npm channel metadata; refusing publication.");
+  const version = packument["dist-tags"][tag];
+  if (version === undefined) return null;
+  if (typeof version !== "string" || packument.versions[version]?.version !== version)
+    throw new Error("Channel target version is missing or inconsistent; refusing publication.");
+  const commit = packument.versions[version]!.holydotCommit;
+  return { version, commit: typeof commit === "string" ? commit : null };
+}
+
+function compareCommits(base: string, head: string): Effect.Effect<CommitRelation, HolydotError> {
+  return Effect.tryPromise({
+    try: async () => {
+      const result = await github<{ status?: string; base_commit?: { sha?: string } }>(
+        `compare/${base}...${head}?per_page=1`,
+      );
+      if (
+        !result ||
+        result.base_commit?.sha !== base ||
+        !["ahead", "behind", "identical", "diverged"].includes(result.status ?? "")
+      )
+        throw new Error("Cannot verify channel ancestry; refusing publication.");
+      return result.status as CommitRelation;
+    },
+    catch: (cause) => new HolydotError({ message: "Channel ancestry verification failed.", cause }),
+  });
+}
+
 /**
  * Execute authorized publication through native GitHub/npm adapters.
  *
@@ -151,9 +196,19 @@ export async function executePublication(): Promise<void> {
     ) {
       throw new Error("npm pack returned unexpected package metadata.");
     }
-    const alreadyPublished = await Effect.runPromise(
+    await Effect.runPromise(
       isIdenticalPublication(await publishedIntegrity(plan.version), pack.integrity),
     );
+    if (
+      !(await Effect.runPromise(
+        canAdvanceChannel(plan, await publishedChannel(plan.distTag), compareCommits),
+      ))
+    ) {
+      console.log(
+        `${plan.tag}: stale candidate skipped; ${plan.distTag} already targets a newer release. No external writes performed.`,
+      );
+      return;
+    }
     const body = `holydot ${plan.version}\n\nSource commit: ${sha}\n\nnpm: holydot@${plan.version} (dist-tag: ${plan.distTag})\n\nIntegrity: ${pack.integrity}\n`;
     let release = await findRelease(plan.tag);
     if (release) await Effect.runPromise(assertMatchingRelease(release, plan, body, true));
@@ -172,37 +227,47 @@ export async function executePublication(): Promise<void> {
     if (!release || !Number.isSafeInteger(release.id) || release.id <= 0) {
       throw new Error("GitHub did not return a valid release identity.");
     }
-    if (!alreadyPublished) {
-      try {
-        await run([
-          "npm",
-          "publish",
-          join(directory, pack.filename),
-          "--access",
-          "public",
-          "--tag",
-          plan.distTag,
-          "--provenance",
-          "--ignore-scripts",
-          "--registry",
-          registry,
-        ]);
-      } catch {
-        throw new Error(
-          "npm publish did not complete successfully. Inspect the preceding npm error and recheck the exact registry version before retrying. Possible authentication causes include a missing initial maintainer publication or trusted publisher with direct npm publish allowed. See docs/releases.md; the matching GitHub draft can resume after verification.",
-        );
-      }
-    }
-    if (!alreadyPublished)
-      await Effect.runPromise(
-        verifyPublication(
-          Effect.tryPromise({
-            try: () => publishedIntegrity(plan.version),
-            catch: (cause) => new HolydotError({ message: "Registry verification failed.", cause }),
-          }),
-          pack.integrity,
-        ),
+    const outcome = await Effect.runPromise(
+      publishChannelArtifact(plan, pack.integrity, {
+        readIntegrity: Effect.tryPromise({
+          try: () => publishedIntegrity(plan.version),
+          catch: (cause) => new HolydotError({ message: "Registry verification failed.", cause }),
+        }),
+        readChannel: Effect.tryPromise({
+          try: () => publishedChannel(plan.distTag),
+          catch: (cause) => new HolydotError({ message: "Channel verification failed.", cause }),
+        }),
+        compareCommits,
+        publish: Effect.tryPromise({
+          try: () =>
+            run([
+              "npm",
+              "publish",
+              join(directory, pack.filename),
+              "--access",
+              "public",
+              "--tag",
+              plan.distTag,
+              "--provenance",
+              "--ignore-scripts",
+              "--registry",
+              registry,
+            ]).then(() => undefined),
+          catch: (cause) =>
+            new HolydotError({
+              message:
+                "npm publish did not complete successfully. Recheck exact registry identity before retrying. Verify initial bootstrap/trusted publisher permissions through supported owner controls; do not repeat bootstrap automatically. The matching draft can resume after verification.",
+              cause,
+            }),
+        }),
+      }),
+    );
+    if (outcome === "stale-skipped") {
+      console.log(
+        `${plan.tag}: channel advanced while preparing publication; stale candidate skipped and matching draft preserved.`,
       );
+      return;
+    }
     // An identical rerun never rolls a dist-tag back after a newer release.
     if (release.draft) {
       await github(`releases/${release.id}`, "PATCH", {
@@ -214,7 +279,7 @@ export async function executePublication(): Promise<void> {
     if (!confirmed) throw new Error("GitHub release was not visible after publication.");
     await Effect.runPromise(assertMatchingRelease(confirmed, plan, body));
     console.log(
-      `${plan.tag}: npm ${alreadyPublished ? "already matched" : "published"}; GitHub release verified.`,
+      `${plan.tag}: npm ${outcome === "already-identical" ? "already matched" : "published"}; GitHub release verified.`,
     );
   } finally {
     await writeFile("package.json", original);

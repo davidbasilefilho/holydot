@@ -181,6 +181,131 @@ export function assertMatchingRelease(
       );
 }
 
+/** Selected npm channel target observed before mutable publication. */
+export interface ChannelRelease {
+  /** Immutable version currently assigned to this channel. */
+  readonly version: string;
+  /** Full stamped source SHA, required to order dev builds of the same product base. */
+  readonly commit: string | null;
+}
+/** GitHub comparison of candidate head against the current channel's base commit. */
+export type CommitRelation = "ahead" | "behind" | "identical" | "diverged";
+/** Read-only ancestry boundary; hashes themselves do not express chronology. */
+export type CompareCommits = (
+  base: string,
+  head: string,
+) => Effect.Effect<CommitRelation, HolydotError>;
+
+/**
+ * Prevent channel rollback by product X/Y/Z rank, then ancestry for same-base dev builds.
+ *
+ * @param plan - Validated immutable candidate and explicitly selected channel.
+ * @param current - Observed target of that channel, or verified absence.
+ * @param compare - Read-only commit comparison for equal-base dev builds.
+ * @returns True for an absent/equal/older target, false for a newer target; ambiguous state fails.
+ */
+export function canAdvanceChannel(
+  plan: ReleasePlan,
+  current: ChannelRelease | null,
+  compare: CompareCommits,
+): Effect.Effect<boolean, HolydotError> {
+  return Effect.gen(function* () {
+    if (current === null) return true;
+    const pattern =
+      /^(0\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-(?:0|[1-9]\d*))?)(?:-dev-([a-f0-9]{12}))?$/;
+    const candidate = pattern.exec(plan.version);
+    const target = pattern.exec(current.version);
+    if (
+      !candidate ||
+      !target ||
+      Boolean(candidate[2]) !== (plan.distTag === "dev") ||
+      Boolean(target[2]) !== (plan.distTag === "dev")
+    )
+      return yield* Effect.fail(
+        new HolydotError({
+          message: "Channel target has an unexpected version/channel; refusing publication.",
+        }),
+      );
+    const rank = (base: string) => {
+      const [numbers, maintenance] = base.split("-");
+      return [...numbers!.split(".").slice(1).map(BigInt), BigInt(maintenance ?? "0")];
+    };
+    const incoming = rank(candidate[1]!);
+    const existing = rank(target[1]!);
+    for (let index = 0; index < incoming.length; index++) {
+      if (incoming[index]! > existing[index]!) return true;
+      if (incoming[index]! < existing[index]!) return false;
+    }
+    if (plan.version === current.version) return true;
+    if (candidate[1] !== target[1] || plan.distTag !== "dev")
+      return yield* Effect.fail(
+        new HolydotError({
+          message: "Equal product ranks have different versions; channel order is ambiguous.",
+        }),
+      );
+    if (
+      !current.commit ||
+      !/^[a-f0-9]{40}$/.test(current.commit) ||
+      !current.commit.startsWith(target[2]!) ||
+      !plan.sha.startsWith(candidate[2]!)
+    )
+      return yield* Effect.fail(
+        new HolydotError({
+          message: "Cannot verify same-base dev source identity; refusing channel movement.",
+        }),
+      );
+    const relation = yield* compare(current.commit, plan.sha);
+    if (relation === "ahead") return true;
+    if (relation === "behind") return false;
+    return yield* Effect.fail(
+      new HolydotError({
+        message: "Dev commits are divergent or inconsistent; channel order is ambiguous.",
+      }),
+    );
+  });
+}
+
+/** Injected publication boundaries; tests supply only offline state and recorded writes. */
+export interface ChannelPublicationIO {
+  /** Exact candidate integrity read, independent of any mutable dist-tag. */
+  readonly readIntegrity: Effect.Effect<string | null, HolydotError>;
+  /** Only the selected channel is read; dev and latest never inherit each other's ordering. */
+  readonly readChannel: Effect.Effect<ChannelRelease | null, HolydotError>;
+  /** Read-only ancestry lookup when product ranks alone cannot order dev builds. */
+  readonly compareCommits: CompareCommits;
+  /** One immutable npm publish, executed only after both identity and channel checks. */
+  readonly publish: Effect.Effect<void, HolydotError>;
+}
+/** Explicit result; a skipped historical artifact was not published by this operation. */
+export type ChannelPublicationResult = "published" | "already-identical" | "stale-skipped";
+
+/**
+ * Recheck the selected channel immediately before a single write; stale missing artifacts stay
+ * absent.
+ *
+ * @param plan - Validated candidate identity and channel.
+ * @param integrity - Local packed SHA512 integrity.
+ * @param io - Native publication boundaries or offline test doubles.
+ * @param pause - Read-only visibility retry delay.
+ * @returns Published, already identical or stale skipped; errors never cause another publish.
+ */
+export function publishChannelArtifact(
+  plan: ReleasePlan,
+  integrity: string,
+  io: ChannelPublicationIO,
+  pause: Effect.Effect<void> = Effect.sleep("2 seconds"),
+): Effect.Effect<ChannelPublicationResult, HolydotError> {
+  return Effect.gen(function* () {
+    const identical = yield* isIdenticalPublication(yield* io.readIntegrity, integrity);
+    if (!(yield* canAdvanceChannel(plan, yield* io.readChannel, io.compareCommits)))
+      return "stale-skipped";
+    if (identical) return "already-identical";
+    yield* io.publish;
+    yield* verifyPublication(io.readIntegrity, integrity, pause);
+    return "published";
+  });
+}
+
 if (import.meta.main) {
   await Effect.runPromise(
     Effect.gen(function* () {

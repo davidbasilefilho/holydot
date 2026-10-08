@@ -199,8 +199,8 @@ test.each([
   "/** Base. */ class Base { /** Value. */ value = { enabled: true }; } /** API. */ export const API = class extends Base {};",
   "/** Base. */ class Base { /** Value. */ value = { enabled: true }; } /** API. */ class API extends Base {} /** Value. */ export const Value = API;",
   "/** Base. */ class Base { static target = { enabled: true }; } /** Source. */ class Source extends Base {} /** Shape. */ export type Shape = typeof Source.target;",
-  "/** Value. */ const { hidden, ...value }: { hidden: { secret: boolean }; enabled: boolean } = external(); export { value };",
-  "/** Value. */ const [hidden, ...value]: [{ secret: boolean }, { enabled: boolean }] = external(); export { value };",
+  "/** Value. */ const { hidden, /** Value. */ ...value }: { hidden: { secret: boolean }; enabled: boolean } = external(); export { value };",
+  "/** Value. */ const [hidden, /** Value. */ ...value]: [{ secret: boolean }, { enabled: boolean }] = external(); export { value };",
 ])("adjacent indexed/scoped/inherited/projected paths reject exposed missing docs: %s", (text) => {
   expect(inspectSource({ path: "scripts/adapters/fixture.ts", text }).length).toBeGreaterThan(0);
 });
@@ -212,8 +212,8 @@ test.each([
   "/** Base. */ class Base { /** Value. */ value = { /** Enabled. */ enabled: true }; private hidden = { secret: true }; } /** API. */ export const API = class extends Base {};",
   "/** Base. */ class Base { /** Value. */ value = { /** Enabled. */ enabled: true }; } /** API. */ class API extends Base {} /** Value. */ export const Value = API;",
   "/** Base. */ class Base { static target = { /** Enabled. */ enabled: true }; private static hidden = { secret: true }; } /** Source. */ class Source extends Base {} /** Shape. */ export type Shape = typeof Source.target;",
-  "/** Value. */ const { hidden, ...value }: { hidden: { secret: boolean }; /** Enabled. */ enabled: boolean } = external(); export { value };",
-  "/** Value. */ const [hidden, ...value]: [{ secret: boolean }, { /** Enabled. */ enabled: boolean }] = external(); export { value };",
+  "/** Value. */ const { hidden, /** Value. */ ...value }: { hidden: { secret: boolean }; /** Enabled. */ enabled: boolean } = external(); export { value };",
+  "/** Value. */ const [hidden, /** Value. */ ...value]: [{ secret: boolean }, { /** Enabled. */ enabled: boolean }] = external(); export { value };",
   "/** Value. */ const [value]: readonly [{ /** Enabled. */ enabled: boolean }, { secret: boolean }] = external(); export { value };",
   "/** Value. */ const { picked: { enabled: value } } = { picked: { enabled: true, hidden: { secret: true } } }; export { value };",
 ])("adjacent paths preserve selected members, scoped values and private exclusions: %s", (text) => {
@@ -231,7 +231,7 @@ test.each([
   "/** Container. */ type Container = { value: { /** Enabled. */ enabled: boolean }; hidden: { secret: boolean } }; /** Value. */ const { value }: Container = external(); export { value };",
   "/** Container. */ interface Container { value: { /** Enabled. */ enabled: boolean }; hidden: { secret: boolean } } /** Value. */ const { value }: Container = external(); export { value };",
   "/** Base. */ interface Base { value: { /** Enabled. */ enabled: boolean } } /** Container. */ interface Container extends Base { hidden: { secret: boolean } } /** Value. */ const { value }: Container = external(); export { value };",
-  "/** Container. */ interface Container { hidden: { secret: boolean }; /** Enabled. */ enabled: boolean } /** Value. */ const { hidden, ...value }: Container = external(); export { value };",
+  "/** Container. */ interface Container { hidden: { secret: boolean }; /** Enabled. */ enabled: boolean } /** Value. */ const { hidden, /** Value. */ ...value }: Container = external(); export { value };",
   "/** A. */ interface A extends B {} /** B. */ interface B extends A {} /** Value. */ const { value }: A = external(); export { value };",
   "interface T { secret: boolean } /** Read. */ export function read<T>(value: T): typeof value { return value; }",
 ])(

@@ -37,3 +37,5 @@ Além dos testes de domínio, execute setup inicial, edição, cancelamento, err
 Faça commits e pushes dos checkpoints autorizados e confirme o SHA remoto. Branches `codex/**`, `work/**` e `feature/**` não acionam publish.yml. Branches `main`, `release/**` e tags `v*` podem publicar e exigem autorização de publicação antes de push. Nunca coloque handoffs privados, credenciais ou estado pessoal no pacote.
 
 Os bumps de X/Y/Z estão em [versões e publicação](releases.md); não são comandos públicos da CLI.
+
+Cada binding/declarator exportado precisa de JSDoc próprio. O comentário anterior à declaração cobre apenas sua primeira binding; comentários inline podem documentar as demais, inclusive destructuring, renomeação e rest. Exportar somente uma binding não expõe as outras do mesmo statement.

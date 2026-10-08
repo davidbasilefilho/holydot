@@ -101,17 +101,55 @@ export function inspectSource(source: SourceFile): string[] {
       );
     return [];
   };
+  const bindingComments = (pattern: Node, name: string): Span[] => {
+    if (!bindingNames(pattern).includes(name)) return [];
+    if (pattern.type === "Identifier") return [pattern];
+    if (pattern.type === "RestElement")
+      return [pattern, ...bindingComments(pattern.argument, name)];
+    if (pattern.type === "AssignmentPattern")
+      return [pattern, ...bindingComments(pattern.left, name)];
+    if (pattern.type === "ObjectPattern")
+      return pattern.properties.flatMap((property) => {
+        const value = property.type === "RestElement" ? property.argument : property.value;
+        return [
+          ...(bindingNames(value).length === 1 && bindingNames(value).includes(name)
+            ? [property]
+            : []),
+          ...bindingComments(value, name),
+        ];
+      });
+    if (pattern.type === "ArrayPattern")
+      return pattern.elements.flatMap((item) => (item ? bindingComments(item, name) : []));
+    return [];
+  };
+  const bindingDocumentation = (
+    pattern: Node,
+    declarator: Span,
+    index: number,
+    boundary: Span,
+    name: string,
+  ): Span => {
+    const own = bindingComments(pattern, name).find(documented);
+    if (own) return own;
+    if (bindingNames(pattern)[0] === name) {
+      if (documented(declarator)) return declarator;
+      if (index === 0) return boundary;
+    }
+    return pattern.type === "Identifier"
+      ? declarator
+      : (bindingComments(pattern, name)[0] ?? declarator);
+  };
   for (const statement of parsed.program.body) {
     const declaration =
       statement.type === "ExportNamedDeclaration" ? statement.declaration : statement;
     if (declaration === null) continue;
     const documentation = statement.type === "ExportNamedDeclaration" ? statement : declaration;
     if (declaration.type === "VariableDeclaration")
-      for (const value of declaration.declarations)
+      for (const [index, value] of declaration.declarations.entries())
         for (const name of bindingNames(value.id))
           bindings.set(name, {
             declaration,
-            documentation,
+            documentation: bindingDocumentation(value.id, value, index, documentation, name),
             pattern: value.id,
             initializer: value.init ?? undefined,
           });
@@ -455,7 +493,7 @@ export function inspectSource(source: SourceFile): string[] {
     const key = `${declaration.start}:${localName ?? "*"}`;
     if (checked.has(key)) return;
     checked.add(key);
-    if (!documented(documentation))
+    if (declaration.type !== "VariableDeclaration" && !documented(documentation))
       report(documentation, "Document every exported symbol with JSDoc.");
     signatureTypes(declaration);
     objectMembers(declaration);
@@ -473,10 +511,12 @@ export function inspectSource(source: SourceFile): string[] {
       exposedAnnotations.push(declaration);
     }
     if (declaration.type === "VariableDeclaration")
-      for (const value of declaration.declarations) {
+      for (const [index, value] of declaration.declarations.entries()) {
         if (localName && !bindingNames(value.id).includes(localName)) continue;
         for (const name of bindingNames(value.id)) {
           if (localName && name !== localName) continue;
+          const comment = bindingDocumentation(value.id, value, index, documentation, name);
+          if (!documented(comment)) report(comment, "Document every exported binding with JSDoc.");
           const selected = boundValue(
             value.id,
             { node: value.init ?? undefined, known: true },
