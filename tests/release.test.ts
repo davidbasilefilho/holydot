@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
 import { Effect, Exit } from "effect";
+import { parseSync, type Node } from "oxc-parser";
 import {
   assertMatchingRelease,
   createReleasePlan,
@@ -198,4 +199,71 @@ test("mise publication tasks explicitly select trusted-publishing capable npm", 
   const config = readFileSync(new URL("../mise.toml", import.meta.url), "utf8");
   expect(config).toContain('run = "mise exec npm:npm@11.21.0 -- bun scripts/release.ts dev"');
   expect(config).toContain('run = "mise exec npm:npm@11.21.0 -- bun scripts/release.ts stable"');
+});
+
+/**
+ * Evaluate the actual guard's restricted boolean AST offline, without eval or a GitHub run.
+ *
+ * @param condition - Boolean workflow expression read from the YAML fixture.
+ * @param github - Disposable event context; no real credentials or account actions.
+ * @returns Guard decision; unsupported syntax fails explicitly.
+ */
+function evaluateGuard(condition: string, github: object): boolean {
+  const parsed = parseSync("guard.ts", `(${condition});`);
+  if (parsed.errors.length) throw new Error("Invalid guard syntax");
+  const statement = parsed.program.body[0];
+  if (statement?.type !== "ExpressionStatement") throw new Error("Expected guard expression");
+  const evaluate = (node: Node): unknown => {
+    if (node.type === "Literal" && typeof node.value === "string") return node.value;
+    if (node.type === "ParenthesizedExpression") return evaluate(node.expression);
+    if (node.type === "Identifier" && node.name === "github") return github;
+    if (node.type === "MemberExpression" && node.property.type === "Identifier") {
+      const object = evaluate(node.object);
+      if (object !== null && typeof object === "object")
+        return (object as Record<string, unknown>)[node.property.name];
+    }
+    if (node.type === "UnaryExpression" && node.operator === "!") return !evaluate(node.argument);
+    if (node.type === "BinaryExpression" && node.operator === "==")
+      return evaluate(node.left) === evaluate(node.right);
+    if (node.type === "LogicalExpression" && node.operator === "&&")
+      return Boolean(evaluate(node.left)) && Boolean(evaluate(node.right));
+    if (node.type === "LogicalExpression" && node.operator === "||")
+      return Boolean(evaluate(node.left)) || Boolean(evaluate(node.right));
+    if (node.type === "CallExpression" && node.callee.type === "Identifier") {
+      const value = node.arguments[0] && evaluate(node.arguments[0]);
+      const part = node.arguments[1] && evaluate(node.arguments[1]);
+      if (typeof value === "string" && typeof part === "string") {
+        if (node.callee.name === "contains") return value.includes(part);
+        if (node.callee.name === "startsWith") return value.startsWith(part);
+      }
+    }
+    throw new Error(`Unsupported guard node: ${node.type}`);
+  };
+  return Boolean(evaluate(statement.expression));
+}
+test.each([
+  { ref: "refs/heads/main", allowed: true },
+  { ref: "refs/heads/release/0.1.0-dev-fix", allowed: true },
+  { ref: "refs/heads/release/fix-dev-publication", allowed: true },
+  { ref: "refs/tags/v0.1.0", allowed: true },
+  { ref: "refs/tags/v0.1.0-dev-abc", allowed: false },
+  { ref: "refs/tags/v0.1.0+build", allowed: false },
+])("publication guard limits prerelease-name filtering to tags: $ref", ({ ref, allowed }) => {
+  const text = readFileSync(new URL("../.github/workflows/publish.yml", import.meta.url), "utf8");
+  const workflow = Bun.YAML.parse(text) as { jobs: { validate: { if: string } } };
+  const evaluate = (github: object) => evaluateGuard(workflow.jobs.validate.if, github);
+  const github = {
+    repository: input.repository,
+    ref,
+    ref_name: ref.replace(/^refs\/(heads|tags)\//, ""),
+    event: { deleted: false, repository: { fork: false } },
+  };
+  expect(evaluate(github)).toBe(allowed);
+  expect(evaluate({ ...github, repository: "other/repo" })).toBe(false);
+  expect(evaluate({ ...github, event: { ...github.event, deleted: true } })).toBe(false);
+  expect(evaluate({ ...github, event: { ...github.event, repository: { fork: true } } })).toBe(
+    false,
+  );
+  if (allowed && ref.startsWith("refs/heads/"))
+    expect(Effect.runSync(createReleasePlan({ ...input, ref })).distTag).toBe("dev");
 });

@@ -106,3 +106,33 @@ test.each([
 ])("all local export paths accept documented API without requiring private details: %s", (text) => {
   expect(inspectSource({ path: "scripts/adapters/fixture.ts", text })).toEqual([]);
 });
+
+test.each([
+  "/** Read. */ export function read(options: { value: string }) {}",
+  "/** Read. */ export function read(): { value: string } { return { value: '' }; }",
+  "/** Read. */ function read(options: { value: string }) {} export { read as publicRead };",
+  "/** Read. */ function read(): { value: string } { return { value: '' }; } export default read;",
+  "/** Read. */ export const read = (options: { value: string }) => options;",
+  "/** Read. */ export const read = function(): { value: string } { return { value: '' }; };",
+  "/** Read. */ export declare function read({ value }: { value: string }): void;",
+  "/** API. */ export class API { /** Read. */ read(): { value: string } { return { value: '' }; } }",
+  "/** API. */ export class API { /** Value. */ value: { nested: string } = { nested: '' }; }",
+  "/** API. */ export class API { /** Create. */ constructor(options: { value: string }) {} }",
+])("public signatures expose inline object members: %s", (text) => {
+  expect(
+    inspectSource({ path: "scripts/adapters/fixture.ts", text }).some((error) =>
+      error.includes("object type members"),
+    ),
+  ).toBe(true);
+});
+test.each([
+  "/** Read. */ export function read(options: { /** Value. */ value: string }): { /** Value. */ value: string } { return options; }",
+  "/** Read. */ function read(options: { /** Value. */ value: string }) {} export { read };",
+  "/** Read. */ const read = (options: { /** Value. */ value: string }) => options; export default read;",
+  "/** Read. */ export declare function read({ value }: { /** Value. */ value: string }): void;",
+  "/** API. */ export class API { /** Read. */ read(): { /** Value. */ value: string } { return { value: '' }; } private hidden(options: { value: string }) {} }",
+  "/** Read. */ export function read() { function internal(options: { value: string }) {} type Local = { value: string }; }",
+  "function internal(options: { value: string }): { value: string } { return options; }",
+])("documented signatures pass and internal signatures stay excluded: %s", (text) => {
+  expect(inspectSource({ path: "scripts/adapters/fixture.ts", text })).toEqual([]);
+});

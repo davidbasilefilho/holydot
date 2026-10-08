@@ -34,12 +34,28 @@ export function inspectSource(source: SourceFile): string[] {
         comment.end <= node.start &&
         source.text.slice(comment.end, node.start).trim() === "",
     );
+  const exposedAnnotations: Span[] = [];
+  const parameterTypes = (node: Node) => {
+    if ("typeAnnotation" in node && node.typeAnnotation)
+      exposedAnnotations.push(node.typeAnnotation);
+    if (node.type === "AssignmentPattern") parameterTypes(node.left);
+    if (node.type === "RestElement") parameterTypes(node.argument);
+    if (node.type === "TSParameterProperty") parameterTypes(node.parameter);
+  };
+  const signatureTypes = (node: Node) => {
+    if ("params" in node) for (const parameter of node.params) parameterTypes(parameter);
+    if ("returnType" in node && node.returnType) exposedAnnotations.push(node.returnType);
+  };
   const classMembers = (node: Class) => {
     for (const member of node.body.body) {
       if (member.type === "StaticBlock") continue;
       if ("accessibility" in member && member.accessibility === "private") continue;
       if ("key" in member && member.key.type === "PrivateIdentifier") continue;
       if (!documented(member)) report(member, "Document exposed class members with JSDoc.");
+      if (member.type === "MethodDefinition" || member.type === "TSAbstractMethodDefinition")
+        signatureTypes(member.value);
+      if ("typeAnnotation" in member && member.typeAnnotation)
+        exposedAnnotations.push(member.typeAnnotation);
       if (
         (member.type === "MethodDefinition" || member.type === "TSAbstractMethodDefinition") &&
         member.kind === "constructor"
@@ -55,7 +71,6 @@ export function inspectSource(source: SourceFile): string[] {
   };
   const bindings = new Map<string, { declaration: Node; documentation: Span }>();
   const exposedTypes = new Set<number>();
-  const exposedAnnotations: Span[] = [];
   const checked = new Set<number>();
   const bindingNames = (node: Node): string[] => {
     if (node.type === "Identifier") return [node.name];
@@ -86,6 +101,7 @@ export function inspectSource(source: SourceFile): string[] {
     checked.add(declaration.start);
     if (!documented(documentation))
       report(documentation, "Document every exported symbol with JSDoc.");
+    signatureTypes(declaration);
     if (declaration.type === "ClassDeclaration" || declaration.type === "ClassExpression")
       classMembers(declaration);
     if (declaration.type === "TSEnumDeclaration")
@@ -99,6 +115,7 @@ export function inspectSource(source: SourceFile): string[] {
     if (declaration.type === "VariableDeclaration")
       for (const value of declaration.declarations) {
         if (value.init?.type === "ClassExpression") classMembers(value.init);
+        if (value.init) signatureTypes(value.init);
         if ("typeAnnotation" in value.id && value.id.typeAnnotation)
           exposedAnnotations.push(value.id.typeAnnotation);
       }

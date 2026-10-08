@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   validate:
-    if: github.repository == 'davidbasilefilho/holydot' && !github.event.deleted && !github.event.repository.fork && !contains(github.ref_name, '-dev-') && !contains(github.ref_name, '+')
+    if: github.repository == 'davidbasilefilho/holydot' && !github.event.deleted && !github.event.repository.fork && (!startsWith(github.ref, 'refs/tags/') || (!contains(github.ref_name, '-dev-') && !contains(github.ref_name, '+')))
     uses: ./.github/workflows/validation.yml
     permissions:
       contents: read
