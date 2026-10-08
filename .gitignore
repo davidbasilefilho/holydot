@@ -10,3 +10,5 @@ holydot.setup.md
 
 *.bak-*
 *.tmp-*
+
+package.json.lock

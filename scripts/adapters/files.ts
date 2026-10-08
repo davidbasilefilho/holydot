@@ -83,7 +83,8 @@ export function parseJson(text: string): Effect.Effect<unknown, HolydotError> {
 }
 
 /**
- * Persist only after explicit Save, preserving original bytes and detecting concurrent edits.
+ * Persist after Save under an exclusive cooperating-writer lock, retaining original bytes. External
+ * editors do not honor this lock; comparison plus rename is not filesystem CAS.
  *
  * @param path - Absolute target path.
  * @param original - Previously read bytes, or null for initial setup.
@@ -95,56 +96,79 @@ export function saveConfigFile(
   original: StoredFile | null,
   content: string,
 ): Effect.Effect<string | null, HolydotError> {
-  return Effect.gen(function* () {
-    const current = yield* readConfigFile(path);
-    if (current?.content !== original?.content)
-      return yield* Effect.fail(
-        new HolydotError({
-          message:
-            "Configuration changed during setup; reload it before saving. No overwrite occurred.",
+  return Effect.scoped(
+    Effect.gen(function* () {
+      const lockPath = `${path}.lock`;
+      yield* Effect.acquireRelease(
+        Effect.try({
+          try: () => openSync(lockPath, "wx", 0o600),
+          catch: (cause) =>
+            new HolydotError({
+              message:
+                "Cannot acquire configuration save lock. Another save or a stale lock may exist; inspect it before retrying.",
+              cause,
+            }),
         }),
+        (fd) =>
+          Effect.sync(() => {
+            try {
+              closeSync(fd);
+            } finally {
+              unlinkSync(lockPath);
+            }
+          }),
       );
-    if (current?.content === content) return null;
-    return yield* Effect.try({
-      try: () => {
-        const suffix = randomUUID();
-        const temporary = `${path}.tmp-${suffix}`;
-        const backup = original === null ? null : `${path}.bak-${suffix}`;
-        let created = false;
-        try {
-          const fd = openSync(temporary, "wx", 0o600);
-          created = true;
+      const current = yield* readConfigFile(path);
+      if (current?.content !== original?.content)
+        return yield* Effect.fail(
+          new HolydotError({
+            message:
+              "Configuration changed during setup; reload it before saving. No overwrite occurred.",
+          }),
+        );
+      if (current?.content === content) return null;
+      return yield* Effect.try({
+        try: () => {
+          const suffix = randomUUID();
+          const temporary = `${path}.tmp-${suffix}`;
+          const backup = original === null ? null : `${path}.bak-${suffix}`;
+          let created = false;
           try {
-            writeFileSync(fd, content, "utf8");
-            fsyncSync(fd);
+            const fd = openSync(temporary, "wx", 0o600);
+            created = true;
+            try {
+              writeFileSync(fd, content, "utf8");
+              fsyncSync(fd);
+            } finally {
+              closeSync(fd);
+            }
+            // Cooperating saves hold the lock across both comparisons and replacement.
+            // External editors can still race: this is not an atomic content CAS.
+            if (original !== null) {
+              const stats = lstatSync(path);
+              if (!stats.isFile() || readFileSync(path, "utf8") !== original.content)
+                throw new Error("Configuration changed before save.");
+              writeFileSync(backup!, original.content, { flag: "wx", mode: 0o600 });
+              renameSync(temporary, path);
+              created = false;
+            } else {
+              // Exclusive atomic creation cannot replace a config created by another process.
+              linkSync(temporary, path);
+            }
+            return backup;
           } finally {
-            closeSync(fd);
+            if (created) unlinkSync(temporary);
           }
-          // Recheck immediately before replacement; the backup is never overwritten.
-          if (original !== null) {
-            const stats = lstatSync(path);
-            if (!stats.isFile() || readFileSync(path, "utf8") !== original.content)
-              throw new Error("Configuration changed before save.");
-            writeFileSync(backup!, original.content, { flag: "wx", mode: 0o600 });
-            renameSync(temporary, path);
-            created = false;
-          } else {
-            // Exclusive atomic creation cannot replace a config created by another process.
-            linkSync(temporary, path);
-          }
-          return backup;
-        } finally {
-          if (created) unlinkSync(temporary);
-        }
-      },
-      catch: (cause) =>
-        new HolydotError({
-          message:
-            "Cannot save configuration atomically. Check permissions and filesystem support; original/backup preserved.",
-          cause,
-        }),
-    });
-  });
+        },
+        catch: (cause) =>
+          new HolydotError({
+            message:
+              "Cannot save configuration atomically. Check permissions and filesystem support; original/backup preserved.",
+            cause,
+          }),
+      });
+    }),
+  );
 }
 
 /**

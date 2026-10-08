@@ -50,6 +50,10 @@ Modelos são identificadores validados, não comprovação de disponibilidade. S
 
 Na edição, a gravação mantém uma cópia `.bak-…` com os bytes originais. Inicialização cria o arquivo de forma exclusiva e atômica; não sobrescreve uma criação concorrente. Falha de permissões, arquivo inválido, symlink, UTF-8 corrompido ou mudança detectada durante o editor aborta a parte afetada.
 
+Gravações do holydot usam um lock exclusivo `<arquivo>.lock` durante leitura, comparação, backup e substituição. Outro processo de setup que tenta salvar nesse período recebe um erro e deve recarregar antes de tentar novamente; não há espera nem sobrescrita por outro writer cooperante. O lock é liberado em sucesso, cancelamento da operação ou falha tratada. Após encerramento abrupto pode restar um lock: confira que nenhum processo está gravando, preserve os arquivos e remova apenas o lock obsoleto antes de repetir. O programa não remove locks existentes automaticamente.
+
+Editores externos e writers que ignoram esse protocolo não ficam bloqueados. As comparações detectam alterações observáveis, mas comparação e rename não são CAS atômico do filesystem; uma edição externa depois da comparação final ainda pode competir. Evite editar o mesmo arquivo externamente durante Save. O backup guarda os bytes originalmente carregados, não uma garantia de todas as revisões externas concorrentes.
+
 Configurações v1 são lidas sem modificação. O antigo `delegation.model/effort` migra para especialistas; a coordenação recebe seu próprio padrão. Velocidade e intervalo são preservados. O escopo antigo de regras de conta sai das preferências gerais, mas permanece no backup original. O editor informa a migração, que ocorre apenas em Save. Cancel e render não migram o arquivo em disco.
 
 ## Aplicação no host
