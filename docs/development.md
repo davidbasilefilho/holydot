@@ -18,6 +18,10 @@ O gate usa AST para rejeitar async, await, new Promise, throw e try/catch nativo
 
 ## Dependências
 
+O gate de documentação faz inspeção estática do AST e resolve apenas declarações do mesmo módulo. A resolução compartilhada segue aliases, wrappers TypeScript, propriedades com chave literal e valores conhecidos de object/array destructuring (renomeação, nesting, defaults conhecidos, holes e rest). Consultas públicas `typeof` usam esses mesmos valores; acessos qualificados ou índices literais selecionam a parte exposta. Assinaturas alcançadas alimentam o fechamento de tipos locais e herança, com deduplicação e proteção contra ciclos. Anotações literais de objetos/tuplas também podem ser projetadas para a binding selecionada.
+
+A matriz de testes cruza essas formas com export direto, alias, default, assinatura `typeof`, campo público de classe e membro de objeto. Casos positivos preservam irmãos não exportados, membros privados, escopos que sombreiam nomes e imports externos. Isso não substitui o typecheck: não executa inicializadores, segue imports, avalia chamadas, infere retornos de corpos, calcula chaves dinâmicas nem acompanha mutações posteriores. Valores ou projeções cuja forma não é conhecida por essas regras ficam fora da resolução; o lint/typecheck separado continua necessário.
+
 As dependências diretas usam caret e bun.lock reproduzível. OpenTUI/Solid é a base da TUI; tuiparts não é necessário para este editor. A faixa de Solid começa com caret e tem limite `<1.9.13`, pois 1.9.12 é o peer exato de OpenTUI 0.5.16. O limite mantém uma única implementação reativa também na instalação do consumidor, sem override incompatível com npm pack. Atualize o par somente após verificar compatibilidade. TypeScript 7 é a ferramenta de linguagem; OXC fornece o parser de AST, sem depender da antiga API JavaScript do compilador TypeScript.
 
 ## Pacote instalável
