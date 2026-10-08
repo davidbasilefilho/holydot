@@ -19,6 +19,8 @@ Modelo simplificado e modificado a partir de Intent, Assignment e AssignmentMeta
 - Efeitos externos já autorizados:
 - Checkpoint: branch de trabalho autorizada, gatilhos de workflow inspecionados e confirmação de push exigida pelo host:
 - Restrições e autorizações já concedidas:
+- Evidência da autorização vigente, fluxo/efeitos automáticos conhecidos e limites de canal:
+- Mudanças materiais ou exigências obrigatórias ainda pendentes:
 
 Use o contrato completo somente quando a complexidade ou o handoff exigir; deixe de fora campos sem efeito nesta tarefa. Para uma tarefa simples, uma frase pode bastar. Antes de delegar uma execução, resolva as dúvidas materiais de requisitos que possam ser esclarecidas; agrupe decisões relacionadas em lotes numerados e não deixe o executor redescobrir decisões já disponíveis. HolyCodex não é dependência operacional deste contrato.
 
@@ -36,3 +38,7 @@ Bloqueios devem ser registrados com causa e próximo passo; não são sucesso. R
 Em trabalho versionado, planeje commits e pushes dos checkpoints significativos dentro da autorização vigente. A coordenação conserva a propriedade da integração. Local-only não conclui a persistência remota; registre bloqueios e peça a confirmação pelo controle suportado quando necessária. Este contrato não salva regras de conta nem autoriza merge, tags, publicação ou implantação.
 
 Prepare contexto e pesquisa antes do plano; inferir preferências não concede permissão. Reúna todas as decisões relacionadas da etapa em lotes claros e manejáveis, sem limite pequeno e arbitrário. A coordenação abre proativamente um PR normal, sem draft, quando a verificação sustenta funcionalidade e qualidade; confira estado e SHA do head e mantenha merge/release/implantação sujeitos à autorização própria.
+
+## **Continuidade da autorização**
+
+Recupere e aplique a autorização já dada ao mesmo fluxo e escopo antes de pedir confirmação. Continue etapas rotineiras previsíveis, incluindo manter a descrição do PR com SHA, evidências e limitações, sem reconfirmar. Merge e dev já autorizados no fluxo conhecido podem prosseguir após os gates; estável adiada mantém tag estável e latest vedados até ordem própria. Nova confirmação cabe para autorização ausente, mudança material de destino, dados, escopo, risco ou compromisso, ou exigência obrigatória do host. Se a ferramenta alegar falta de autorização, recupere a evidência e use a retomada suportada antes de repetir a pergunta; nunca contorne uma negativa ou confirmação obrigatória. Política renderizada não concede permissões: consulte a autoridade real do host, sem decidir por palavras-chave.

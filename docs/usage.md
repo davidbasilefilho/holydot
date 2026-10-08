@@ -41,3 +41,7 @@ Teste o comportamento relevante, os caminhos de erro e a interface implementada.
 ## Texto literal de comunicação
 
 O render inclui integralmente o bloco genérico aprovado em inglês na fonte canônica [instructions/holydot.md](../instructions/holydot.md), incluindo headings em negrito, estilo consistente em respostas longas e entrega completa de artefatos. O bloco é preservado literalmente; referências pessoais só devem ser consultadas pelos controles disponíveis e nunca são incorporadas ao pacote. Panoramas recorrentes mantêm sua autorização e agendamento próprios; não restringem atualizações úteis de trabalho em andamento.
+
+## **Continuidade da autorização**
+
+Recupere e aplique a autorização já dada ao mesmo fluxo e escopo antes de pedir confirmação. Continue etapas rotineiras previsíveis, incluindo manter a descrição do PR com SHA, evidências e limitações, sem reconfirmar. Merge e dev já autorizados no fluxo conhecido podem prosseguir após os gates; estável adiada mantém tag estável e latest vedados até ordem própria. Nova confirmação cabe para autorização ausente, mudança material de destino, dados, escopo, risco ou compromisso, ou exigência obrigatória do host. Se a ferramenta alegar falta de autorização, recupere a evidência e use a retomada suportada antes de repetir a pergunta; nunca contorne uma negativa ou confirmação obrigatória. Política renderizada não concede permissões: consulte a autoridade real do host, sem decidir por palavras-chave.

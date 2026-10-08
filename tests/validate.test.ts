@@ -213,6 +213,42 @@ describe("offline package validation", () => {
     );
   });
 
+  test.each(["templates/task.md", "templates/result.md", "docs/usage.md", "docs/account-rules.md"])(
+    "authorization continuity stays aligned in %s",
+    (file) => {
+      const text = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
+      for (const requirement of [
+        "autorização já dada ao mesmo fluxo e escopo",
+        "descrição do PR com SHA, evidências e limitações",
+        "Merge e dev já autorizados no fluxo conhecido",
+        "tag estável e latest vedados até ordem própria",
+        "mudança material de destino, dados, escopo, risco ou compromisso",
+        "retomada suportada antes de repetir a pergunta",
+        "nunca contorne uma negativa ou confirmação obrigatória",
+        "Política renderizada não concede permissões",
+        "autoridade real do host, sem decidir por palavras-chave",
+      ])
+        expect(text).toContain(requirement);
+    },
+  );
+  test("specialist and release boundaries reuse authorization without expanding it", () => {
+    const specialist = readFileSync(
+      new URL("../instructions/specialist.md", import.meta.url),
+      "utf8",
+    );
+    expect(specialist).toContain("Recupere a evidência da autorização recebida");
+    expect(specialist).toContain("mesmo fluxo e escopo sem reconfirmar etapas rotineiras");
+    expect(specialist).toContain("Nunca contorne uma negativa ou confirmação obrigatória");
+    const release = readFileSync(new URL("../docs/releases.md", import.meta.url), "utf8");
+    expect(release).toContain("Recupere essa evidência antes de pedir novamente");
+    expect(release).toContain("adiar apenas estável não revoga dev nem exige reconfirmação");
+    expect(release).toContain("tag estável e latest continuam vedados até ordem própria");
+    expect(release).toContain("não altere credenciais/OIDC por presumir");
+    const acceptance = readFileSync(new URL("../examples/acceptance.md", import.meta.url), "utf8");
+    expect(acceptance).toContain(
+      "Testes de texto/render comprovam o contrato distribuído, não o enforcement",
+    );
+  });
   test("accepts a complete fixture and its local and external links", () => {
     const root = fixture();
     writeFileSync(

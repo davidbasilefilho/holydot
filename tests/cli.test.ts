@@ -173,7 +173,7 @@ describe("settings and configured UTF-8 render", () => {
       "controles reais de autorização e regras personalizadas do host como fonte de autoridade",
     );
     expect(checkpoint).toContain(
-      "Se o push exigir aprovação, solicite a confirmação pelo controle suportado",
+      "Se o push exigir aprovação, solicite a confirmação pelo controle suportado somente quando ela ainda faltar ou for obrigatória",
     );
     expect(checkpoint).toContain(
       "preserve o checkpoint local e informe o bloqueio até obter a resposta",
@@ -231,6 +231,47 @@ describe("settings and configured UTF-8 render", () => {
     expect(output).not.toMatch(
       /libfile_|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
     );
+  });
+  test.each([
+    {
+      scenario: "known merge/dev authorization continues while stable remains forbidden",
+      row: "| Merge e dev já autorizados; fluxo automático conhecido; apenas estável adiada | Continuar merge e dev após os gates, sem reconfirmar; manter tag estável e latest vedados até ordem própria. |",
+    },
+    {
+      scenario: "approved routine PR maintenance proceeds without repeated approval",
+      row: "| Manutenção da descrição do PR aprovada no mesmo escopo | Atualizar SHA, evidências e limitações sem reconfirmar; preservar destino e excluir dados privados. |",
+    },
+    {
+      scenario: "a new material external effect requires its own authority",
+      row: "| Novo efeito externo material não coberto | Pausar o efeito novo e pedir autorização específica; continuar trabalho independente autorizado. |",
+    },
+    {
+      scenario: "mandatory host denial is never bypassed by earlier approval",
+      row: "| Negativa ou confirmação obrigatória do host | Respeitar o bloqueio e o controle exigido; não contornar nem tratar aprovação anterior como dispensa. |",
+    },
+    {
+      scenario: "claimed missing authorization first uses supported recovery",
+      row: "| Ferramenta alega falta de autorização para ação já coberta | Recuperar evidência e tentar retomada suportada; persistindo negativa obrigatória, pausar e relatar. |",
+    },
+  ])("rendered authorization contract: $scenario", async ({ row }) => {
+    const root = directory();
+    await Effect.runPromise(runCli(["setup"], root, save));
+    const before = readFileSync(join(root, "holydot.config.json"));
+    const output = await Effect.runPromise(runCli(["render"], root, cancel));
+    const policy = output.split("## **Continuidade da autorização**")[1]!.split("\n## ")[0]!;
+    expect(policy).toContain(row);
+    expect(policy).toContain("recupere a evidência de autorização já dada");
+    expect(policy).toContain("não exija ordens duplicadas para cada etapa coberta");
+    expect(policy).toContain("restrições posteriores, pausas ou revogações");
+    expect(policy).toContain(
+      "Um pedido isolado de merge, sem evidência de autorização dos efeitos de publicação, não autoriza presumir esses efeitos",
+    );
+    expect(policy).toContain("Nova confirmação cabe quando a autorização realmente faltar");
+    expect(policy).toContain("Nunca contorne uma negativa nem ignore exigência obrigatória");
+    expect(policy).toContain("política renderizada, não enforcement de permissões");
+    expect(policy).toContain("Não decida autorização por palavras-chave");
+    expect(readFileSync(join(root, "holydot.config.json"))).toEqual(before);
+    expect(readdirSync(root)).toEqual(["holydot.config.json"]);
   });
   test("missing, malformed, oversized and symlink configs fail without touching their targets", async () => {
     const root = directory();

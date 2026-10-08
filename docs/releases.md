@@ -31,7 +31,7 @@ A fonte deve estar limpa e no SHA exato do evento. O planner rejeita branches de
 
 ## Aprovação e autenticação
 
-Preparar ou validar o candidato não autoriza publicação. Push nas branches de release, tags, merge, rerun de publicação e npm publish exigem autorização correspondente. Não repita o bootstrap já publicado para resolver atraso de visibilidade.
+Preparar ou validar o candidato não autoriza publicação. Push nas branches de release, tags, merge, rerun de publicação e npm publish exigem autorização correspondente, que pode já ter sido concedida ao mesmo fluxo e escopo. Recupere essa evidência antes de pedir novamente. Com merge e dev já autorizados e publicação automática conhecida, adiar apenas estável não revoga dev nem exige reconfirmação; tag estável e latest continuam vedados até ordem própria. Mudança material ou controle obrigatório do host exige avaliação correspondente; não altere credenciais/OIDC por presumir que a autorização de publicação cobre configuração de conta. Não repita o bootstrap já publicado para resolver atraso de visibilidade.
 
 O publisher esperado no npm aponta para GitHub Actions, `davidbasilefilho/holydot`, `publish.yml`; environment deve corresponder ao workflow (atualmente nenhum). É necessário permitir publicação direta pelo publisher. Não afirme que o formulário foi salvo ou que OIDC funciona sem evidência real. A CLI não altera essa conta.
 
