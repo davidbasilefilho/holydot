@@ -59,6 +59,13 @@ export function inspectSource(source: SourceFile): string[] {
       if ("typeAnnotation" in member && member.typeAnnotation)
         exposedAnnotations.push(member.typeAnnotation);
       if (
+        "value" in member &&
+        member.value &&
+        member.type !== "MethodDefinition" &&
+        member.type !== "TSAbstractMethodDefinition"
+      )
+        objectMembers(member.value);
+      if (
         (member.type === "MethodDefinition" || member.type === "TSAbstractMethodDefinition") &&
         member.kind === "constructor"
       )

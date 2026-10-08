@@ -213,3 +213,46 @@ test.each([
 ])("documented named types pass and generic/internal/external types stay excluded: %s", (text) => {
   expect(inspectSource({ path: "scripts/adapters/fixture.ts", text })).toEqual([]);
 });
+
+test.each([
+  "/** API. */ export class API { /** Options. */ options = { enabled: true }; }",
+  "/** API. */ class API { /** Options. */ options = { enabled: true }; } export { API as PublicAPI };",
+  "/** API. */ class API { /** Options. */ options = { enabled: true }; } export default API;",
+  "/** API. */ export default class { /** Options. */ options = { enabled: true }; }",
+  "/** API. */ export const API = class { /** Options. */ options = { enabled: true }; };",
+  "/** API. */ export class API { /** Options. */ static readonly options = { enabled: true }; }",
+  "/** API. */ export class API { /** Options. */ public options = { /** Nested. */ nested: { enabled: true } }; }",
+  "/** API. */ export class API { /** Options. */ protected options = [{ enabled: true }]; }",
+  "/** API. */ export class API { /** Options. */ options = { enabled: true } as const; }",
+  "/** API. */ export class API { /** Options. */ options = { enabled: true } satisfies Record<string, boolean>; }",
+  "const shared = { enabled: true }; /** API. */ export class API { /** Options. */ options = shared; }",
+  "const shared = { enabled: true }; /** API. */ export class API { /** Options. */ options = { /** Shared. */ ...shared }; }",
+  "/** Base. */ class Base { /** Options. */ options = { enabled: true }; } /** API. */ export class API extends Base {}",
+  "/** API. */ export class API { /** Read. */ read = (options: { enabled: boolean }) => options; }",
+  "/** API. */ export class API { /** Child. */ child = class { /** Options. */ options = { enabled: true }; }; }",
+])(
+  "public class field initializers expose inferred members across equivalent paths: %s",
+  (text) => {
+    expect(inspectSource({ path: "scripts/adapters/fixture.ts", text }).length).toBeGreaterThan(0);
+  },
+);
+
+test.each([
+  "/** API. */ export class API { /** Options. */ options = { /** Enabled. */ enabled: true }; }",
+  "/** API. */ export class API { /** Options. */ static readonly options = [{ /** Enabled. */ enabled: true }]; }",
+  "/** API. */ class API { /** Options. */ options = { /** Enabled. */ enabled: true } as const; } export { API };",
+  "/** API. */ export default class { /** Options. */ options = { /** Enabled. */ enabled: true }; }",
+  "/** API. */ export const API = class { /** Options. */ options = { /** Enabled. */ enabled: true }; };",
+  "const shared = { /** Enabled. */ enabled: true }; /** API. */ export class API { /** Options. */ options = { /** Shared. */ ...shared }; }",
+  "/** API. */ export class API { private options = { enabled: true }; #hidden = { enabled: true }; private static hidden = [{ enabled: true }]; }",
+  "/** API. */ export class API { private read = (options: { enabled: boolean }) => options; }",
+  "/** API. */ export class API { /** Read. */ read() { const hidden = { enabled: true }; } static { const hidden = { enabled: true }; } }",
+  "class Internal { options = { enabled: true }; }",
+  "const shared = { enabled: true }; /** API. */ export class API { private options = shared; }",
+  "/** API. */ export class API { /** Child. */ child = class { private options = { enabled: true }; }; }",
+])(
+  "documented public class initializers pass while private and internal values stay excluded: %s",
+  (text) => {
+    expect(inspectSource({ path: "scripts/adapters/fixture.ts", text })).toEqual([]);
+  },
+);
