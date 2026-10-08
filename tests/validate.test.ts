@@ -2,7 +2,13 @@ import { afterEach, describe, expect, test } from "bun:test";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
-import { REQUIRED_FILES, SOURCE_REVISION, validatePackage } from "../scripts/validate";
+import {
+  REQUIRED_FILES,
+  SOURCE_REVISION,
+  validatePackage as validateEffect,
+} from "../scripts/validate";
+import { Effect } from "effect";
+const validatePackage = (directory: string) => Effect.runSync(validateEffect(directory));
 
 const directories: string[] = [];
 
@@ -27,165 +33,280 @@ afterEach(() => {
 });
 
 describe("offline package validation", () => {
-  test("maintainer API-equivalent cost estimate stays conditional, separate from agent budgets", () => {
-    const usage = readFileSync(new URL("../docs/usage.md", import.meta.url), "utf8");
-    expect(usage).toContain("Modelo de estimativa para manutenção");
-    expect(usage).toContain("custo ponderado API-equivalente");
-    expect(usage).toContain("não é a fórmula confirmada do Pro");
-    expect(usage).toContain("não fixe multiplicadores nesta instrução");
-  });
-
-  test("task contract contains the information needed for a Root handoff", () => {
-    const template = readFileSync(new URL("../templates/task.md", import.meta.url), "utf8");
-    for (const field of [
-      "Objetivo e resultado pretendido, em termos claros",
-      "Escopo aceito e entregáveis",
-      "Fora do escopo e exclusões",
-      "Abordagem viável",
-      "Fontes consultadas e evidências disponíveis",
-      "Decisões materiais resolvidas antes do handoff",
-      "Dependências, acessos e permissões necessários",
-      "Riscos e impactos relevantes",
-      "Critérios de aceitação, testes e verificações",
-      "Efeitos externos já autorizados",
-    ]) {
-      expect(template).toContain(field);
-    }
-  });
-
-  test("quickstart uses bunx without requiring a project dependency and qualifies release tags", () => {
-    const readme = readFileSync(new URL("../README.md", import.meta.url), "utf8");
-    const setup = readFileSync(new URL("../docs/setup.md", import.meta.url), "utf8");
-    expect(readme).toContain("bunx holydot@latest setup");
-    expect(readme).toContain("Depois da primeira versão estável publicada no npm");
-    expect(readme).toContain("sem `bun add`, instalação global ou dependência no seu projeto");
-    expect(setup).toContain("bunx holydot@X.Y.Z setup");
-    expect(setup).toContain(
-      "use `bunx holydot@dev setup` somente quando a tag `dev` estiver publicada",
-    );
-    expect(setup).toContain("sem instalação global, dependência no projeto");
-    expect(setup).toContain("cria `holydot.config.json` atomicamente");
-    expect(setup).toContain(
-      "Se o diretório não for gravável ou o sistema de arquivos não oferecer suporte a hard links",
-    );
-    expect(setup).toContain("não tenta uma gravação não atômica como alternativa");
-    expect(setup).not.toContain("bun add --dev holydot@");
-  });
-
-  test("public elevation guidance reuses informed approval for the same action and device", () => {
+  test("public package instructions reflect autonomy, role separation and batched questions", () => {
     const instructions = readFileSync(
       new URL("../instructions/holydot.md", import.meta.url),
       "utf8",
     );
-    const rules = readFileSync(new URL("../docs/account-rules.md", import.meta.url), "utf8");
-    const acceptance = readFileSync(new URL("../examples/acceptance.md", import.meta.url), "utf8");
-    expect(instructions).toContain("Se existir, não peça a mesma aprovação outra vez");
-    expect(rules).toContain("Se sim, não pergunte de novo");
-    expect(acceptance).toContain("prosseguir sem pedir a mesma confirmação de novo");
-    for (const content of [instructions, rules, acceptance]) {
-      expect(content).toContain("ação, dispositivo");
-      expect(content).toContain("senha no chat");
-      expect(content).toContain("cloud do dot");
-    }
+    expect(instructions).toContain("Agrupe perguntas relacionadas em um único lote");
+    expect(instructions).toContain("GPT-6.1 Sol com esforço medium");
+    expect(instructions).toContain("GPT-6 Luna com esforço high");
+    expect(instructions).toContain("sem seletor rule-mode");
+    expect(instructions).toContain(
+      "Uma chamada aceita pela ferramenta não comprova que o formulário apareceu",
+    );
+    expect(instructions).toContain("licença Apache-2.0");
   });
 
-  test("project status cadence is configurable and host scheduling is not claimed by the CLI", () => {
+  test("adoption uses real rename and readback, preserves profile appearance and qualifies status claims", () => {
     const instructions = readFileSync(
       new URL("../instructions/holydot.md", import.meta.url),
       "utf8",
     );
-    const usage = readFileSync(new URL("../docs/usage.md", import.meta.url), "utf8");
-    const setup = readFileSync(new URL("../docs/setup.md", import.meta.url), "utf8");
-    const statusSection =
-      instructions.split("## Panorama periódico de status por projeto")[1]?.split("\n## ")[0] ?? "";
-    expect(statusSection).toContain(
-      "Não envie mensagens proativas de andamento fora do intervalo configurado",
-    );
-    expect(statusSection).toContain("mesmo quando houver mudança substancial");
-    expect(statusSection).toContain(
-      "A única exceção é uma notificação imediata de pronto para merge que o usuário tenha pedido explicitamente",
-    );
-    expect(statusSection).toContain("padrão é 30 minutos");
-    expect(statusSection).toContain("uma mensagem breve por projeto");
-    expect(statusSection).toContain("mudanças desde o último panorama e evidências verificadas");
-    expect(statusSection).toContain("responda imediatamente nesse mesmo formato");
-    expect(statusSection).toContain(
-      "Um lembrete periódico de intervenção é uma mensagem breve, separada do panorama de progresso",
-    );
-    expect(statusSection).toContain(
-      "só pode ser enviado no intervalo configurado se o projeto tiver pedido essencial ainda sem resposta ou ciência",
-    );
-    expect(statusSection).toContain("Limite o lembrete a esses pedidos");
-    expect(statusSection).toContain(
-      "Não repita pedidos respondidos, reconhecidos, cancelados, resolvidos ou substituídos",
-    );
-    expect(statusSection).toContain("se não houver pedido essencial pendente, não envie lembrete");
-    expect(statusSection).toContain(
-      "usando formulário, controle dedicado ou ferramenta estruturada de perguntas apropriada",
-    );
-    expect(statusSection).toContain("Nunca apresente opções em texto comum");
-    expect(statusSection).toContain("relate falha ou incerteza honestamente");
-    expect(statusSection).toContain("Não invente progresso");
-    expect(statusSection).not.toContain("mensagens de progresso imediatas");
-    expect(statusSection).toContain("não instala nem inicia um agendador");
-    expect(usage).toContain("padrão é um panorama breve por projeto ativo a cada 30 minutos");
-    expect(setup).toContain('"intervalMinutes": 30');
-    expect(setup).toContain("--status-interval-minutes 60");
-    expect(setup).toContain("O CLI não cria cron, daemon ou serviço de fundo");
-    expect(setup).toContain("Não envie progresso proativo fora do intervalo");
-    expect(setup).toContain("Para decisão, opinião, ação ou aprovação");
-    expect(setup).toContain("Lembretes de intervenção são mensagens breves, separadas do panorama");
-    expect(setup).toContain("só ocorrem no intervalo para projetos com pedido essencial");
-    expect(setup).toContain("sem pendência essencial, não envie lembrete");
+    const adoption = instructions.split("### **Identidade e adoção**")[1]!.split(/\n#{2,3} /)[0]!;
+    expect(adoption).toContain("Quando o dono pedir para adotar ou instalar");
+    expect(adoption).toContain("cloud_threads.change_orbit_name");
+    expect(adoption).toContain("definindo **holydot**");
+    expect(adoption).toContain("cloud_threads.get_orbit_profile");
+    expect(adoption).toContain("Só afirme que o nome mudou se o resultado confirmar **holydot**");
+    expect(adoption).toContain("Preserve o avatar e as cores atuais");
+    expect(adoption).toContain("Não altere pet, imagem, cor, nem outras configurações do perfil");
+    expect(adoption).toContain("Diferencie instruções em uso de nome de perfil verificado");
+    expect(adoption).toContain("Se a alteração ou a verificação falhar ou não estiver disponível");
+    expect(adoption).toContain("o que continua pendente, com o próximo passo suportado");
+    expect(adoption).toContain("não comprova a mudança");
+    expect(adoption).toContain("sem pedir que o usuário repita uma autorização já explícita");
+    const status = instructions.split("### **Atualizações de status**")[1]!.split(/\n#{2,3} /)[0]!;
+    expect(status).toContain("Uma preferência de intervalo não cria um agendamento");
+    expect(status).toContain("confirme sua configuração antes de afirmar que está ativo");
+    expect(status).toContain("uma mensagem curta por projeto ainda ativo");
+    expect(status).toContain("verificação pendente");
+    expect(status).toContain("Responda imediatamente a pedidos de status");
   });
 
-  test("status acceptance examples suppress progress churn and track only pending interventions", () => {
-    const acceptance = readFileSync(new URL("../examples/acceptance.md", import.meta.url), "utf8");
-    const panoramaPolicy = [
-      "não enviar mensagens proativas de andamento fora do intervalo configurado, que é 30 minutos por padrão",
-      "Inícios de verificação, login confirmado, push na fila, CI intermediária e transferências não viram avisos separados",
-      "Um pedido direto de status recebe resposta imediata, uma por projeto",
-      "Um pedido aceito pela ferramenta não prova que foi exibido",
-    ];
-    for (const rule of panoramaPolicy) expect(acceptance).toContain(rule);
-    expect(acceptance).toContain(
-      "Não repita pedidos respondidos, reconhecidos, cancelados, resolvidos ou substituídos",
+  test.each([
+    {
+      file: "templates/task.md",
+      required: [
+        "branch de trabalho autorizada",
+        "gatilhos de workflow inspecionados",
+        "Local-only não conclui a persistência remota",
+        "controle suportado",
+        "não salva regras de conta",
+      ],
+    },
+    {
+      file: "templates/result.md",
+      required: [
+        "SHA remoto verificado",
+        "confirmação pendente",
+        "Um commit apenas local não conclui a persistência remota",
+        "CI da versão entregue",
+        "autorização pendente para merge",
+      ],
+    },
+    {
+      file: "instructions/specialist.md",
+      required: [
+        "SHA remoto verificado",
+        "gatilhos de workflow",
+        "propriedade da integração",
+        "não comprova persistência remota",
+        "sem supor uma regra de conta permanente",
+      ],
+    },
+    {
+      file: "docs/usage.md",
+      required: [
+        "commit e push",
+        "branch de trabalho autorizada",
+        "SHA remoto",
+        "controle suportado",
+        "render não salva nem recria regras de conta",
+      ],
+    },
+    {
+      file: "docs/account-rules.md",
+      required: [
+        "gatilhos de workflow",
+        "SHA da referência remota",
+        "um commit apenas local não conclui a persistência remota",
+        "controles vivos de permissão",
+        "não salvam uma regra de conta nem recriam uma regra excluída",
+        "formulário real de confirmação do host",
+        "não é permissão permanente presumida",
+      ],
+    },
+    {
+      file: "docs/setup.md",
+      required: [
+        "commit/push",
+        "SHA remoto",
+        "não salva regras de conta nem recria regras excluídas",
+        "controle suportado",
+      ],
+    },
+    {
+      file: "examples/acceptance.md",
+      required: [
+        "Checkpoint:",
+        "SHA remoto",
+        "informar bloqueio",
+        "controle de confirmação suportado",
+        "não salva nem recria regra de conta",
+      ],
+    },
+  ])("checkpoint contract remains aligned in $file", ({ file, required }) => {
+    const text = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
+    for (const requirement of required) expect(text).toContain(requirement);
+    expect(text).not.toMatch(
+      /libfile_|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
     );
-    expect(acceptance).toContain(
-      "A única exceção é uma notificação imediata de pronto para merge pedida explicitamente",
-    );
-    expect(acceptance).toContain(
-      "Lembretes de intervenção são mensagens breves, separadas do panorama",
-    );
-    expect(acceptance).toContain(
-      "só ocorrem no intervalo para projetos com pedido essencial ainda sem resposta ou ciência",
-    );
-    expect(acceptance).toContain("Limite-os a esses pedidos");
-    expect(acceptance).toContain("sem pendência essencial, não envie lembrete");
   });
 
-  test("model-role preferences require observable host routing and public role guidance", () => {
-    const instructions = readFileSync(
-      new URL("../instructions/holydot.md", import.meta.url),
-      "utf8",
+  test.each([
+    {
+      file: "templates/task.md",
+      required: [
+        "opções suportadas pesquisadas",
+        "Plano coerente e lote",
+        "inferir preferências não concede permissão",
+        "todas as decisões relacionadas da etapa",
+        "PR normal, sem draft",
+        "estado e SHA do head",
+      ],
+    },
+    {
+      file: "templates/result.md",
+      required: [
+        "estado normal verificado e SHA do head",
+        "Confiança em funcionalidade/qualidade e bloqueios residuais",
+        "evidência de testes/CI ao SHA",
+        "não autoriza merge",
+      ],
+    },
+    {
+      file: "docs/usage.md",
+      required: [
+        "contexto existente e pesquise opções suportadas",
+        "preferências fundamentadas",
+        "plano coerente",
+        "sem limite pequeno e arbitrário",
+        "Inferir uma preferência não concede permissão",
+        "PR normal, sem draft",
+        "estado normal e SHA do head",
+      ],
+    },
+    {
+      file: "docs/policy-index.md",
+      required: [
+        "Planejamento fundamentado e lotes completos",
+        "contexto/pesquisa antes do plano",
+        "PR normal com confiança e head verificado",
+        "leitura real de estado/head do PR",
+      ],
+    },
+    {
+      file: "AGENTS.md",
+      required: [
+        "normal, non-draft pull requests proactively",
+        "confidence in functionality and quality",
+        "Verify PR state and head",
+        "merge/release/deployment authorization separate",
+      ],
+    },
+  ])("planning and normal PR policy stays aligned in $file", ({ file, required }) => {
+    const text = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
+    for (const requirement of required) expect(text).toContain(requirement);
+    expect(text).not.toMatch(
+      /libfile_|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
     );
+  });
+
+  test.each(["templates/task.md", "templates/result.md", "docs/usage.md", "docs/account-rules.md"])(
+    "authorization continuity stays aligned in %s",
+    (file) => {
+      const text = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
+      for (const requirement of [
+        "autorização já dada ao mesmo fluxo e escopo",
+        "descrição do PR com SHA, evidências e limitações",
+        "Merge e dev já autorizados no fluxo conhecido",
+        "tag estável e latest vedados até ordem própria",
+        "mudança material de destino, dados, escopo, risco ou compromisso",
+        "retomada suportada antes de repetir a pergunta",
+        "nunca contorne uma negativa ou confirmação obrigatória",
+        "Política renderizada não concede permissões",
+        "autoridade real do host, sem decidir por palavras-chave",
+      ])
+        expect(text).toContain(requirement);
+    },
+  );
+  test("specialist and release boundaries reuse authorization without expanding it", () => {
     const specialist = readFileSync(
       new URL("../instructions/specialist.md", import.meta.url),
       "utf8",
     );
-    const provenance = readFileSync(new URL("../docs/provenance.md", import.meta.url), "utf8");
-    expect(instructions).toContain("GPT-6.1 Sol (`gpt-6.1-sol`) com esforço `medium`");
-    expect(instructions).toContain("GPT-6 Luna (`gpt-6-luna`) com esforço `high`");
-    expect(instructions).toContain("evidência de roteamento efetivo");
-    expect(instructions).toContain(
-      "Fast é opcional e só deve ser solicitado quando o usuário optar explicitamente",
+    expect(specialist).toContain("Recupere a evidência da autorização recebida");
+    expect(specialist).toContain("mesmo fluxo e escopo sem reconfirmar etapas rotineiras");
+    expect(specialist).toContain("Nunca contorne uma negativa ou confirmação obrigatória");
+    const release = readFileSync(new URL("../docs/releases.md", import.meta.url), "utf8");
+    expect(release).toContain("Recupere essa evidência antes de pedir novamente");
+    expect(release).toContain("adiar apenas estável não revoga dev nem exige reconfirmação");
+    expect(release).toContain("tag estável e latest continuam vedados até ordem própria");
+    expect(release).toContain("não altere credenciais/OIDC por presumir");
+    const acceptance = readFileSync(new URL("../examples/acceptance.md", import.meta.url), "utf8");
+    expect(acceptance).toContain(
+      "Testes de texto/render comprovam o contrato distribuído, não o enforcement",
     );
-    expect(instructions).toContain("conteúdo de papel no pacote público");
-    expect(specialist).toContain("Execute apenas a tarefa limitada recebida");
-    expect(provenance).toContain("ff1b9ff5c2f35100095f19a4b55802bb931f6434");
-    expect(provenance).not.toContain("writing-instructions/SKILL.md");
   });
-
+  test("general instructions have exactly three peer chapters and retain the approved block", () => {
+    const text = readFileSync(new URL("../instructions/holydot.md", import.meta.url), "utf8");
+    const chapters = Array.from(text.matchAll(/^## \*\*(.*?)\*\*$/gm), (match) => match[1]);
+    expect(chapters).toEqual(["I. Autonomia", "II. Eficiência", "III. Qualidade e mergeability"]);
+    expect(text).toContain("três pilares são capítulos sem hierarquia");
+    expect(text).toContain("critérios conjuntos");
+    expect(text).not.toContain("quatro objetivos");
+    expect(text).toContain("Eficiência não impõe cortes de raciocínio, testes ou qualidade");
+    expect(text).toContain("Reutilize sessões e subagentes compatíveis");
+  });
+  test.each([
+    [
+      "profile read before rename and no-op when already correct",
+      "Se o nome já for holydot, confirme o estado atual sem gravar novamente",
+    ],
+    [
+      "uncertain rename reconciles before retry",
+      "Quando houver falha ou leitura divergente, registre a etapa e confira o estado antes de repetir uma gravação",
+    ],
+    [
+      "mandatory rule form replaces redundant chat approval",
+      "esse formulário é o ponto de confirmação. Não acrescente uma pergunta de chat redundante antes",
+    ],
+    [
+      "pending or cancelled form does not grant authority",
+      "Formulário pendente ou cancelado não autoriza a ação coberta",
+    ],
+    [
+      "saved rule needs matching readback",
+      "Só registre salva após confirmação do host e verificada após leitura que corresponda à proposta",
+    ],
+    [
+      "deduplicate by actual scope/behavior, preserving unrelated rules",
+      "Compare ação, destino, escopo e comportamento para identificar a regra correspondente",
+    ],
+    [
+      "pending and cancelled proposals are not silently reopened",
+      "Não reabra uma proposta pendente nem uma cancelada por iniciativa própria",
+    ],
+    [
+      "deleted rule is never automatically restored",
+      "Nunca recrie automaticamente uma regra excluída nem restaure uma cópia antiga",
+    ],
+    [
+      "missing native controls only block the dependent step",
+      "Descubra capacidades reais, relate controles desabilitados e mantenha trabalho independente autorizado",
+    ],
+  ])(
+    "host adoption contract (text gate, not account integration): %s",
+    (_scenario, requirement) => {
+      const text = readFileSync(new URL("../instructions/holydot.md", import.meta.url), "utf8");
+      expect(text).toContain(requirement);
+      expect(text).toContain("Não altere pet, imagem, cor, nem outras configurações do perfil");
+      expect(text).toContain(
+        "Não grave regras pessoais, identificadores privados ou permissões atuais no pacote",
+      );
+    },
+  );
   test("accepts a complete fixture and its local and external links", () => {
     const root = fixture();
     writeFileSync(

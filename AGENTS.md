@@ -7,6 +7,8 @@ This repository is a public instruction package for an existing dot, not an assi
 - Write JSDoc for every public, exposed or exported function, type, interface, class, constant and member. Explain behavior, parameters, return values and relevant failure conditions. Keep TypeScript types in TypeScript rather than duplicating them in tags.
 - Oxfmt formats JSDoc; native Oxlint JSDoc rules check supported tags. The documentation requirement above also applies where native lint does not detect a missing comment.
 - Add positive and negative Bun tests for validator changes. Run `bun run check` before proposing publication. Do not label checks as passed if they were not run.
-- Preserve unrelated changes. Keep new pull requests in draft unless the maintainer asks otherwise.
+- Preserve unrelated changes. Open normal, non-draft pull requests proactively for authorized scoped work when verification supports confidence in functionality and quality. Verify PR state and head, disclose residual blockers, and keep merge/release/deployment authorization separate.
 - Do not add CI monitoring services, review bots, account rules, secrets or a custom backend. The repository's own validation workflows are permitted; they do not monitor other projects.
 - Use only public sources and original project material. Never publish private conversations, credentials or account-specific instructions.
+
+- Recover and apply existing authorization for the same workflow and scope before asking again. Continue predictable authorized steps, including keeping PR descriptions current with head SHA, evidence and limitations. Known merge+dev authorization remains valid when only stable is deferred; stable tags/latest need their own authority. Material changes or mandatory host controls require separate evaluation. Use supported authorization recovery before repeating a question, never bypass a denial. Rendered policy is not permission enforcement; do not infer authority from keywords.

@@ -7,3 +7,8 @@ dist/
 holydot.config.json*
 holydot.instructions.md
 holydot.setup.md
+
+*.bak-*
+*.tmp-*
+
+package.json.lock

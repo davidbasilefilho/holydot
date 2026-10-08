@@ -17,7 +17,7 @@ O manifesto e a política consultados identificam a versão 0.17.0. Esta atribui
 
 O texto Apache-2.0 deste pacote é preservado em [LICENSE](../LICENSE). A atribuição pública usada por esta adaptação permanece em [NOTICE](../NOTICE), que identifica HolyCodex e conserva a atribuição aplicável a OpenAI Codex. O holydot não incorpora código Ratatui, o codec toon-rs ou binários do Codex; as atribuições a esses componentes no repositório original não descrevem componentes distribuídos por este pacote.
 
-O pacote de instruções não tem runtime próprio. A manutenção usa Bun, TypeScript e ferramentas de desenvolvimento registradas em package.json e bun.lock; consulte [desenvolvimento](development.md). O uso do texto não depende dessas ferramentas. A existência desta adaptação não implica endosso de OpenAI, HolyCodex ou de seus colaboradores.
+O pacote não implementa um runtime de assistente. A CLI local usa Bun, Effect, OpenTUI e Solid para preferências e geração de texto; a manutenção usa TypeScript e ferramentas registradas em package.json e bun.lock; consulte [desenvolvimento](development.md). O uso do texto não depende dessas ferramentas. A existência desta adaptação não implica endosso de OpenAI, HolyCodex ou de seus colaboradores.
 
 ## Documentação pública do produto
 

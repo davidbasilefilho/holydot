@@ -28,8 +28,15 @@ description = "Validate the instruction package offline"
 run = "bun scripts/validate.ts"
 
 [tasks.check]
-description = "Run all read-only quality checks"
-run = ["mise run format-check", "mise run lint", "mise run test", "mise run validate"]
+description = "Run quality gates and build the installable CLI"
+run = [
+  "mise run format-check",
+  "mise run lint",
+  "mise run test",
+  "mise run validate",
+  "mise run architecture",
+  "mise run build",
+]
 
 [tasks.hooks-install]
 description = "Install the explicitly requested local Git hooks"
@@ -42,3 +49,23 @@ run = "mise exec npm:npm@11.21.0 -- bun scripts/release.ts dev"
 [tasks.release-stable]
 description = "Publish an authorized stable release from CI"
 run = "mise exec npm:npm@11.21.0 -- bun scripts/release.ts stable"
+
+[tasks.architecture]
+description = "Check Effect boundaries, public JSDoc and UTF-8"
+run = "bun scripts/architecture.ts"
+
+[tasks.bump-x]
+description = "Bump product X and reset Y/maintenance"
+run = "bun scripts/version.ts x"
+
+[tasks.bump-y]
+description = "Bump product Y and reset maintenance"
+run = "bun scripts/version.ts y"
+
+[tasks.bump-z]
+description = "Bump numeric product maintenance Z"
+run = "bun scripts/version.ts z"
+
+[tasks.build]
+description = "Build installable split Bun/Solid CLI"
+run = "bun scripts/build.ts"
