@@ -1,6 +1,6 @@
 # Setup e render
 
-Os comandos públicos de tarefa são `setup` e `render`. Use `-h/--help` e `-v/--version` também depois de um comando. A manutenção de versão pertence a scripts Bun/mise, não à CLI do produto.
+Os comandos públicos de tarefa são `setup`, `render` e `resume`. Use `-h/--help` e `-v/--version` também depois de um comando. A manutenção de versão pertence a scripts Bun/mise, não à CLI do produto.
 
 Depois da publicação da versão desejada:
 

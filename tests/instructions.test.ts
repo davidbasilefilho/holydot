@@ -92,6 +92,38 @@ test("receiver continuity contract preserves precedence, later corrections and a
     expect(canonical.toLowerCase()).toContain(phrase.toLowerCase());
 });
 
+test("render and resume carry the public rule recipes without requiring a separate guide", async () => {
+  const pkg = makePackage(canonical);
+  await Effect.runPromise(
+    runCli(["setup"], pkg.consumer, (config) => Effect.succeed(config), pkg.url),
+  );
+  for (const command of ["render", "resume"]) {
+    const output = await Effect.runPromise(
+      runCli([command], pkg.consumer, () => Effect.die("render/resume must not prompt"), pkg.url),
+    );
+    for (const phrase of [
+      "Checkpoint de trabalho autorizado",
+      "PR normal e manutenção do mesmo escopo",
+      "Resolução de review confirmado",
+      "Estas receitas são propostas públicas",
+      "não use wildcard de todos os repositórios",
+      "Outdated não significa resolvido",
+      "30 minutos",
+      "estado, mudança, evidência, próxima etapa e verificação pendente",
+      "Após mencionar uma conclusão uma vez, retire a tarefa dos seguintes",
+      "exact_schedule",
+      "condition_watch",
+      "Recupere timezone pessoal e canal de entrega da instância atual",
+      "Pedido enviado não é tarefa salva",
+      "tarefa salva sem readback permanece não verificada",
+      "não crie uma tarefa nesta sessão apenas para testar",
+    ])
+      expect(output).toContain(phrase);
+    expect(output.split(literal)).toHaveLength(2);
+    expect(output).toContain("formulário exato obrigatório");
+  }
+});
+
 // Deterministic receiver-contract assertions; these do not simulate host account persistence.
 test.each([
   [
