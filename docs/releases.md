@@ -36,3 +36,7 @@ Preparar ou validar o candidato não autoriza publicação. Push nas branches de
 O publisher esperado no npm aponta para GitHub Actions, `davidbasilefilho/holydot`, `publish.yml`; environment deve corresponder ao workflow (atualmente nenhum). É necessário permitir publicação direta pelo publisher. Não afirme que o formulário foi salvo ou que OIDC funciona sem evidência real. A CLI não altera essa conta.
 
 Depois de publicação autorizada, verifique versão/dist-tag e integridade no npm, tag/SHA e release GitHub, então entregue comandos bunx com versão realmente disponível.
+
+## Fila de publicação
+
+A concorrência de publicação usa um grupo compartilhado, `queue: max` e `cancel-in-progress: false`, conforme a [documentação atual do GitHub.com](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency). O padrão `single` substitui um run pendente quando chega outro evento; `max` preserva até 100 pendentes, sem cancelar a execução ativa. A fila tem limite: novos runs acima de 100 pendentes são cancelados pelo serviço. A ordem segue a entrada na espera, não necessariamente a ordem dos eventos. Verifique runs cancelados e retome somente publicações realmente autorizadas. Não alegue fila ilimitada nem comportamento comprovado por uma publicação que não foi executada.

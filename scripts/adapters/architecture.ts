@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { relative, resolve } from "node:path";
-import { parseSync, Visitor, type Span, type Class } from "oxc-parser";
+import { parseSync, Visitor, type Span, type Class, type Node } from "oxc-parser";
 
 /** Source text and repository-relative filename checked by the architectural gate. */
 export interface SourceFile {
@@ -53,6 +53,81 @@ export function inspectSource(source: SourceFile): string[] {
             report(parameter, "Document exposed constructor parameter properties with JSDoc.");
     }
   };
+  const bindings = new Map<string, { declaration: Node; documentation: Span }>();
+  const exposedTypes = new Set<number>();
+  const exposedAnnotations: Span[] = [];
+  const checked = new Set<number>();
+  const bindingNames = (node: Node): string[] => {
+    if (node.type === "Identifier") return [node.name];
+    if (node.type === "RestElement") return bindingNames(node.argument);
+    if (node.type === "AssignmentPattern") return bindingNames(node.left);
+    if (node.type === "ArrayPattern")
+      return node.elements.flatMap((value) => (value === null ? [] : bindingNames(value)));
+    if (node.type === "ObjectPattern")
+      return node.properties.flatMap((value) =>
+        bindingNames(value.type === "RestElement" ? value.argument : value.value),
+      );
+    return [];
+  };
+  for (const statement of parsed.program.body) {
+    const declaration =
+      statement.type === "ExportNamedDeclaration" ? statement.declaration : statement;
+    if (declaration === null) continue;
+    const documentation = statement.type === "ExportNamedDeclaration" ? statement : declaration;
+    if (declaration.type === "VariableDeclaration")
+      for (const value of declaration.declarations)
+        for (const name of bindingNames(value.id))
+          bindings.set(name, { declaration, documentation });
+    else if ("id" in declaration && declaration.id?.type === "Identifier")
+      bindings.set(declaration.id.name, { declaration, documentation });
+  }
+  const expose = (declaration: Node, documentation: Span) => {
+    if (checked.has(declaration.start)) return;
+    checked.add(declaration.start);
+    if (!documented(documentation))
+      report(documentation, "Document every exported symbol with JSDoc.");
+    if (declaration.type === "ClassDeclaration" || declaration.type === "ClassExpression")
+      classMembers(declaration);
+    if (declaration.type === "TSEnumDeclaration")
+      for (const member of declaration.body.members)
+        if (!documented(member)) report(member, "Document exposed enum members with JSDoc.");
+    if (declaration.type === "TSInterfaceDeclaration")
+      for (const member of declaration.body.body)
+        if (!documented(member)) report(member, "Document exposed interface members with JSDoc.");
+    if (["TSInterfaceDeclaration", "TSTypeAliasDeclaration"].includes(declaration.type))
+      exposedTypes.add(declaration.start);
+    if (declaration.type === "VariableDeclaration")
+      for (const value of declaration.declarations) {
+        if (value.init?.type === "ClassExpression") classMembers(value.init);
+        if ("typeAnnotation" in value.id && value.id.typeAnnotation)
+          exposedAnnotations.push(value.id.typeAnnotation);
+      }
+  };
+  const exposeLocal = (name: string, boundary: Span) => {
+    const local = bindings.get(name);
+    if (local) expose(local.declaration, local.documentation);
+    else if (!documented(boundary))
+      report(boundary, "Document external re-export boundaries with JSDoc.");
+  };
+  for (const statement of parsed.program.body) {
+    if (statement.type === "ExportNamedDeclaration") {
+      if (statement.declaration !== null) expose(statement.declaration, statement);
+      else if (statement.source !== null) {
+        if (!documented(statement))
+          report(statement, "Document external re-export boundaries with JSDoc.");
+      } else
+        for (const specifier of statement.specifiers)
+          exposeLocal(
+            specifier.local.type === "Identifier" ? specifier.local.name : specifier.local.value,
+            statement,
+          );
+    } else if (statement.type === "ExportDefaultDeclaration") {
+      if (statement.declaration.type === "Identifier")
+        exposeLocal(statement.declaration.name, statement);
+      else expose(statement.declaration, statement);
+    } else if (statement.type === "ExportAllDeclaration" && !documented(statement))
+      report(statement, "Document external re-export boundaries with JSDoc.");
+  }
   const main = (node: { test: Span }) =>
     source.text.slice(node.test.start, node.test.end) === "import.meta.main";
   const domain = (node: Span, message: string) => {
@@ -86,38 +161,28 @@ export function inspectSource(source: SourceFile): string[] {
       if (node.async) domain(node, "Async domain functions must return Effect.");
     },
     ExportNamedDeclaration: (node) => {
-      if (node.declaration === null) return;
-      if (
-        node.declaration.type === "TSTypeAliasDeclaration" ||
-        node.declaration.type === "TSInterfaceDeclaration"
-      )
-        exportedTypeDepth++;
-      if (node.declaration.type === "ClassDeclaration") classMembers(node.declaration);
-      if (!documented(node)) report(node, "Document every exported symbol with JSDoc.");
-      if (node.declaration.type === "TSInterfaceDeclaration")
-        for (const member of node.declaration.body.body)
-          if (!documented(member)) report(member, "Document exposed interface members with JSDoc.");
+      if (node.declaration !== null) expose(node.declaration, node);
     },
-    "ExportNamedDeclaration:exit": (node) => {
-      if (
-        node.declaration?.type === "TSTypeAliasDeclaration" ||
-        node.declaration?.type === "TSInterfaceDeclaration"
-      )
-        exportedTypeDepth--;
+    TSInterfaceDeclaration: (node) => {
+      if (exposedTypes.has(node.start)) exportedTypeDepth++;
+    },
+    "TSInterfaceDeclaration:exit": (node) => {
+      if (exposedTypes.has(node.start)) exportedTypeDepth--;
+    },
+    TSTypeAliasDeclaration: (node) => {
+      if (exposedTypes.has(node.start)) exportedTypeDepth++;
+    },
+    "TSTypeAliasDeclaration:exit": (node) => {
+      if (exposedTypes.has(node.start)) exportedTypeDepth--;
     },
     TSTypeLiteral: (node) => {
-      if (exportedTypeDepth > 0)
+      if (
+        exportedTypeDepth > 0 ||
+        exposedAnnotations.some((range) => range.start <= node.start && node.end <= range.end)
+      )
         for (const member of node.members)
           if (!documented(member))
             report(member, "Document exposed object type members with JSDoc.");
-    },
-    ExportDefaultDeclaration: (node) => {
-      if (
-        node.declaration.type === "ClassDeclaration" ||
-        node.declaration.type === "ClassExpression"
-      )
-        classMembers(node.declaration);
-      if (!documented(node)) report(node, "Document default exports with JSDoc.");
     },
   });
   for (const error of parsed.errors) errors.push(`${source.path}: ${error.message}`);

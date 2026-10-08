@@ -174,7 +174,9 @@ test("single publication workflow excludes checkpoint pushes and validates befor
   expect(text).toContain("persist-credentials: false");
   expect(text).not.toContain("NPM_TOKEN");
   expect(text).not.toContain("pull_request_target");
-  expect(text).toContain("cancel-in-progress: false");
+  expect(workflow).toHaveProperty("concurrency.group", "holydot-publish");
+  expect(workflow).toHaveProperty("concurrency.queue", "max");
+  expect(workflow).toHaveProperty("concurrency.cancel-in-progress", false);
   for (const action of text.matchAll(/uses: (\S+)/g))
     if (!action[1]?.startsWith("./")) expect(action[1]).toMatch(/@[a-f0-9]{40}$/);
   const validationText = readFileSync(

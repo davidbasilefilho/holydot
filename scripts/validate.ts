@@ -2,6 +2,7 @@ import { Effect } from "effect";
 import { resolve } from "node:path";
 import { inspectPackage } from "./adapters/validate";
 import { HolydotError } from "./errors";
+/** Package integrity requirements and pinned public provenance used by callers. */
 export { REQUIRED_FILES, SOURCE_REVISION } from "./adapters/validate";
 
 /**

@@ -66,3 +66,43 @@ test.each([
 ])("JSDoc accepts documented API members and ignores private/internal members: %s", (text) => {
   expect(inspectSource({ path: "scripts/adapters/fixture.ts", text })).toEqual([]);
 });
+
+test.each([
+  "const value = 1; export { value };",
+  "export { value as publicValue }; const value = 1;",
+  "/** Export list only. */ export { value }; const value = 1;",
+  "function run() {} export { run as execute };",
+  "/** API. */ class API { value = 1; } export { API };",
+  "/** Options. */ type Options = { value: number }; export type { Options };",
+  "/** State. */ export enum State { Ready }",
+  "/** State. */ enum State { Ready } export { State as PublicState };",
+  "/** State. */ enum State { Ready } export default State;",
+  "/** API. */ class API { value = 1; } export default API;",
+  "/** API. */ export const API = class { value = 1; };",
+  "/** Options. */ const options: { value: number } = { value: 1 }; export { options };",
+  "export { imported } from './external';",
+  "export * from './external';",
+])("all local export paths reject undocumented API declarations or members: %s", (text) => {
+  expect(inspectSource({ path: "scripts/adapters/fixture.ts", text }).length).toBeGreaterThan(0);
+});
+
+test.each([
+  "/** Value. */ const value = 1; export { value as publicValue };",
+  "export { value }; /** Value. */ const value = 1;",
+  "/** Run. */ function run() {} export { run as execute };",
+  "/** API. */ class API { /** Value. */ value = 1; private hidden = 2; } export { API };",
+  "/** Options. */ type Options = { /** Value. */ value: number }; export type { Options };",
+  "/** State. */ export enum State { /** Ready. */ Ready }",
+  "/** State. */ enum State { /** Ready. */ Ready } export { State as PublicState };",
+  "/** State. */ enum State { /** Ready. */ Ready } export default State;",
+  "/** API. */ class API { /** Value. */ value = 1; } export default API;",
+  "/** API. */ export const API = class { /** Value. */ value = 1; };",
+  "/** Options. */ const options: { /** Value. */ value: number } = { value: 1 }; export { options };",
+  "/** Run. */ export const run = () => { type Internal = { value: string }; };",
+  "/** Value. */ const { value } = { value: 1 }; export { value };",
+  "/** Public import. */ export { imported } from './external';",
+  "/** Public exports. */ export * from './external';",
+  "enum Internal { Hidden } type InternalType = { value: number };",
+])("all local export paths accept documented API without requiring private details: %s", (text) => {
+  expect(inspectSource({ path: "scripts/adapters/fixture.ts", text })).toEqual([]);
+});

@@ -12,6 +12,8 @@ permissions:
 # A push to the release branches or a version tag still requires owner authorization.
 concurrency:
   group: holydot-publish
+  # GitHub.com supports up to 100 pending runs; default single would replace older events.
+  queue: max
   cancel-in-progress: false
 
 jobs:
