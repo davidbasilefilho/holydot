@@ -31,3 +31,38 @@ test("public JSDoc is checked for declarations and interface members", () => {
     }),
   ).toEqual([]);
 });
+
+test.each([
+  "/** API. */ export class API { value = 1; }",
+  "/** API. */ export class API { static run() {} }",
+  "/** API. */ export default class { get value() { return 1; } }",
+  "/** API. */ export abstract class API { abstract run(): void; }",
+  "/** API. */ export class API { /** Create. */ constructor(public id: string) {} }",
+  "/** Options. */ export type Options = { value: number };",
+  "/** Options. */ export type Options = { run(): void; [key: string]: unknown };",
+  "/** Options. */ export type Options = { /** Nested. */ nested: { child: string } };",
+  "/** Options. */ export type Options = { /** Value. */ value: number } | { other: string };",
+  "/** Options. */ export interface Options { /** Nested. */ nested: { child: string } }",
+])("JSDoc rejects undocumented exposed class/type members: %s", (text) => {
+  expect(
+    inspectSource({ path: "scripts/adapters/fixture.ts", text }).some(
+      (error) => error.includes("members") || error.includes("parameter properties"),
+    ),
+  ).toBe(true);
+});
+
+test.each([
+  "/** API. */ export class API { /** Value. */ value = 1; /** Run. */ static run() {} }",
+  "/** API. */ export default class { /** Value. */ get value() { return 1; } /** Update. */ set value(next: number) {} }",
+  "/** API. */ export abstract class API { /** Run. */ abstract run(): void; }",
+  "/** API. */ export class API { /** Create. */ constructor(/** Identity. */ public id: string, private hidden: string) {} }",
+  "/** API. */ export class API { private hidden = 1; #secret = 2; static {} }",
+  "/** API. */ export class API { /** Run. */ run() { class Local { value = 1; } } }",
+  "/** Options. */ export type Options = { /** Value. */ value: number; /** Run. */ run(): void; /** Keys. */ [key: string]: unknown };",
+  "/** Options. */ export type Options = { /** Nested. */ nested: { /** Child. */ child: string } };",
+  "/** Options. */ export type Options = { /** Value. */ value: number } & { /** Other. */ other: string };",
+  "class Local { value = 1; } type LocalOptions = { value: number };",
+  "/** Options. */ export type Options = string; type Internal = { value: number };",
+])("JSDoc accepts documented API members and ignores private/internal members: %s", (text) => {
+  expect(inspectSource({ path: "scripts/adapters/fixture.ts", text })).toEqual([]);
+});

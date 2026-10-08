@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { relative, resolve } from "node:path";
-import { parseSync, Visitor, type Span } from "oxc-parser";
+import { parseSync, Visitor, type Span, type Class } from "oxc-parser";
 
 /** Source text and repository-relative filename checked by the architectural gate. */
 export interface SourceFile {
@@ -21,6 +21,7 @@ export function inspectSource(source: SourceFile): string[] {
   const parsed = parseSync(source.path, source.text);
   const adapter = source.path.startsWith("scripts/adapters/");
   let entryDepth = 0;
+  let exportedTypeDepth = 0;
   const report = (node: Span, message: string) => {
     const line = source.text.slice(0, node.start).split("\n").length;
     errors.push(`${source.path}:${line}: ${message}`);
@@ -33,6 +34,25 @@ export function inspectSource(source: SourceFile): string[] {
         comment.end <= node.start &&
         source.text.slice(comment.end, node.start).trim() === "",
     );
+  const classMembers = (node: Class) => {
+    for (const member of node.body.body) {
+      if (member.type === "StaticBlock") continue;
+      if ("accessibility" in member && member.accessibility === "private") continue;
+      if ("key" in member && member.key.type === "PrivateIdentifier") continue;
+      if (!documented(member)) report(member, "Document exposed class members with JSDoc.");
+      if (
+        (member.type === "MethodDefinition" || member.type === "TSAbstractMethodDefinition") &&
+        member.kind === "constructor"
+      )
+        for (const parameter of member.value.params)
+          if (
+            parameter.type === "TSParameterProperty" &&
+            parameter.accessibility !== "private" &&
+            !documented(parameter)
+          )
+            report(parameter, "Document exposed constructor parameter properties with JSDoc.");
+    }
+  };
   const main = (node: { test: Span }) =>
     source.text.slice(node.test.start, node.test.end) === "import.meta.main";
   const domain = (node: Span, message: string) => {
@@ -67,12 +87,36 @@ export function inspectSource(source: SourceFile): string[] {
     },
     ExportNamedDeclaration: (node) => {
       if (node.declaration === null) return;
+      if (
+        node.declaration.type === "TSTypeAliasDeclaration" ||
+        node.declaration.type === "TSInterfaceDeclaration"
+      )
+        exportedTypeDepth++;
+      if (node.declaration.type === "ClassDeclaration") classMembers(node.declaration);
       if (!documented(node)) report(node, "Document every exported symbol with JSDoc.");
       if (node.declaration.type === "TSInterfaceDeclaration")
         for (const member of node.declaration.body.body)
           if (!documented(member)) report(member, "Document exposed interface members with JSDoc.");
     },
+    "ExportNamedDeclaration:exit": (node) => {
+      if (
+        node.declaration?.type === "TSTypeAliasDeclaration" ||
+        node.declaration?.type === "TSInterfaceDeclaration"
+      )
+        exportedTypeDepth--;
+    },
+    TSTypeLiteral: (node) => {
+      if (exportedTypeDepth > 0)
+        for (const member of node.members)
+          if (!documented(member))
+            report(member, "Document exposed object type members with JSDoc.");
+    },
     ExportDefaultDeclaration: (node) => {
+      if (
+        node.declaration.type === "ClassDeclaration" ||
+        node.declaration.type === "ClassExpression"
+      )
+        classMembers(node.declaration);
       if (!documented(node)) report(node, "Document default exports with JSDoc.");
     },
   });
