@@ -49,6 +49,6 @@ export function setup(
       loaded?.stored ?? null,
       `${JSON.stringify(config, null, 2)}\n`,
     );
-    return `Saved local preferences.${backup === null ? "" : ` Previous configuration: ${backup}.`}\nRun holydot render to print the complete instructions.\n`;
+    return `Saved local preferences.${backup === null ? "" : ` Previous configuration: ${backup}.`}\nRun holydot render to print the complete instructions.\nLocal setup does not apply or verify your dot name or custom rules. Provide the full render to your dot for host adoption.\n`;
   });
 }

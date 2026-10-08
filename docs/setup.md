@@ -61,3 +61,23 @@ Configurações v1 são lidas sem modificação. O antigo `delegation.model/effo
 Forneça o render completo ao dot no fluxo autorizado de adoção. Nome holydot deve ser aplicado e verificado pelos controles reais do host; avatar, mascote e cor permanecem intactos. A CLI gera texto e configurações locais, sem modificar diretamente perfil, regras de conta, permissões ou agendamentos. Uma chamada aceita não comprova aplicação ou exibição.
 
 O render inclui o fluxo de checkpoints com commit/push e verificação do SHA remoto em branch autorizada. A instalação/renderização não salva regras de conta nem recria regras excluídas. A autoridade vem das permissões e regras vigentes nos controles reais do host; se for necessária uma aprovação de push, use o controle suportado.
+
+## **Inventário e estados da adoção**
+
+| Etapa                  | Inventário e ação                                                                          | Evidência e retomada                                                                                                            |
+| ---------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| Configuração local     | Ler v1/v2, editar papéis, velocidade, intervalo e CODEX_HOME; Save/Cancel                  | Arquivo e backup; cancelamento preserva bytes; Save idêntico não duplica backup; erro preserva estado e permite nova tentativa. |
+| Render                 | Gerar instruções integrais e preferências, com UTF-8                                       | Saída completa, bloco literal e config intacta; não aplica conta.                                                               |
+| Nome do dot            | Descobrir leitura/rename nativos; ler perfil antes de mudar para holydot                   | Nome já correto só exige leitura; após rename, readback do nome e aparência. Falha/divergência permanece pendente.              |
+| Regra opcional         | Somente mediante solicitação válida; preparar ação, destino, escopo, dados e comportamento | Proposta concreta não é regra salva nem permissão. Não criar regra por toda aprovação de tarefa.                                |
+| Formulário obrigatório | Abrir pelo controle suportado, sem pergunta redundante de chat antes                       | Pendente, cancelado ou bloqueado não é salvo; uma chamada aceita não comprova formulário visível.                               |
+| Regra salva            | Confirmar resultado do host e reler regra correspondente                                   | Só afirmar verificada se readback corresponder. Salva com leitura indisponível permanece não verificada.                        |
+| Retomada               | Ler config, perfil, regras e eventual formulário atual antes de repetir                    | Concluir apenas etapas ainda autorizadas; preservar cancelamento, negativa e regra excluída. Não duplicar regra existente.      |
+
+O render descreve os controles nativos de adoção. A CLI portátil não dispõe de credenciais nem API de conta e não grava o nome ou regras. Quando houver controle nativo autorizado, o dot receptor executa e verifica o fluxo; quando não houver, reporte a etapa bloqueada e o caminho suportado. Não finja integração real a partir de um teste de texto ou mock.
+
+Para regras solicitadas, o formulário real é o ponto de confirmação. Sem controle nativo, Settings > Personalization > Custom rules é a alternativa documentada, quando disponível no workspace. Nenhum teste deste pacote altera conta, perfil ou regras pessoais. Regras excluídas só podem ser propostas novamente após nova solicitação válida; instalação/render nunca as restaura.
+
+Os três pilares são capítulos sem hierarquia: I. autonomia; II. eficiência; III. qualidade e mergeability. O setup mantém os padrões aceitos e os modelos configuráveis; a reescrita não muda capacidades, preferências ou permissões reais.
+
+Na reconciliação de regras, compare ação, destino, escopo e comportamento; preserve regras existentes e opções alheias ao pedido. Não reabra proposta pendente ou cancelada automaticamente: consulte o formulário existente quando válido; cancelamento exige nova solicitação para reabrir. Um controle ausente bloqueia somente sua etapa, sem impedir configuração local, render ou trabalho independente autorizado.

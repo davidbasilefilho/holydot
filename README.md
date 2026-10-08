@@ -1,6 +1,6 @@
 # holydot
 
-Instruções reutilizáveis e configuração local para um dot existente. O holydot pesquisa, prepara, executa e coordena trabalho dentro do escopo autorizado, com eficiência, mergeability, qualidade e autonomia. Não exige HolyCodex instalado.
+Instruções reutilizáveis e configuração local para um dot existente. O holydot pesquisa, prepara, executa e coordena trabalho dentro do escopo autorizado, com três pilares conjuntos, sem hierarquia: I. autonomia; II. eficiência; III. qualidade e mergeability. Não exige HolyCodex instalado.
 
 ## Uso
 

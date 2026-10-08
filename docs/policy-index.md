@@ -18,3 +18,5 @@
 | Integridade e atribuição                          | validate.ts, NOTICE e LICENSE                | tests/validate.test.ts                                                             |
 
 Testes locais não comprovam seletores do host, alteração de perfil, autenticação, OIDC, agendamentos, disponibilidade dos modelos ou comportamento de um dot. Uma chamada aceita não comprova exibição. Relate aprovação, falha, bloqueio e não execução separadamente para a versão efetivamente avaliada.
+
+Os pilares I. autonomia, II. eficiência e III. qualidade e mergeability são capítulos sem hierarquia. [Prompt design](prompt-design.md) documenta as fontes públicas; [setup](setup.md) distingue gates locais de adoção real no host.

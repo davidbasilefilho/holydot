@@ -19,3 +19,9 @@ Os controles vivos de permissão e regras personalizadas do host são a fonte de
 ## **Continuidade da autorização**
 
 Recupere e aplique a autorização já dada ao mesmo fluxo e escopo antes de pedir confirmação. Continue etapas rotineiras previsíveis, incluindo manter a descrição do PR com SHA, evidências e limitações, sem reconfirmar. Merge e dev já autorizados no fluxo conhecido podem prosseguir após os gates; estável adiada mantém tag estável e latest vedados até ordem própria. Nova confirmação cabe para autorização ausente, mudança material de destino, dados, escopo, risco ou compromisso, ou exigência obrigatória do host. Se a ferramenta alegar falta de autorização, recupere a evidência e use a retomada suportada antes de repetir a pergunta; nunca contorne uma negativa ou confirmação obrigatória. Política renderizada não concede permissões: consulte a autoridade real do host, sem decidir por palavras-chave.
+
+## **Formulário, readback e retomada**
+
+Regras são opcionais; uma aprovação de tarefa não precisa virar regra. Para um pedido válido de regra, prepare ação, destino, dados, escopo e comportamento e abra diretamente o formulário obrigatório: não pergunte novamente no chat antes dele. Diferencie proposta, formulário pendente, cancelamento, salva e verificada. Confirme salva pelo resultado do host e verificada por leitura correspondente. Se o controle estiver desabilitado ou ausente, declare o bloqueio e indique Settings > Personalization > Custom rules quando suportado.
+
+Releia o estado antes de retomar; preserve regra já verificada sem duplicar e preserve cancelamentos/negativas. Nunca recrie automaticamente uma regra excluída nem copie regras pessoais ou permissões atuais para config/pacote/fixtures. Acesso a apps, controles de workspace e confirmações obrigatórias permanecem independentes. Testes de contrato não são integração real de conta.

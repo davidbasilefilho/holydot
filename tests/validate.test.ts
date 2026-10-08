@@ -53,12 +53,12 @@ describe("offline package validation", () => {
       new URL("../instructions/holydot.md", import.meta.url),
       "utf8",
     );
-    const adoption = instructions.split("## **Identidade e adoção**")[1]!.split("\n## ")[0]!;
+    const adoption = instructions.split("### **Identidade e adoção**")[1]!.split(/\n#{2,3} /)[0]!;
     expect(adoption).toContain("Quando o dono pedir para adotar ou instalar");
     expect(adoption).toContain("cloud_threads.change_orbit_name");
     expect(adoption).toContain("definindo **holydot**");
     expect(adoption).toContain("cloud_threads.get_orbit_profile");
-    expect(adoption).toContain("só afirme que o nome mudou se o resultado confirmar **holydot**");
+    expect(adoption).toContain("Só afirme que o nome mudou se o resultado confirmar **holydot**");
     expect(adoption).toContain("Preserve o avatar e as cores atuais");
     expect(adoption).toContain("Não altere pet, imagem, cor, nem outras configurações do perfil");
     expect(adoption).toContain("Diferencie instruções em uso de nome de perfil verificado");
@@ -66,7 +66,7 @@ describe("offline package validation", () => {
     expect(adoption).toContain("o que continua pendente, com o próximo passo suportado");
     expect(adoption).toContain("não comprova a mudança");
     expect(adoption).toContain("sem pedir que o usuário repita uma autorização já explícita");
-    const status = instructions.split("## **Atualizações de status**")[1]!.split("\n## ")[0]!;
+    const status = instructions.split("### **Atualizações de status**")[1]!.split(/\n#{2,3} /)[0]!;
     expect(status).toContain("Uma preferência de intervalo não cria um agendamento");
     expect(status).toContain("confirme sua configuração antes de afirmar que está ativo");
     expect(status).toContain("uma mensagem curta por projeto ainda ativo");
@@ -249,6 +249,64 @@ describe("offline package validation", () => {
       "Testes de texto/render comprovam o contrato distribuído, não o enforcement",
     );
   });
+  test("general instructions have exactly three peer chapters and retain the approved block", () => {
+    const text = readFileSync(new URL("../instructions/holydot.md", import.meta.url), "utf8");
+    const chapters = Array.from(text.matchAll(/^## \*\*(.*?)\*\*$/gm), (match) => match[1]);
+    expect(chapters).toEqual(["I. Autonomia", "II. Eficiência", "III. Qualidade e mergeability"]);
+    expect(text).toContain("três pilares são capítulos sem hierarquia");
+    expect(text).toContain("critérios conjuntos");
+    expect(text).not.toContain("quatro objetivos");
+    expect(text).toContain("Eficiência não impõe cortes de raciocínio, testes ou qualidade");
+    expect(text).toContain("Reutilize sessões e subagentes compatíveis");
+  });
+  test.each([
+    [
+      "profile read before rename and no-op when already correct",
+      "Se o nome já for holydot, confirme o estado atual sem gravar novamente",
+    ],
+    [
+      "uncertain rename reconciles before retry",
+      "Quando houver falha ou leitura divergente, registre a etapa e confira o estado antes de repetir uma gravação",
+    ],
+    [
+      "mandatory rule form replaces redundant chat approval",
+      "esse formulário é o ponto de confirmação. Não acrescente uma pergunta de chat redundante antes",
+    ],
+    [
+      "pending or cancelled form does not grant authority",
+      "Formulário pendente ou cancelado não autoriza a ação coberta",
+    ],
+    [
+      "saved rule needs matching readback",
+      "Só registre salva após confirmação do host e verificada após leitura que corresponda à proposta",
+    ],
+    [
+      "deduplicate by actual scope/behavior, preserving unrelated rules",
+      "Compare ação, destino, escopo e comportamento para identificar a regra correspondente",
+    ],
+    [
+      "pending and cancelled proposals are not silently reopened",
+      "Não reabra uma proposta pendente nem uma cancelada por iniciativa própria",
+    ],
+    [
+      "deleted rule is never automatically restored",
+      "Nunca recrie automaticamente uma regra excluída nem restaure uma cópia antiga",
+    ],
+    [
+      "missing native controls only block the dependent step",
+      "Descubra capacidades reais, relate controles desabilitados e mantenha trabalho independente autorizado",
+    ],
+  ])(
+    "host adoption contract (text gate, not account integration): %s",
+    (_scenario, requirement) => {
+      const text = readFileSync(new URL("../instructions/holydot.md", import.meta.url), "utf8");
+      expect(text).toContain(requirement);
+      expect(text).toContain("Não altere pet, imagem, cor, nem outras configurações do perfil");
+      expect(text).toContain(
+        "Não grave regras pessoais, identificadores privados ou permissões atuais no pacote",
+      );
+    },
+  );
   test("accepts a complete fixture and its local and external links", () => {
     const root = fixture();
     writeFileSync(

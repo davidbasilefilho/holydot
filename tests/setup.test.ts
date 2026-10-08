@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { Effect, Exit } from "effect";
 import { setup, loadSettings } from "../scripts/setup";
 import { DEFAULT_CONFIG } from "../scripts/config";
+import { HolydotError } from "../scripts/errors";
 const roots: string[] = [];
 /**
  * Allocate a settings fixture.
@@ -106,3 +107,36 @@ test("invalid prompt results fail before writing", async () => {
 async function expectFailure<A, E>(program: Effect.Effect<A, E>): Promise<void> {
   expect(Exit.isFailure(await Effect.runPromiseExit(program))).toBe(true);
 }
+
+test("unchanged repeated setup is idempotent and does not accumulate backups", async () => {
+  const path = fixture();
+  const save = (config: typeof DEFAULT_CONFIG) => Effect.succeed(config);
+  const output = await Effect.runPromise(setup(path, {}, save));
+  expect(output).toContain("Local setup does not apply or verify your dot name or custom rules");
+  const before = readFileSync(path);
+  await Effect.runPromise(setup(path, {}, save));
+  expect(readFileSync(path)).toEqual(before);
+  expect(readdirSync(roots[0]!)).toEqual(["holydot.config.json"]);
+  await Effect.runPromise(setup(path, { "--status-interval-minutes": "60" }, save));
+  const changed = readFileSync(path);
+  const afterEdit = readdirSync(roots[0]!).sort();
+  expect(afterEdit.filter((name) => name.includes(".bak-")).length).toBe(1);
+  await Effect.runPromise(setup(path, {}, save));
+  expect(readFileSync(path)).toEqual(changed);
+  expect(readdirSync(roots[0]!).sort()).toEqual(afterEdit);
+});
+
+test("failed prompt preserves state and supported retry/cancel is recoverable", async () => {
+  const path = fixture();
+  const unavailable = () =>
+    Effect.fail(new HolydotError({ message: "Fixture prompt unavailable" }));
+  await expectFailure(setup(path, {}, unavailable));
+  expect(readdirSync(roots[0]!)).toEqual([]);
+  await Effect.runPromise(setup(path, {}, (config) => Effect.succeed(config)));
+  const before = readFileSync(path);
+  await expectFailure(setup(path, { "--speed": "fast" }, unavailable));
+  expect(readFileSync(path)).toEqual(before);
+  await Effect.runPromise(setup(path, { "--speed": "fast" }, () => Effect.succeed(null)));
+  expect(readFileSync(path)).toEqual(before);
+  expect(readdirSync(roots[0]!)).toEqual(["holydot.config.json"]);
+});

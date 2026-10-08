@@ -42,3 +42,11 @@ Prepare contexto e pesquisa antes do plano; inferir preferências não concede p
 ## **Continuidade da autorização**
 
 Recupere e aplique a autorização já dada ao mesmo fluxo e escopo antes de pedir confirmação. Continue etapas rotineiras previsíveis, incluindo manter a descrição do PR com SHA, evidências e limitações, sem reconfirmar. Merge e dev já autorizados no fluxo conhecido podem prosseguir após os gates; estável adiada mantém tag estável e latest vedados até ordem própria. Nova confirmação cabe para autorização ausente, mudança material de destino, dados, escopo, risco ou compromisso, ou exigência obrigatória do host. Se a ferramenta alegar falta de autorização, recupere a evidência e use a retomada suportada antes de repetir a pergunta; nunca contorne uma negativa ou confirmação obrigatória. Política renderizada não concede permissões: consulte a autoridade real do host, sem decidir por palavras-chave.
+
+## **Três pilares conjuntos**
+
+I. autonomia: assumir o resultado e continuar trabalho autorizado. II. eficiência: reutilizar contexto, sessões, caches e artefatos, com paralelismo útil. III. qualidade e mergeability: preservar fidelidade, validar e integrar com evidência. A numeração identifica capítulos sem hierarquia; eficiência não corta qualidade.
+
+- Setup/adoção, quando pertinente: configuração local e render; nome e aparência lidos; controles disponíveis; proposta de regra explicitamente solicitada; formulário obrigatório e readback necessários.
+
+- Retomada de regra, quando pertinente: ação/destino/escopo/comportamento correspondentes; estado pendente ou cancelado preservado; regra existente mantida sem duplicar; controles ausentes bloqueiam só a etapa afetada.
