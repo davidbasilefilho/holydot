@@ -9,6 +9,8 @@ const scenario = JSON.parse(process.argv[2]!) as {
   channels: Record<string, { version: string; commit: string | null }>;
   existingIntegrity?: string;
   existingDraft?: boolean;
+  npmVersion?: string;
+  nodeVersion?: string;
   relation?: string;
   advanced?: { version: string; commit: string | null };
 };
@@ -124,7 +126,11 @@ Object.defineProperty(Bun, "spawn", {
   value: (command: string[]) => {
     actions.push(command.slice(0, 2).join(" "));
     let output = "";
-    if (command[0] === "git" && command[1] === "rev-parse") output = scenario.sha;
+    if (command[0] === "npm" && command[1] === "--version")
+      output = scenario.npmVersion ?? "11.21.0";
+    else if (command[0] === "node" && command[1] === "--version")
+      output = scenario.nodeVersion ?? "v24.21.0";
+    else if (command[0] === "git" && command[1] === "rev-parse") output = scenario.sha;
     else if (command[0] === "git" && command[1] === "status") output = "";
     else if (command[0] === "bun" && command[1] === "run") output = "";
     else if (command[0] === "npm" && command[1] === "pack")

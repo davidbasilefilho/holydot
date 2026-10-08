@@ -40,7 +40,7 @@ Teste o comportamento relevante, os caminhos de erro e a interface implementada.
 
 ## Texto literal de comunicação
 
-O render inclui integralmente o bloco genérico aprovado em inglês na fonte canônica [instructions/holydot.md](../instructions/holydot.md), incluindo headings em negrito, estilo consistente em respostas longas e entrega completa de artefatos. O bloco é preservado literalmente; referências pessoais só devem ser consultadas pelos controles disponíveis e nunca são incorporadas ao pacote. Panoramas recorrentes mantêm sua autorização e agendamento próprios; não restringem atualizações úteis de trabalho em andamento.
+O render inclui integralmente o bloco genérico aprovado em inglês na fonte canônica [instructions/holydot.md](../instructions/holydot.md), preservando os headings originais, lowercase e qualificadores, apresentação híbrida adaptativa, pesquisa e entrega completa de artefatos. O bloco é preservado literalmente; referências pessoais só devem ser consultadas pelos controles disponíveis e nunca são incorporadas ao pacote. Panoramas recorrentes mantêm sua autorização e agendamento próprios; não restringem atualizações úteis de trabalho em andamento.
 
 ## **Continuidade da autorização**
 
@@ -49,3 +49,5 @@ Recupere e aplique a autorização já dada ao mesmo fluxo e escopo antes de ped
 ## **Três pilares e adoção**
 
 I. autonomia; II. eficiência; III. qualidade e mergeability são capítulos sem hierarquia e critérios conjuntos. Consulte o [fluxo de setup e adoção](setup.md) para configuração local, nome, regras opcionais, retomada e readback. A base pública da reescrita está em [orientação de prompts](prompt-design.md).
+
+A fonte atual substitui integralmente o bloco anterior. Somente as quebras CRLF são normalizadas para LF; detalhes de tamanho/hash e limites da verificação estão em [docs/prompt-design.md](prompt-design.md). O render não reescreve os headings literais para aplicar a própria orientação de formatação do texto.
