@@ -51,3 +51,29 @@ test("full render preserves exact Markdown, bold headings, privacy and unrelated
     rmSync(root, { recursive: true, force: true });
   }
 });
+
+test("direct wording states the intended test, environment and expected log without response rituals", () => {
+  const source = readFileSync(new URL("../instructions/holydot.md", import.meta.url), "utf8");
+  const section = source
+    .split("### **Formulação direta**")[1]
+    ?.split("### **Comunicação e apresentação")[0];
+  expect(section).toBeDefined();
+  for (const phrase of [
+    "ação ou intenção real",
+    "quem deve agir",
+    "qual retorno é esperado",
+    "nomes concretos",
+    "arquivo intermediário de final",
+    "contexto que ainda não foi comunicado",
+    "mais curta que preserve escopo",
+    "sem compensar uma frase ruim com mais parágrafos",
+    "não exige checklist, títulos ou relatório em toda resposta",
+    "profundidade e formatos úteis quando solicitados",
+    "teste no Windows já instalado no seu PC e me envie o log",
+    "não instala nem formata nada",
+    "não é instalar Windows",
+    "candidata de diagnóstico",
+    "deixa ação, ambiente e retorno indefinidos",
+  ])
+    expect(section).toContain(phrase);
+});

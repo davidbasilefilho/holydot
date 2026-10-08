@@ -188,3 +188,28 @@ test("named local object export checks only exposed bindings in a shared declara
     }).some((error) => error.includes("object literal members")),
   ).toBe(true);
 });
+
+test.each([
+  "/** Result. */ interface Result { value: string } /** Read. */ export function read(): Result { return {} as Result; }",
+  "/** Result. */ type Result = { value: string }; /** Read. */ export const read = (input: Result) => input;",
+  "/** Base. */ interface Base { value: string } /** Result. */ interface Result extends Base {} /** Read. */ export function read(): Result { return {} as Result; }",
+  "/** Base. */ type Base = { value: string }; /** Result. */ type Result = Base; /** Read. */ export function read(): Result { return {} as Result; }",
+  "/** A. */ interface A { /** B. */ b: B } /** B. */ interface B { value: string; /** A. */ a: A } /** Read. */ export function read(): A { return {} as A; }",
+  "/** Base. */ class Base { value = 1; } /** API. */ export class API extends Base {}",
+  "/** Result. */ interface Result { value: string } /** API. */ export class API { /** Read. */ read(): Result { return {} as Result; } }",
+])("public named local types and inherited members require documentation: %s", (text) => {
+  expect(inspectSource({ path: "scripts/adapters/fixture.ts", text }).length).toBeGreaterThan(0);
+});
+
+test.each([
+  "/** Result. */ interface Result { /** Value. */ value: string } /** Read. */ export function read(): Result { return {} as Result; }",
+  "/** Base. */ interface Base { /** Value. */ value: string } /** Result. */ interface Result extends Base {} /** Read. */ export function read(): Result { return {} as Result; }",
+  "/** A. */ interface A { /** B. */ b: B } /** B. */ interface B { /** A. */ a: A } /** Read. */ export function read(): A { return {} as A; }",
+  "interface T { hidden: string } /** Read. */ export function read<T>(input: T): T { return input; }",
+  "interface T { hidden: string } /** API. */ export interface API<T> { /** Value. */ value: T }",
+  "interface Hidden { hidden: string } /** Read. */ export function read() { const internal: Hidden = {} as Hidden; }",
+  "interface Hidden { hidden: string } /** API. */ export class API { private hidden(): Hidden { return {} as Hidden; } }",
+  'import type { Result } from "external"; /** Read. */ export function read(): Result { return {} as Result; }',
+])("documented named types pass and generic/internal/external types stay excluded: %s", (text) => {
+  expect(inspectSource({ path: "scripts/adapters/fixture.ts", text })).toEqual([]);
+});

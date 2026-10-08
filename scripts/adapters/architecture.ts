@@ -43,6 +43,8 @@ export function inspectSource(source: SourceFile): string[] {
     if (node.type === "TSParameterProperty") parameterTypes(node.parameter);
   };
   const signatureTypes = (node: Node) => {
+    if ("typeParameters" in node && node.typeParameters)
+      exposedAnnotations.push(node.typeParameters);
     if ("params" in node) for (const parameter of node.params) parameterTypes(parameter);
     if ("returnType" in node && node.returnType) exposedAnnotations.push(node.returnType);
   };
@@ -132,16 +134,20 @@ export function inspectSource(source: SourceFile): string[] {
       report(documentation, "Document every exported symbol with JSDoc.");
     signatureTypes(declaration);
     objectMembers(declaration);
-    if (declaration.type === "ClassDeclaration" || declaration.type === "ClassExpression")
+    if (declaration.type === "ClassDeclaration" || declaration.type === "ClassExpression") {
       classMembers(declaration);
+      if (declaration.superClass) exposedAnnotations.push(declaration.superClass);
+    }
     if (declaration.type === "TSEnumDeclaration")
       for (const member of declaration.body.members)
         if (!documented(member)) report(member, "Document exposed enum members with JSDoc.");
     if (declaration.type === "TSInterfaceDeclaration")
       for (const member of declaration.body.body)
         if (!documented(member)) report(member, "Document exposed interface members with JSDoc.");
-    if (["TSInterfaceDeclaration", "TSTypeAliasDeclaration"].includes(declaration.type))
+    if (["TSInterfaceDeclaration", "TSTypeAliasDeclaration"].includes(declaration.type)) {
       exposedTypes.add(declaration.start);
+      exposedAnnotations.push(declaration);
+    }
     if (declaration.type === "VariableDeclaration")
       for (const value of declaration.declarations) {
         if (localName && !bindingNames(value.id).includes(localName)) continue;
@@ -174,6 +180,71 @@ export function inspectSource(source: SourceFile): string[] {
       else expose(statement.declaration, statement);
     } else if (statement.type === "ExportAllDeclaration" && !documented(statement))
       report(statement, "Document external re-export boundaries with JSDoc.");
+  }
+  const genericScopes: { range: Span; names: Set<string> }[] = [];
+  const generics = (node: Node) => {
+    if ("typeParameters" in node && node.typeParameters)
+      genericScopes.push({
+        range: node,
+        names: new Set(node.typeParameters.params.map((parameter) => parameter.name.name)),
+      });
+  };
+  new Visitor({
+    FunctionDeclaration: generics,
+    FunctionExpression: generics,
+    ArrowFunctionExpression: generics,
+    TSDeclareFunction: generics,
+    TSInterfaceDeclaration: generics,
+    TSTypeAliasDeclaration: generics,
+    ClassDeclaration: generics,
+    ClassExpression: generics,
+    TSMethodSignature: generics,
+    TSCallSignatureDeclaration: generics,
+    TSConstructSignatureDeclaration: generics,
+    TSFunctionType: generics,
+    TSConstructorType: generics,
+  }).visit(parsed.program);
+  const resolveType = (name: string, reference: Span) => {
+    if (
+      !exposedAnnotations.some(
+        (range) => range.start <= reference.start && reference.end <= range.end,
+      )
+    )
+      return;
+    if (
+      genericScopes.some(
+        ({ range, names }) =>
+          range.start <= reference.start && reference.end <= range.end && names.has(name),
+      )
+    )
+      return;
+    const local = bindings.get(name);
+    if (
+      local &&
+      [
+        "TSInterfaceDeclaration",
+        "TSTypeAliasDeclaration",
+        "ClassDeclaration",
+        "TSEnumDeclaration",
+      ].includes(local.declaration.type)
+    )
+      expose(local.declaration, local.documentation);
+  };
+  let previousSize = -1;
+  while (previousSize !== checked.size) {
+    previousSize = checked.size;
+    new Visitor({
+      TSTypeReference: (node) => {
+        if (node.typeName.type === "Identifier") resolveType(node.typeName.name, node);
+      },
+      ClassDeclaration: (node) => {
+        if (node.superClass?.type === "Identifier")
+          resolveType(node.superClass.name, node.superClass);
+      },
+      TSInterfaceHeritage: (node) => {
+        if (node.expression.type === "Identifier") resolveType(node.expression.name, node);
+      },
+    }).visit(parsed.program);
   }
   const main = (node: { test: Span }) =>
     source.text.slice(node.test.start, node.test.end) === "import.meta.main";

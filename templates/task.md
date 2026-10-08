@@ -50,3 +50,5 @@ I. autonomia: assumir o resultado e continuar trabalho autorizado. II. eficiênc
 - Setup/adoção, quando pertinente: configuração local e render; nome e aparência lidos; controles disponíveis; proposta de regra explicitamente solicitada; formulário obrigatório e readback necessários.
 
 - Retomada de regra, quando pertinente: ação/destino/escopo/comportamento correspondentes; estado pendente ou cancelado preservado; regra existente mantida sem duplicar; controles ausentes bloqueiam só a etapa afetada.
+
+Quando solicitar uma ação, diga diretamente quem deve agir, em qual ambiente e qual retorno é esperado, somente com os detalhes necessários. Prefira nomes concretos e distinga arquivo intermediário de final quando isso afetar o uso. Não compense formulação ruim com mais texto nem imponha checklist a toda resposta.
