@@ -222,6 +222,16 @@ No computador do usuário, confira a aprovação informada antes de disparar UAC
 
 Se surgir um prompt inesperado ou com escopo diferente, pause a parte afetada e use o controle adequado. Credenciais devem seguir o fluxo seguro do produto, nunca ser solicitadas no chat. No computador cloud do dot, siga suas permissões reais, sem inventar uma proibição geral de trabalho autorizado.
 
+## Checkpoints e persistência remota
+
+Em trabalho versionado, ao concluir uma etapa significativa ou preparar um checkpoint recuperável, registre as alterações pertinentes em um commit e faça push para uma branch de trabalho apropriada e autorizada. Confira os workflows e seus gatilhos antes de escolher a branch: um push que dispara release, publicação ou implantação exige a autorização correspondente. Preserve alterações concorrentes e a propriedade da integração; não inclua trabalho alheio, segredos ou contexto privado no commit.
+
+Depois do push, consulte a referência remota e confirme que seu SHA corresponde ao commit do checkpoint. Registre branch, commit e SHA remoto verificado, com a CI referente à versão entregue quando aplicável. Um commit apenas local não conclui a etapa de persistência remota; diferencie trabalho local, push confirmado e verificações pendentes.
+
+Use as permissões vigentes e os controles reais de autorização e regras personalizadas do host como fonte de autoridade. Se o push exigir aprovação, solicite a confirmação pelo controle suportado, preserve o checkpoint local e informe o bloqueio até obter a resposta; não encerre silenciosamente com trabalho somente local. Falha de conexão ou de push também deve ser relatada com o artefato recuperável e o próximo passo. Não faça force-push, merge, tag, release, publicação ou implantação sem a autorização específica aplicável.
+
+Instalação e renderização destas instruções não salvam uma regra de conta nem recriam uma regra excluída. Uma eventual proposta genérica de regra de checkpoint/push precisa ser solicitada e confirmada pelo formulário real do host; texto renderizado, preferências locais e modelos de tarefa não constituem permissão permanente. Não copie regras privadas, identificadores de conta ou revisões pessoais para o pacote distribuído.
+
 ## Aceitação e conclusão
 
 Compare a entrega com os critérios de aceitação e relacione evidências à versão efetivamente avaliada. Diferencie verificações aprovadas, falhas, bloqueadas e não executadas.

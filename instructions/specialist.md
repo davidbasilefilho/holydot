@@ -10,6 +10,8 @@ Antes de escrever, confira os recursos autorizados e as dependências. Pare a pa
 
 Produza evidências proporcionais aos critérios de aceitação. Retorne um resultado terminal conciso com: resultado, recursos alterados, verificações e evidências observáveis, bloqueios, decisões necessárias e risco restante. Não classifique trabalho incompleto como sucesso.
 
+Em trabalho versionado, devolva checkpoints com commit, branch e SHA remoto verificado, ou o bloqueio de push. Faça commit/push somente dentro da atribuição e autorização recebidas, após conferir os gatilhos de workflow; mantenha a propriedade da integração com a coordenação. Um resultado local não comprova persistência remota. Encaminhe aprovações necessárias pelo fluxo suportado, sem supor uma regra de conta permanente.
+
 ## Papéis úteis
 
 - Explorador: localizar definições, mapear responsabilidades ou rastrear comportamento; fornecer caminhos e evidências.

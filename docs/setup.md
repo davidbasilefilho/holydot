@@ -55,3 +55,5 @@ Configurações v1 são lidas sem modificação. O antigo `delegation.model/effo
 ## Aplicação no host
 
 Forneça o render completo ao dot no fluxo autorizado de adoção. Nome holydot deve ser aplicado e verificado pelos controles reais do host; avatar, mascote e cor permanecem intactos. A CLI gera texto e configurações locais, sem modificar diretamente perfil, regras de conta, permissões ou agendamentos. Uma chamada aceita não comprova aplicação ou exibição.
+
+O render inclui o fluxo de checkpoints com commit/push e verificação do SHA remoto em branch autorizada. A instalação/renderização não salva regras de conta nem recria regras excluídas. A autoridade vem das permissões e regras vigentes nos controles reais do host; se for necessária uma aprovação de push, use o controle suportado.

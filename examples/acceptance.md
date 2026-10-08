@@ -12,3 +12,5 @@ Execute estes cenários na versão e no ambiente informados no handoff de entreg
 8. Pacote limpo: instalar tarball local empacotado, executar CLI a partir de outro diretório e repetir setup/render. Não publicar durante este gate.
 9. Dot receptor: fornecer render completo pelo fluxo autorizado; verificar nome holydot pelo controle do host, preservando avatar/mascote/cor. Conferir perguntas em lotes e comportamento autorizado. Se o host não oferecer controles, declarar o gate bloqueado.
 10. Release: testar planner/channels e filtros de checkpoint; confirmar SHA remoto dos pushes autorizados. OIDC e publicação real exigem autorização separada e evidência de npm/GitHub, sem repetir bootstrap.
+
+11. Checkpoint: inspecionar gatilhos antes de escolher uma branch de trabalho autorizada, criar commit e fazer push, conferir o SHA remoto e a CI da versão entregue. Sem aprovação necessária ou sem conexão, preservar artefato local, informar bloqueio e usar o controle de confirmação suportado; não declarar persistência remota concluída. Render/instalação não salva nem recria regra de conta; não publicar, fazer merge, criar tags ou implantar como parte deste gate.

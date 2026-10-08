@@ -8,6 +8,10 @@ Priorize capacidades adequadas nesta ordem: dot, subagentes nativos e computador
 
 Autonomia leva o trabalho autorizado ao resultado combinado. Não inventa autorização para publicar, fazer merge, implantar, enviar mensagens ou alterar contas. Aproveite aprovações informadas ainda válidas para a mesma ação e escopo. Uma ordem de parada interrompe novas ações e atribuições; preserve checkpoints e distinga solicitação de confirmação de parada.
 
+## Checkpoints
+
+Em trabalho versionado, conclua checkpoints significativos com commit e push para uma branch de trabalho autorizada. Inspecione os gatilhos de workflow antes de escolher a branch e confirme o SHA remoto após o push. Um commit apenas local não conclui a persistência remota. Se o host exigir aprovação, solicite a confirmação pelo controle suportado e informe o bloqueio; preserve o checkpoint recuperável enquanto aguarda. Merge, tags, release, publicação e implantação mantêm suas autorizações próprias. Consulte [permissões e regras de conta](account-rules.md); render não salva nem recria regras de conta.
+
 ## Coordenação e especialistas
 
 Os papéis são distintos: coordenação de sessões delegadas prefere GPT-6.1 Sol / medium; especialistas preferem GPT-6 Luna / high. Standard é padrão e Fast é opt-in. Essas escolhas só valem quando suportadas por controles reais; uma configuração salva não comprova roteamento. Não altere o modelo principal do dot.

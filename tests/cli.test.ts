@@ -153,6 +153,43 @@ describe("settings and configured UTF-8 render", () => {
     expect(Buffer.from(output, "utf8").toString("utf8")).toBe(output);
     expect(readFileSync(join(root, "holydot.config.json"))).toEqual(before);
   });
+  test("render requires authorized remote checkpoints without applying account rules", async () => {
+    const root = directory();
+    await Effect.runPromise(runCli(["setup"], root, save));
+    const before = readFileSync(join(root, "holydot.config.json"));
+    const output = await Effect.runPromise(runCli(["render"], root, cancel));
+    const checkpoint = output.split("## Checkpoints e persistência remota")[1]!.split("\n## ")[0]!;
+    expect(checkpoint).toContain("ao concluir uma etapa significativa");
+    expect(checkpoint).toContain("commit e faça push");
+    expect(checkpoint).toContain("branch de trabalho apropriada e autorizada");
+    expect(checkpoint).toContain("Confira os workflows e seus gatilhos antes de escolher a branch");
+    expect(checkpoint).toContain("seu SHA corresponde ao commit do checkpoint");
+    expect(checkpoint).toContain(
+      "Um commit apenas local não conclui a etapa de persistência remota",
+    );
+    expect(checkpoint).toContain(
+      "controles reais de autorização e regras personalizadas do host como fonte de autoridade",
+    );
+    expect(checkpoint).toContain(
+      "Se o push exigir aprovação, solicite a confirmação pelo controle suportado",
+    );
+    expect(checkpoint).toContain(
+      "preserve o checkpoint local e informe o bloqueio até obter a resposta",
+    );
+    expect(checkpoint).toContain("Falha de conexão ou de push");
+    expect(checkpoint).toContain(
+      "Não faça force-push, merge, tag, release, publicação ou implantação sem a autorização específica",
+    );
+    expect(checkpoint).toContain("não salvam uma regra de conta nem recriam uma regra excluída");
+    expect(checkpoint).toContain("proposta genérica de regra de checkpoint/push");
+    expect(checkpoint).toContain("confirmada pelo formulário real do host");
+    expect(checkpoint).toContain("não constituem permissão permanente");
+    expect(checkpoint).not.toMatch(
+      /libfile_|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
+    );
+    expect(readFileSync(join(root, "holydot.config.json"))).toEqual(before);
+    expect(readdirSync(root)).toEqual(["holydot.config.json"]);
+  });
   test("missing, malformed, oversized and symlink configs fail without touching their targets", async () => {
     const root = directory();
     const path = join(root, "holydot.config.json");

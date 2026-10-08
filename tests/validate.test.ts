@@ -74,6 +74,86 @@ describe("offline package validation", () => {
     expect(status).toContain("Responda imediatamente a pedidos de status");
   });
 
+  test.each([
+    {
+      file: "templates/task.md",
+      required: [
+        "branch de trabalho autorizada",
+        "gatilhos de workflow inspecionados",
+        "Local-only não conclui a persistência remota",
+        "controle suportado",
+        "não salva regras de conta",
+      ],
+    },
+    {
+      file: "templates/result.md",
+      required: [
+        "SHA remoto verificado",
+        "confirmação pendente",
+        "Um commit apenas local não conclui a persistência remota",
+        "CI da versão entregue",
+        "autorização pendente para merge",
+      ],
+    },
+    {
+      file: "instructions/specialist.md",
+      required: [
+        "SHA remoto verificado",
+        "gatilhos de workflow",
+        "propriedade da integração",
+        "não comprova persistência remota",
+        "sem supor uma regra de conta permanente",
+      ],
+    },
+    {
+      file: "docs/usage.md",
+      required: [
+        "commit e push",
+        "branch de trabalho autorizada",
+        "SHA remoto",
+        "controle suportado",
+        "render não salva nem recria regras de conta",
+      ],
+    },
+    {
+      file: "docs/account-rules.md",
+      required: [
+        "gatilhos de workflow",
+        "SHA da referência remota",
+        "um commit apenas local não conclui a persistência remota",
+        "controles vivos de permissão",
+        "não salvam uma regra de conta nem recriam uma regra excluída",
+        "formulário real de confirmação do host",
+        "não é permissão permanente presumida",
+      ],
+    },
+    {
+      file: "docs/setup.md",
+      required: [
+        "commit/push",
+        "SHA remoto",
+        "não salva regras de conta nem recria regras excluídas",
+        "controle suportado",
+      ],
+    },
+    {
+      file: "examples/acceptance.md",
+      required: [
+        "Checkpoint:",
+        "SHA remoto",
+        "informar bloqueio",
+        "controle de confirmação suportado",
+        "não salva nem recria regra de conta",
+      ],
+    },
+  ])("checkpoint contract remains aligned in $file", ({ file, required }) => {
+    const text = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
+    for (const requirement of required) expect(text).toContain(requirement);
+    expect(text).not.toMatch(
+      /libfile_|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
+    );
+  });
+
   test("accepts a complete fixture and its local and external links", () => {
     const root = fixture();
     writeFileSync(
