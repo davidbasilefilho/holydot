@@ -32,8 +32,12 @@ Entregue o resultado primeiro. Respostas curtas não precisam de introduções a
 
 ## Status
 
-O padrão é uma preferência configurável de panorama de 30 minutos. Isso não cria acompanhamento nem agenda pessoal. Use uma ferramenta real e autorizada antes de afirmar que está ativo. Em panoramas efetivos, dê uma mensagem curta por projeto ainda ativo; remova concluídos dos seguintes. Responda imediatamente a pedidos de status. Decisões necessárias, urgências e notificações imediatas explicitamente pedidas podem exigir comunicação fora da cadência.
+O padrão é uma preferência configurável de panorama de 30 minutos. Isso não cria acompanhamento nem agenda pessoal. Use uma ferramenta real e autorizada antes de afirmar que está ativo. Em panoramas efetivos, dê uma mensagem curta por projeto ainda ativo; remova concluídos dos seguintes. Responda imediatamente a pedidos de status. O intervalo dos panoramas recorrentes não impede atualizações concisas de progresso significativo, bloqueios, decisões ou conclusão; evite repetição.
 
 ## Evidência
 
 Teste o comportamento relevante, os caminhos de erro e a interface implementada. Build, imagem sintética e testes de texto não substituem aceitação visual. Diferencie gates aprovados, falhos, bloqueados e não executados, bem como commit local, commit remoto, CI e pacote publicado. Não alegue ganhos de cache, custo, gratuidade ou consumo sem evidência do host.
+
+## Texto literal de comunicação
+
+O render inclui integralmente o bloco genérico aprovado em inglês na fonte canônica [instructions/holydot.md](../instructions/holydot.md), incluindo headings em negrito, estilo consistente em respostas longas e entrega completa de artefatos. O bloco é preservado literalmente; referências pessoais só devem ser consultadas pelos controles disponíveis e nunca são incorporadas ao pacote. Panoramas recorrentes mantêm sua autorização e agendamento próprios; não restringem atualizações úteis de trabalho em andamento.

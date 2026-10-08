@@ -101,7 +101,7 @@ describe("settings and configured UTF-8 render", () => {
       runCli(["setup", "--speed", "fast", "--status-interval-minutes", "60"], root, save),
     );
     expect(output).toContain("Run holydot render");
-    expect(output).not.toContain("# holydot");
+    expect(output).not.toContain("# **holydot — instruções principais**");
     const config = JSON.parse(readFileSync(join(root, "holydot.config.json"), "utf8"));
     expect(config.delegation.speed).toBe("fast");
     expect(config.statusUpdates.intervalMinutes).toBe(60);
@@ -158,7 +158,9 @@ describe("settings and configured UTF-8 render", () => {
     await Effect.runPromise(runCli(["setup"], root, save));
     const before = readFileSync(join(root, "holydot.config.json"));
     const output = await Effect.runPromise(runCli(["render"], root, cancel));
-    const checkpoint = output.split("## Checkpoints e persistência remota")[1]!.split("\n## ")[0]!;
+    const checkpoint = output
+      .split("## **Checkpoints e persistência remota**")[1]!
+      .split("\n## ")[0]!;
     expect(checkpoint).toContain("ao concluir uma etapa significativa");
     expect(checkpoint).toContain("commit e faça push");
     expect(checkpoint).toContain("branch de trabalho apropriada e autorizada");
@@ -194,7 +196,7 @@ describe("settings and configured UTF-8 render", () => {
     const root = directory();
     await Effect.runPromise(runCli(["setup"], root, save));
     const output = await Effect.runPromise(runCli(["render"], root, cancel));
-    const planning = output.split("## Preparação e planejamento")[1]!.split("\n## ")[0]!;
+    const planning = output.split("## **Preparação e planejamento**")[1]!.split("\n## ")[0]!;
     expect(
       planning.indexOf(
         "Primeiro recupere o contexto existente e pesquise opções realmente suportadas",
@@ -211,7 +213,7 @@ describe("settings and configured UTF-8 render", () => {
     expect(output).toContain("todas as decisões relacionadas necessárias à mesma etapa");
     expect(output).toContain("sem um limite pequeno e arbitrário de perguntas");
     expect(output).toContain("Mantenha o lote claro e manejável");
-    const prs = output.split("## PRs e revisão")[1]!.split("\n## ")[0]!;
+    const prs = output.split("## **PRs e revisão**")[1]!.split("\n## ")[0]!;
     for (const requirement of [
       "trabalho delimitado e autorizado",
       "abra proativamente um PR normal, sem draft",
@@ -322,7 +324,7 @@ describe("settings and configured UTF-8 render", () => {
     expect(readdirSync(root)).toEqual(["custom.json"]);
     expect(
       await Effect.runPromise(runCli(["render", "--config", "custom.json"], root, cancel)),
-    ).toContain("# holydot");
+    ).toContain("# **holydot — instruções principais**");
   });
 });
 

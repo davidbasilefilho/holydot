@@ -53,7 +53,7 @@ describe("offline package validation", () => {
       new URL("../instructions/holydot.md", import.meta.url),
       "utf8",
     );
-    const adoption = instructions.split("## Identidade e adoção")[1]!.split("\n## ")[0]!;
+    const adoption = instructions.split("## **Identidade e adoção**")[1]!.split("\n## ")[0]!;
     expect(adoption).toContain("Quando o dono pedir para adotar ou instalar");
     expect(adoption).toContain("cloud_threads.change_orbit_name");
     expect(adoption).toContain("definindo **holydot**");
@@ -66,7 +66,7 @@ describe("offline package validation", () => {
     expect(adoption).toContain("o que continua pendente, com o próximo passo suportado");
     expect(adoption).toContain("não comprova a mudança");
     expect(adoption).toContain("sem pedir que o usuário repita uma autorização já explícita");
-    const status = instructions.split("## Atualizações de status")[1]!.split("\n## ")[0]!;
+    const status = instructions.split("## **Atualizações de status**")[1]!.split("\n## ")[0]!;
     expect(status).toContain("Uma preferência de intervalo não cria um agendamento");
     expect(status).toContain("confirme sua configuração antes de afirmar que está ativo");
     expect(status).toContain("uma mensagem curta por projeto ainda ativo");

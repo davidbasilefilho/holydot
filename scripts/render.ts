@@ -13,7 +13,7 @@ export function renderInstructions(base: string, config: HolydotConfig) {
     const parsed = yield* parseConfig(config);
     const { coordinator, specialist, speed } = parsed.delegation;
     return (
-      `${base.trim()}\n\n## Preferências explícitas desta configuração\n\n` +
+      `${base.trim()}\n\n## **Preferências explícitas desta configuração**\n\n` +
       `Esta seção substitui os padrões correspondentes. São preferências locais, sem conceder acesso ou aprovação.\n\n` +
       `- Coordenação de sessões delegadas: ${coordinator.model} / ${coordinator.effort}.\n` +
       `- Especialistas: ${specialist.model} / ${specialist.effort}.\n` +
