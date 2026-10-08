@@ -297,9 +297,9 @@ export function publishChannelArtifact(
 ): Effect.Effect<ChannelPublicationResult, HolydotError> {
   return Effect.gen(function* () {
     const identical = yield* isIdenticalPublication(yield* io.readIntegrity, integrity);
+    if (identical) return "already-identical";
     if (!(yield* canAdvanceChannel(plan, yield* io.readChannel, io.compareCommits)))
       return "stale-skipped";
-    if (identical) return "already-identical";
     yield* io.publish;
     yield* verifyPublication(io.readIntegrity, integrity, pause);
     return "published";

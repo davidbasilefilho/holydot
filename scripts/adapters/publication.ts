@@ -196,10 +196,14 @@ export async function executePublication(): Promise<void> {
     ) {
       throw new Error("npm pack returned unexpected package metadata.");
     }
-    await Effect.runPromise(
+    const identical = await Effect.runPromise(
       isIdenticalPublication(await publishedIntegrity(plan.version), pack.integrity),
     );
+    const body = `holydot ${plan.version}\n\nSource commit: ${sha}\n\nnpm: holydot@${plan.version} (dist-tag: ${plan.distTag})\n\nIntegrity: ${pack.integrity}\n`;
+    let release = identical ? await findRelease(plan.tag) : null;
+    if (release) await Effect.runPromise(assertMatchingRelease(release, plan, body, true));
     if (
+      !(identical && release) &&
       !(await Effect.runPromise(
         canAdvanceChannel(plan, await publishedChannel(plan.distTag), compareCommits),
       ))
@@ -209,8 +213,7 @@ export async function executePublication(): Promise<void> {
       );
       return;
     }
-    const body = `holydot ${plan.version}\n\nSource commit: ${sha}\n\nnpm: holydot@${plan.version} (dist-tag: ${plan.distTag})\n\nIntegrity: ${pack.integrity}\n`;
-    let release = await findRelease(plan.tag);
+    release ??= await findRelease(plan.tag);
     if (release) await Effect.runPromise(assertMatchingRelease(release, plan, body, true));
     await ensureTag(plan);
     // Reserve a recoverable draft before npm, detecting GitHub permission blocks first.

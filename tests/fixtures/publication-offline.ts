@@ -8,6 +8,7 @@ const scenario = JSON.parse(process.argv[2]!) as {
   sha: string;
   channels: Record<string, { version: string; commit: string | null }>;
   existingIntegrity?: string;
+  existingDraft?: boolean;
   relation?: string;
   advanced?: { version: string; commit: string | null };
 };
@@ -40,6 +41,19 @@ if (scenario.existingIntegrity)
 const actions: string[] = [];
 const tags: Record<string, { object: { type: string; sha: string } }> = {};
 let release: Record<string, unknown> | null = null;
+if (scenario.existingDraft) {
+  const tag = `v${version}`;
+  tags[tag] = { object: { type: "commit", sha: scenario.sha } };
+  release = {
+    id: 1,
+    tag_name: tag,
+    target_commitish: scenario.sha,
+    name: tag,
+    body: `holydot ${version}\n\nSource commit: ${scenario.sha}\n\nnpm: holydot@${version} (dist-tag: ${selected})\n\nIntegrity: ${integrity}\n`,
+    prerelease: scenario.mode === "dev",
+    draft: true,
+  };
+}
 let channelReads = 0;
 const json = (value: unknown, status = 200) =>
   new Response(JSON.stringify(value), { status, headers: { "content-type": "application/json" } });

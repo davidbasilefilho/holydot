@@ -21,6 +21,20 @@ const plan = (mode: "dev" | "stable", base = "0.1.0", commit = sha) =>
     }),
   );
 const scenarios = [
+  ...(["dev", "stable"] as const).map((mode) => ({
+    name: `identical older ${mode} resumes matching draft without channel writes`,
+    mode,
+    base: "0.1.0",
+    existingIntegrity: "sha512-offline-pack",
+    existingDraft: true,
+    channels:
+      mode === "dev"
+        ? { dev: { version: `0.2.0-dev-${next.slice(0, 12)}`, commit: next } }
+        : { latest: { version: "0.1.1", commit: next } },
+    write: false,
+    published: true,
+    resume: true,
+  })),
   { name: "first dev publication", mode: "dev", base: "0.1.0", channels: {}, write: true },
   { name: "first stable publication", mode: "stable", base: "0.1.0", channels: {}, write: true },
   {
@@ -150,6 +164,15 @@ for (const scenario of scenarios)
         ),
       ).toEqual([]);
     if ("draft" in scenario) expect(result.draft).toBe(true);
+    if ("existingDraft" in scenario) {
+      expect(result.draft).toBe(false);
+      expect(
+        result.actions.filter(
+          (action: string) => action === "PATCH /repos/davidbasilefilho/holydot/releases/1",
+        ),
+      ).toHaveLength(1);
+      expect(result.channels).toEqual(scenario.channels);
+    }
     const selected = scenario.mode === "dev" ? "dev" : "latest";
     const other = selected === "dev" ? "latest" : "dev";
     expect(result.channels[other]).toEqual((scenario.channels as Record<string, unknown>)[other]);
