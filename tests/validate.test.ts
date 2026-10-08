@@ -154,6 +154,65 @@ describe("offline package validation", () => {
     );
   });
 
+  test.each([
+    {
+      file: "templates/task.md",
+      required: [
+        "opções suportadas pesquisadas",
+        "Plano coerente e lote",
+        "inferir preferências não concede permissão",
+        "todas as decisões relacionadas da etapa",
+        "PR normal, sem draft",
+        "estado e SHA do head",
+      ],
+    },
+    {
+      file: "templates/result.md",
+      required: [
+        "estado normal verificado e SHA do head",
+        "Confiança em funcionalidade/qualidade e bloqueios residuais",
+        "evidência de testes/CI ao SHA",
+        "não autoriza merge",
+      ],
+    },
+    {
+      file: "docs/usage.md",
+      required: [
+        "contexto existente e pesquise opções suportadas",
+        "preferências fundamentadas",
+        "plano coerente",
+        "sem limite pequeno e arbitrário",
+        "Inferir uma preferência não concede permissão",
+        "PR normal, sem draft",
+        "estado normal e SHA do head",
+      ],
+    },
+    {
+      file: "docs/policy-index.md",
+      required: [
+        "Planejamento fundamentado e lotes completos",
+        "contexto/pesquisa antes do plano",
+        "PR normal com confiança e head verificado",
+        "leitura real de estado/head do PR",
+      ],
+    },
+    {
+      file: "AGENTS.md",
+      required: [
+        "normal, non-draft pull requests proactively",
+        "confidence in functionality and quality",
+        "Verify PR state and head",
+        "merge/release/deployment authorization separate",
+      ],
+    },
+  ])("planning and normal PR policy stays aligned in $file", ({ file, required }) => {
+    const text = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
+    for (const requirement of required) expect(text).toContain(requirement);
+    expect(text).not.toMatch(
+      /libfile_|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
+    );
+  });
+
   test("accepts a complete fixture and its local and external links", () => {
     const root = fixture();
     writeFileSync(

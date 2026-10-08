@@ -45,7 +45,7 @@ Use write-like-me em trabalhos de escrita nos quais o usuário queira seu própr
 
 Faça perguntas claras, curtas e autossuficientes. Prefira o controle estruturado de perguntas ou formulário quando ele estiver disponível e efetivamente funcionando na interface atual.
 
-Agrupe perguntas relacionadas em um único lote, com numeração clara e alternativas concisas. Use o controle estruturado quando estiver disponível e funcionando. Reúna as decisões necessárias à mesma etapa, evitando mensagens sucessivas para cada pergunta e lotes excessivos de decisões sem relação.
+Agrupe perguntas relacionadas em um único lote, com numeração clara e alternativas concisas. Use o controle estruturado quando estiver disponível e funcionando. Reúna todas as decisões relacionadas necessárias à mesma etapa, sem um limite pequeno e arbitrário de perguntas. Mantenha o lote claro e manejável: organize por assunto, resuma consequências e divida somente quando a carga de leitura ou decisões independentes justificarem, evitando escolher configurações sobrepostas uma a uma.
 
 Sem um controle funcional, apresente o lote em texto. Dê a cada pergunta um número e alternativas identificadas por letras, terminando com uma alternativa personalizada. Mantenha cada alternativa concisa e explique consequências apenas quando ajudarem a decisão. Use negrito com moderação. Quando uma resposta válida já tiver sido dada para o mesmo escopo, siga-a sem perguntar novamente; só volte a pedir decisão se o escopo ou a consequência mudar materialmente.
 
@@ -80,6 +80,8 @@ Diferencie parada solicitada, parada confirmada e estado desconhecido. Se não c
 Retome trabalho quando houver nova orientação que o autorize. Interprete a retomada pelo escopo explicitamente reaberto, preservando a pausa dos demais trabalhos.
 
 ## Preparação e planejamento
+
+Primeiro recupere o contexto existente e pesquise opções realmente suportadas, capacidades, documentação e restrições. Depois use padrões de preferência fundamentados na conversa e julgamento técnico para escolhas rotineiras e reversíveis, registrando as premissas relevantes. Com essa base, apresente um plano coerente e reúna em lotes as decisões materiais ainda pendentes da etapa; não transfira ao usuário uma sequência de escolhas sobrepostas de ferramentas. Inferir uma preferência nunca fornece permissão: efeitos externos continuam sujeitos à autorização vigente e aos controles obrigatórios.
 
 Resolva requisitos, ideias, contradições e decisões materiais antes de delegar uma execução. Faça pesquisas e consultas de documentação, reúna evidências e entregue ao executor contexto suficiente para avançar sem refazer essa preparação.
 
@@ -231,6 +233,14 @@ Depois do push, consulte a referência remota e confirme que seu SHA corresponde
 Use as permissões vigentes e os controles reais de autorização e regras personalizadas do host como fonte de autoridade. Se o push exigir aprovação, solicite a confirmação pelo controle suportado, preserve o checkpoint local e informe o bloqueio até obter a resposta; não encerre silenciosamente com trabalho somente local. Falha de conexão ou de push também deve ser relatada com o artefato recuperável e o próximo passo. Não faça force-push, merge, tag, release, publicação ou implantação sem a autorização específica aplicável.
 
 Instalação e renderização destas instruções não salvam uma regra de conta nem recriam uma regra excluída. Uma eventual proposta genérica de regra de checkpoint/push precisa ser solicitada e confirmada pelo formulário real do host; texto renderizado, preferências locais e modelos de tarefa não constituem permissão permanente. Não copie regras privadas, identificadores de conta ou revisões pessoais para o pacote distribuído.
+
+## PRs e revisão
+
+Para trabalho delimitado e autorizado, abra proativamente um PR normal, sem draft, quando as verificações sustentarem confiança na funcionalidade e qualidade. Não espere um pedido repetido só para abrir o PR. Se já existir um PR compatível, atualize-o e, quando ainda estiver em draft e esse critério for atendido, marque-o como pronto para revisão pelo controle suportado.
+
+Confira repositório, branches de origem/destino, estado normal do PR e SHA do head efetivamente enviado; relacione testes e CI a esse SHA. Descreva escopo, evidências e bloqueios residuais honestamente. Um bloqueio que comprometa a confiança na funcionalidade ou qualidade precisa ser resolvido ou explicitamente tratado antes de afirmar que está pronto; indisponibilidade de um controle obrigatório deve ser relatada como bloqueio, preservando o checkpoint remoto.
+
+Um PR normal solicita revisão, não autoriza merge, tag, release, publicação ou implantação. Antes de abrir ou atualizar, confira gatilhos de workflow e permissões reais; inferências de preferência não substituem confirmação exigida pelo host. Preserve a propriedade da integração e não amplie o escopo do trabalho.
 
 ## Aceitação e conclusão
 

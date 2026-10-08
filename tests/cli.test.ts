@@ -190,6 +190,46 @@ describe("settings and configured UTF-8 render", () => {
     expect(readFileSync(join(root, "holydot.config.json"))).toEqual(before);
     expect(readdirSync(root)).toEqual(["holydot.config.json"]);
   });
+  test("render includes researched planning, complete decision batches and verified normal PRs", async () => {
+    const root = directory();
+    await Effect.runPromise(runCli(["setup"], root, save));
+    const output = await Effect.runPromise(runCli(["render"], root, cancel));
+    const planning = output.split("## Preparação e planejamento")[1]!.split("\n## ")[0]!;
+    expect(
+      planning.indexOf(
+        "Primeiro recupere o contexto existente e pesquise opções realmente suportadas",
+      ),
+    ).toBeGreaterThanOrEqual(0);
+    expect(planning.indexOf("Depois use padrões de preferência fundamentados")).toBeGreaterThan(
+      planning.indexOf("Primeiro recupere"),
+    );
+    expect(planning.indexOf("apresente um plano coerente")).toBeGreaterThan(
+      planning.indexOf("Depois use"),
+    );
+    expect(planning).toContain("escolhas rotineiras e reversíveis");
+    expect(planning).toContain("Inferir uma preferência nunca fornece permissão");
+    expect(output).toContain("todas as decisões relacionadas necessárias à mesma etapa");
+    expect(output).toContain("sem um limite pequeno e arbitrário de perguntas");
+    expect(output).toContain("Mantenha o lote claro e manejável");
+    const prs = output.split("## PRs e revisão")[1]!.split("\n## ")[0]!;
+    for (const requirement of [
+      "trabalho delimitado e autorizado",
+      "abra proativamente um PR normal, sem draft",
+      "confiança na funcionalidade e qualidade",
+      "Se já existir um PR compatível",
+      "marque-o como pronto para revisão pelo controle suportado",
+      "estado normal do PR e SHA do head",
+      "testes e CI a esse SHA",
+      "bloqueios residuais honestamente",
+      "não autoriza merge, tag, release, publicação ou implantação",
+      "confirmação exigida pelo host",
+    ])
+      expect(prs).toContain(requirement);
+    expect(output).toContain("Um commit apenas local não conclui a etapa de persistência remota");
+    expect(output).not.toMatch(
+      /libfile_|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
+    );
+  });
   test("missing, malformed, oversized and symlink configs fail without touching their targets", async () => {
     const root = directory();
     const path = join(root, "holydot.config.json");

@@ -14,3 +14,6 @@ Execute estes cenários na versão e no ambiente informados no handoff de entreg
 10. Release: testar planner/channels e filtros de checkpoint; confirmar SHA remoto dos pushes autorizados. OIDC e publicação real exigem autorização separada e evidência de npm/GitHub, sem repetir bootstrap.
 
 11. Checkpoint: inspecionar gatilhos antes de escolher uma branch de trabalho autorizada, criar commit e fazer push, conferir o SHA remoto e a CI da versão entregue. Sem aprovação necessária ou sem conexão, preservar artefato local, informar bloqueio e usar o controle de confirmação suportado; não declarar persistência remota concluída. Render/instalação não salva nem recria regra de conta; não publicar, fazer merge, criar tags ou implantar como parte deste gate.
+
+12. Planejamento: recuperar contexto e pesquisar opções suportadas antes de propor o plano; aplicar preferências fundamentadas somente a escolhas rotineiras/reversíveis; reunir todas as decisões relacionadas da etapa sem limite arbitrário, mantendo o lote manejável. Inferência não concede permissão.
+13. PR: para escopo autorizado e verificação confiável, abrir um PR normal, sem draft, ou marcar um PR compatível como pronto para revisão. Ler estado e SHA do head, relacionar CI/testes ao mesmo SHA e declarar bloqueios residuais. Não fazer merge/release/implantação como parte deste gate.

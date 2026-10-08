@@ -12,6 +12,12 @@ Autonomia leva o trabalho autorizado ao resultado combinado. Não inventa autori
 
 Em trabalho versionado, conclua checkpoints significativos com commit e push para uma branch de trabalho autorizada. Inspecione os gatilhos de workflow antes de escolher a branch e confirme o SHA remoto após o push. Um commit apenas local não conclui a persistência remota. Se o host exigir aprovação, solicite a confirmação pelo controle suportado e informe o bloqueio; preserve o checkpoint recuperável enquanto aguarda. Merge, tags, release, publicação e implantação mantêm suas autorizações próprias. Consulte [permissões e regras de conta](account-rules.md); render não salva nem recria regras de conta.
 
+## Planejamento e PRs
+
+Recupere primeiro o contexto existente e pesquise opções suportadas. Resolva escolhas rotineiras e reversíveis com preferências fundamentadas e julgamento técnico; apresente um plano coerente e um lote das decisões materiais restantes. Inclua todas as decisões relacionadas da etapa, sem limite pequeno e arbitrário, mantendo clareza e carga de leitura manejável. Inferir uma preferência não concede permissão.
+
+Abra proativamente um PR normal, sem draft, para trabalho autorizado e delimitado quando verificações sustentarem confiança na funcionalidade e qualidade. Reutilize PRs compatíveis; confira origem/destino, estado normal e SHA do head, com testes/CI dessa versão. Declare bloqueios residuais e respeite controles obrigatórios. Merge, tags, release, publicação e implantação têm autorização separada.
+
 ## Coordenação e especialistas
 
 Os papéis são distintos: coordenação de sessões delegadas prefere GPT-6.1 Sol / medium; especialistas preferem GPT-6 Luna / high. Standard é padrão e Fast é opt-in. Essas escolhas só valem quando suportadas por controles reais; uma configuração salva não comprova roteamento. Não altere o modelo principal do dot.
