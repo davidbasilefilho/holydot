@@ -256,3 +256,27 @@ test.each([
     expect(inspectSource({ path: "scripts/adapters/fixture.ts", text })).toEqual([]);
   },
 );
+
+test.each([
+  "/** API. */ export namespace Api { export const value = 1; }",
+  "/** API. */ export namespace Api { /** Inner. */ export namespace Inner { export const value = 1; } }",
+  "/** API. */ namespace Api { export const value = 1; } export { Api };",
+  "/** API. */ namespace Api { export const value = 1; } export default Api;",
+  "/** API. */ export namespace Api { /** Value. */ export const value = { enabled: true }; }",
+  "/** API. */ export namespace Api { /** Options. */ export interface Options { enabled: boolean } }",
+])(
+  "namespace direct-export traversal rejects undocumented declarations and members: %s",
+  (text) => {
+    expect(inspectSource({ path: "scripts/adapters/fixture.ts", text }).length).toBeGreaterThan(0);
+  },
+);
+test.each([
+  "/** API. */ export namespace Api { /** Value. */ export const value = 1; }",
+  "/** API. */ export namespace Api { /** Inner. */ export namespace Inner { /** Value. */ export const value = 1; } }",
+  "/** API. */ namespace Api { /** Value. */ export const value = 1; } export { Api };",
+  "/** API. */ namespace Api { /** Value. */ export const value = 1; } export default Api;",
+  "/** API. */ export namespace Api { /** Value. */ export const value = { /** Enabled. */ enabled: true }; }",
+  "/** API. */ export namespace Api { /** Options. */ export interface Options { /** Enabled. */ enabled: boolean } }",
+])("documented namespace direct exports already pass: %s", (text) => {
+  expect(inspectSource({ path: "scripts/adapters/fixture.ts", text })).toEqual([]);
+});
