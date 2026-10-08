@@ -76,11 +76,11 @@ test("replacement keeps conditional research, presentation and channel guidance 
     expect(source).not.toContain(removed);
 });
 
-// Authored acceptance examples test contract expectations, not generated model behavior.
+// Synthetic presentation examples: turn labels are scenario descriptions, not actual model turns.
 const presentationCases = [
   {
     kind: "long response after many turns",
-    turns: 120,
+    describedPriorTurns: 120,
     meaningfulEmphasis: true,
     messages: [
       {
@@ -96,7 +96,7 @@ const presentationCases = [
   },
   {
     kind: "status of every active project",
-    turns: 80,
+    describedPriorTurns: 80,
     meaningfulEmphasis: true,
     messages: [
       {
@@ -111,7 +111,7 @@ const presentationCases = [
   },
   {
     kind: "integrated worker result",
-    turns: 100,
+    describedPriorTurns: 100,
     meaningfulEmphasis: true,
     messages: [
       {
@@ -122,7 +122,7 @@ const presentationCases = [
   },
   {
     kind: "short answer without useful emphasis",
-    turns: 120,
+    describedPriorTurns: 120,
     meaningfulEmphasis: false,
     messages: [{ scope: "task-d", text: "A versão instalada é 0.1.0." }],
   },
@@ -144,8 +144,8 @@ const presentationErrors = (example: (typeof presentationCases)[number]) => {
   return errors;
 };
 for (const example of presentationCases)
-  test(`authored persistent-compliance acceptance: ${example.kind}`, () => {
-    expect(example.turns).toBeGreaterThanOrEqual(80);
+  test(`synthetic presentation contract (no model evaluation): ${example.kind}`, () => {
+    expect(example.describedPriorTurns).toBeGreaterThanOrEqual(80);
     expect(presentationErrors(example)).toEqual([]);
     if (example.kind.startsWith("long"))
       expect(example.messages[0]!.text.length).toBeGreaterThan(1000);
@@ -156,7 +156,7 @@ test("authored rejection cases catch lost emphasis/headings and mixed or duplica
   expect(
     presentationErrors({
       kind: "degraded long answer",
-      turns: 120,
+      describedPriorTurns: 120,
       meaningfulEmphasis: true,
       messages: [{ scope: "project-a", text: "## Resultado\n\nTeste local passou." }],
     }),
@@ -164,7 +164,7 @@ test("authored rejection cases catch lost emphasis/headings and mixed or duplica
   expect(
     presentationErrors({
       kind: "mixed status",
-      turns: 80,
+      describedPriorTurns: 80,
       meaningfulEmphasis: false,
       messages: [{ scope: "project-a,project-b", text: "Dois projetos em uma mensagem." }],
     }),
@@ -172,7 +172,7 @@ test("authored rejection cases catch lost emphasis/headings and mixed or duplica
   expect(
     presentationErrors({
       kind: "duplicated status",
-      turns: 80,
+      describedPriorTurns: 80,
       meaningfulEmphasis: false,
       messages: [
         { scope: "project-a", text: "Teste passou." },

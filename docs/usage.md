@@ -51,3 +51,15 @@ Recupere e aplique a autorização já dada ao mesmo fluxo e escopo antes de ped
 I. autonomia; II. eficiência; III. qualidade e mergeability são capítulos sem hierarquia e critérios conjuntos. Consulte o [fluxo de setup e adoção](setup.md) para configuração local, nome, regras opcionais, retomada e readback. A base pública da reescrita está em [orientação de prompts](prompt-design.md).
 
 A fonte atual substitui integralmente o bloco anterior. Somente as quebras CRLF são normalizadas para LF; detalhes de tamanho/hash e limites da verificação estão em [docs/prompt-design.md](prompt-design.md). O render não reescreve os headings literais para aplicar a própria orientação de formatação do texto.
+
+## Carregamento e retomada
+
+`setup` verifica os bytes canônicos e o bloco adotado contra `instructions/integrity.json` antes de abrir o editor ou salvar preferências. A saída identifica versão instalada, revisão e digests. `render` e `resume` repetem essa verificação e entregam o render completo mais a identidade realmente lida do pacote. Fonte alterada/truncada/duplicada ou bloco antigo falha antes de prompt/escrita; restaure uma versão aprovada antes de continuar.
+
+```sh
+holydot resume --config holydot.config.json > holydot.instructions.md
+```
+
+Use esse material no fluxo suportado do host para nova instância, retomada ou recuperação após compactação. O comando não detecta perda de contexto nem injeta regras em uma conta. Releitura pelo host e confirmação da fonte ativa continuam necessárias. Digest não prova leitura, contexto ativo ou conformidade comportamental; o pin é interno ao pacote, detecta corrupção/mistura de versões e não autentica um pacote inteiro substituído maliciosamente.
+
+O contrato operacional externo ao literal exige revisão interna de aplicabilidade antes de respostas/ações, conservação de correções posteriores, continuidade e handoff verificável aos delegados. As preferências locais substituem apenas seus campos de configuração, respeitando autoridade superior e pedidos atuais. Os testes com labels de muitos turnos são exemplos sintéticos; não são uma avaliação real de conversação longa nem promessa de 100% de compliance.

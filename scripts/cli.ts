@@ -5,6 +5,7 @@ import { HolydotError } from "./errors";
 import { parseFlags } from "./flags";
 import { renderInstructions } from "./render";
 import { readText } from "./adapters/files";
+import { loadInstructionSource } from "./adapters/instructions";
 import { loadSettings, setup, type SetupPrompt } from "./setup";
 
 /** Human-readable CLI help; development bumps are intentionally absent. */
@@ -12,6 +13,7 @@ export const HELP = `holydot — local preferences and reusable instructions
 
 Usage: holydot setup [options]
        holydot render [--config PATH] > holydot.instructions.md
+       holydot resume [--config PATH] > holydot.instructions.md
 
   -h, --help                       Show help (also after a command)
   -v, --version                    Show the installed package version
@@ -25,7 +27,8 @@ Usage: holydot setup [options]
   --codex-home PATH|default         Advanced override; default respects CODEX_HOME
 
 Setup edits existing preferences, saves only on Save, and prints no instructions.
-Render prints the complete configured instructions without changing host settings.
+Setup verifies the installed instruction source before opening the editor.
+Render/resume print complete verified instructions; resume does not inject them into a host session.
 Use bunx holydot@VERSION setup and bunx holydot@VERSION render after publication.
 `;
 
@@ -35,26 +38,38 @@ Use bunx holydot@VERSION setup and bunx holydot@VERSION render after publication
  * @param input - Runtime arguments excluding executable names.
  * @param directory - Invoking directory; settings paths are relative to it.
  * @param prompt - Interactive Effect adapter, lazily loaded by the executable boundary.
- * @returns Informational text, setup completion or full Markdown render.
+ * @param packageRoot - Installed package root; optional isolated package seam for validation.
+ * @returns Informational text, verified setup completion or full Markdown render.
  */
-export function runCli(input: unknown, directory: string, prompt: SetupPrompt) {
+export function runCli(
+  input: unknown,
+  directory: string,
+  prompt: SetupPrompt,
+  packageRoot = new URL("../", import.meta.url),
+) {
   return Effect.gen(function* () {
     const flags = yield* parseFlags(input);
     if (flags.command === "help") return HELP;
     if (flags.command === "version") {
-      const text = yield* readText(new URL("../package.json", import.meta.url));
+      const text = yield* readText(new URL("package.json", packageRoot));
       const manifest = yield* importManifest(text);
       return `${manifest.version}\n`;
     }
+    const source = yield* loadInstructionSource(packageRoot);
+    const manifest = yield* importManifest(yield* readText(new URL("package.json", packageRoot)));
+    const identity = `holydot ${manifest.version}; instructions ${source.identity.revision}; SHA-256 ${source.identity.canonicalSHA256}; adopted SHA-256 ${source.identity.adoptedSHA256}`;
     const path = resolve(directory, flags.configPath);
-    if (flags.command === "setup") return yield* setup(path, flags.overrides, prompt);
+    if (flags.command === "setup") {
+      const result = yield* setup(path, flags.overrides, prompt);
+      return `${result}Verified ${identity}.\n`;
+    }
     const loaded = yield* loadSettings(path);
     if (loaded === null)
       return yield* Effect.fail(
         new HolydotError({ message: "Configuration is missing. Run holydot setup first." }),
       );
-    const base = yield* readText(new URL("../instructions/holydot.md", import.meta.url));
-    return yield* renderInstructions(base, loaded.config);
+    const rendered = yield* renderInstructions(source.text, loaded.config);
+    return `${rendered}\nIdentidade verificada do pacote: ${identity}.\n`;
   });
 }
 

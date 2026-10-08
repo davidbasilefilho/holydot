@@ -81,3 +81,9 @@ Para regras solicitadas, o formulário real é o ponto de confirmação. Sem con
 Os três pilares são capítulos sem hierarquia: I. autonomia; II. eficiência; III. qualidade e mergeability. O setup mantém os padrões aceitos e os modelos configuráveis; a reescrita não muda capacidades, preferências ou permissões reais.
 
 Na reconciliação de regras, compare ação, destino, escopo e comportamento; preserve regras existentes e opções alheias ao pedido. Não reabra proposta pendente ou cancelada automaticamente: consulte o formulário existente quando válido; cancelamento exige nova solicitação para reabrir. Um controle ausente bloqueia somente sua etapa, sem impedir configuração local, render ou trabalho independente autorizado.
+
+## Fonte verificada e nova instância
+
+Antes da TUI e de qualquer Save, `holydot setup` lê a fonte completa instalada e verifica `instructions/integrity.json`. Uma fonte ausente, inválida, alterada ou incompatível bloqueia a operação sem salvar preferências. A confirmação local identifica versão instalada, revisão e digests reais; isso não confirma instruções ativas no host.
+
+Após Save, entregue o resultado completo de `holydot render` pelo fluxo de adoção suportado do dot. Para recuperar o material, use `holydot resume`, que verifica e emite novamente a mesma fonte com as escolhas atuais. Não há hook automático de conversa/compactação nem escrita de regras de conta. A instância deve confirmar acesso real à fonte completa, aplicar a precedência e as correções atuais, e recuperar contexto quando faltar. Checklist interno e handoff reduzem omissões; conformidade comportamental permanece dependente do modelo/host e precisa de avaliação observada própria.
