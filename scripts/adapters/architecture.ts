@@ -71,7 +71,7 @@ export function inspectSource(source: SourceFile): string[] {
   };
   const bindings = new Map<string, { declaration: Node; documentation: Span }>();
   const exposedTypes = new Set<number>();
-  const checked = new Set<number>();
+  const checked = new Set<string>();
   const bindingNames = (node: Node): string[] => {
     if (node.type === "Identifier") return [node.name];
     if (node.type === "RestElement") return bindingNames(node.argument);
@@ -96,12 +96,42 @@ export function inspectSource(source: SourceFile): string[] {
     else if ("id" in declaration && declaration.id?.type === "Identifier")
       bindings.set(declaration.id.name, { declaration, documentation });
   }
-  const expose = (declaration: Node, documentation: Span) => {
-    if (checked.has(declaration.start)) return;
-    checked.add(declaration.start);
+  const checkedObjects = new Set<Node>();
+  const objectMembers = (node: Node) => {
+    if (checkedObjects.has(node)) return;
+    checkedObjects.add(node);
+    if (node.type === "Identifier") {
+      const local = bindings.get(node.name)?.declaration;
+      if (local?.type === "VariableDeclaration")
+        for (const value of local.declarations)
+          if (value.id.type === "Identifier" && value.id.name === node.name && value.init)
+            objectMembers(value.init);
+    } else if (
+      node.type === "TSAsExpression" ||
+      node.type === "TSSatisfiesExpression" ||
+      node.type === "TSNonNullExpression" ||
+      node.type === "ParenthesizedExpression"
+    )
+      objectMembers(node.expression);
+    else if (node.type === "ArrayExpression") {
+      for (const value of node.elements) if (value) objectMembers(value);
+    } else if (node.type === "ObjectExpression") {
+      for (const property of node.properties) {
+        if (!documented(property))
+          report(property, "Document exposed object literal members with JSDoc.");
+        objectMembers(property.type === "SpreadElement" ? property.argument : property.value);
+      }
+    } else if (node.type === "ClassExpression") classMembers(node);
+    else signatureTypes(node);
+  };
+  const expose = (declaration: Node, documentation: Span, localName?: string) => {
+    const key = `${declaration.start}:${localName ?? "*"}`;
+    if (checked.has(key)) return;
+    checked.add(key);
     if (!documented(documentation))
       report(documentation, "Document every exported symbol with JSDoc.");
     signatureTypes(declaration);
+    objectMembers(declaration);
     if (declaration.type === "ClassDeclaration" || declaration.type === "ClassExpression")
       classMembers(declaration);
     if (declaration.type === "TSEnumDeclaration")
@@ -114,15 +144,15 @@ export function inspectSource(source: SourceFile): string[] {
       exposedTypes.add(declaration.start);
     if (declaration.type === "VariableDeclaration")
       for (const value of declaration.declarations) {
-        if (value.init?.type === "ClassExpression") classMembers(value.init);
-        if (value.init) signatureTypes(value.init);
-        if ("typeAnnotation" in value.id && value.id.typeAnnotation)
+        if (localName && !bindingNames(value.id).includes(localName)) continue;
+        if (value.id.type === "Identifier" && value.init) objectMembers(value.init);
+        if (value.id.type === "Identifier" && value.id.typeAnnotation)
           exposedAnnotations.push(value.id.typeAnnotation);
       }
   };
   const exposeLocal = (name: string, boundary: Span) => {
     const local = bindings.get(name);
-    if (local) expose(local.declaration, local.documentation);
+    if (local) expose(local.declaration, local.documentation, name);
     else if (!documented(boundary))
       report(boundary, "Document external re-export boundaries with JSDoc.");
   };

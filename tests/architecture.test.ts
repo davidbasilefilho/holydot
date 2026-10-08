@@ -97,7 +97,7 @@ test.each([
   "/** State. */ enum State { /** Ready. */ Ready } export default State;",
   "/** API. */ class API { /** Value. */ value = 1; } export default API;",
   "/** API. */ export const API = class { /** Value. */ value = 1; };",
-  "/** Options. */ const options: { /** Value. */ value: number } = { value: 1 }; export { options };",
+  "/** Options. */ const options: { /** Value. */ value: number } = { /** Value. */ value: 1 }; export { options };",
   "/** Run. */ export const run = () => { type Internal = { value: string }; };",
   "/** Value. */ const { value } = { value: 1 }; export { value };",
   "/** Public import. */ export { imported } from './external';",
@@ -135,4 +135,56 @@ test.each([
   "function internal(options: { value: string }): { value: string } { return options; }",
 ])("documented signatures pass and internal signatures stay excluded: %s", (text) => {
   expect(inspectSource({ path: "scripts/adapters/fixture.ts", text })).toEqual([]);
+});
+
+test.each([
+  "/** Options. */ export const options = { enabled: true };",
+  "/** Options. */ const options = { enabled: true }; export { options };",
+  "/** Options. */ const options = { enabled: true }; export default options;",
+  "/** Options. */ export default { enabled: true };",
+  "/** Options. */ export const options = { /** Nested. */ nested: { enabled: true } };",
+  "/** Options. */ export const options = { enabled: true } as const;",
+  "/** Options. */ export const options = { enabled: true } satisfies Record<string, boolean>;",
+  "/** Options. */ export const options = [{ enabled: true }];",
+  "/** Internal. */ const internal = { enabled: true }; /** Options. */ export const options = { /** Spread. */ ...internal };",
+  "/** Options. */ export const options = { /** Read. */ read(options: { enabled: boolean }) {} };",
+])("known exported object literal members require docs across equivalent paths: %s", (text) => {
+  expect(
+    inspectSource({ path: "scripts/adapters/fixture.ts", text }).some(
+      (error) => error.includes("object literal members") || error.includes("object type members"),
+    ),
+  ).toBe(true);
+});
+test.each([
+  "/** Options. */ export const options = { /** Enabled. */ enabled: true };",
+  "/** Options. */ const options = { /** Enabled. */ enabled: true }; export { options };",
+  "/** Options. */ export default { /** Enabled. */ enabled: true };",
+  "/** Options. */ export const options = { /** Nested. */ nested: { /** Enabled. */ enabled: true } } as const;",
+  "/** Options. */ export const options = [{ /** Enabled. */ enabled: true }];",
+  "/** Internal. */ const internal = { /** Enabled. */ enabled: true }; /** Options. */ export const options = { /** Spread. */ ...internal };",
+  "/** Options. */ export const options = { /** Read. */ read(options: { /** Enabled. */ enabled: boolean }) { const hidden = { secret: true }; } };",
+  "const internal = { enabled: true };",
+])("documented runtime object members pass, without checking internal bodies: %s", (text) => {
+  expect(inspectSource({ path: "scripts/adapters/fixture.ts", text })).toEqual([]);
+});
+
+test("named local object export checks only exposed bindings in a shared declaration", () => {
+  expect(
+    inspectSource({
+      path: "scripts/adapters/fixture.ts",
+      text: "/** Values. */ const hidden = { secret: true }, value = 1; export { value };",
+    }),
+  ).toEqual([]);
+  expect(
+    inspectSource({
+      path: "scripts/adapters/fixture.ts",
+      text: "/** Values. */ const hidden = { secret: true }, value = { /** Enabled. */ enabled: true }; export { value };",
+    }),
+  ).toEqual([]);
+  expect(
+    inspectSource({
+      path: "scripts/adapters/fixture.ts",
+      text: "/** Values. */ const first = { /** A. */ a: 1 }, second = { missing: true }; export { first, second };",
+    }).some((error) => error.includes("object literal members")),
+  ).toBe(true);
 });

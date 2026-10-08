@@ -39,13 +39,33 @@ export const ConfigSchema = Schema.Struct({
 export type HolydotConfig = typeof ConfigSchema.Type;
 /** Fresh v2 defaults; callers should validate/copy before editing. */
 export const DEFAULT_CONFIG: HolydotConfig = {
+  /** Version of the persisted local-preference format. */
   schemaVersion: 2,
+  /** Separate requested roles and speed; no host routing or approval is created. */
   delegation: {
-    coordinator: { model: "gpt-6.1-sol", effort: "medium" },
-    specialist: { model: "gpt-6-luna", effort: "high" },
+    /** Defaults for delegated coordination, distinct from the main dot. */
+    coordinator: {
+      /** Supporting-host model preference for coordination. */
+      model: "gpt-6.1-sol",
+      /** Balanced requested reasoning effort. */
+      effort: "medium",
+    },
+    /** Defaults for bounded specialist work. */
+    specialist: {
+      /** Supporting-host model preference for specialists. */
+      model: "gpt-6-luna",
+      /** Requested specialist reasoning effort. */
+      effort: "high",
+    },
+    /** Standard is the default; Fast needs explicit selection. */
     speed: "standard",
   },
-  statusUpdates: { intervalMinutes: 30 },
+  /** Reporting preferences; a real scheduler remains necessary. */
+  statusUpdates: {
+    /** Default recurring-panorama interval in minutes, without scheduling a task. */
+    intervalMinutes: 30,
+  },
+  /** Null preserves the explicit environment or Codex default home. */
   codexHome: null,
 };
 
