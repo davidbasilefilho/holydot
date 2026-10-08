@@ -64,7 +64,7 @@ test("verified initial setup identifies actual package and resume reloads identi
   );
   expect(setup).toContain(`holydot ${JSON.parse(manifest).version}`);
   expect(setup).toContain(JSON.parse(pin).canonicalSHA256);
-  expect(setup).toContain("2026-10-08.1");
+  expect(setup).toContain(JSON.parse(pin).revision);
   const config = readFileSync(join(pkg.consumer, "holydot.config.json"));
   const noPrompt = () => Effect.die("render/resume must not prompt");
   const render = await Effect.runPromise(runCli(["render"], pkg.consumer, noPrompt, pkg.url));
@@ -90,4 +90,36 @@ test("receiver continuity contract preserves precedence, later corrections and a
     "Não prometa 100% de compliance de LLM por prompt",
   ])
     expect(canonical.toLowerCase()).toContain(phrase.toLowerCase());
+});
+
+// Deterministic receiver-contract assertions; these do not simulate host account persistence.
+test.each([
+  [
+    "new installation executes host steps",
+    "execute essas etapas com as ferramentas reais do host disponíveis",
+  ],
+  ["idempotent reexecution", "execute somente o que ainda falta, sem duplicar o que existe"],
+  [
+    "pending and cancellation preserved",
+    "Não reabra formulário pendente nem cancelado por iniciativa própria",
+  ],
+  [
+    "saved requires host confirmation",
+    "Somente a confirmação de gravação pelo host permite marcar salva",
+  ],
+  [
+    "verified requires corresponding readback",
+    "somente o readback correspondente permite marcar verificada",
+  ],
+  [
+    "partial failure retains verified effects",
+    "preserve esses resultados e registre a falha parcial",
+  ],
+  ["missing definitions stay explicit", "bloqueada por definição incompleta"],
+  [
+    "task verification and no blind interval fallback",
+    "Não invente campos ausentes nem converta automaticamente 30 minutos",
+  ],
+])("host-installation contract (not live host evaluation): %s", (_, phrase) => {
+  expect(canonical).toContain(phrase);
 });
