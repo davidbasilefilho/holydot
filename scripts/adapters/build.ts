@@ -10,7 +10,7 @@ import solidPlugin from "@opentui/solid/bun-plugin";
 export async function compileCli(): Promise<void> {
   rmSync("./dist", { recursive: true, force: true });
   const result = await Bun.build({
-    entrypoints: ["./scripts/cli.ts", "./scripts/adoption.ts"],
+    entrypoints: ["./scripts/cli.ts"],
     outdir: "./dist",
     target: "bun",
     packages: "external",

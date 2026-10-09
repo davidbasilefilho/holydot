@@ -22,9 +22,6 @@
     "dist/"
   ],
   "type": "module",
-  "exports": {
-    "./adoption": "./dist/adoption.js"
-  },
   "publishConfig": {
     "access": "public"
   },
