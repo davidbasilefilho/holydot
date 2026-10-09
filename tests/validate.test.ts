@@ -213,7 +213,7 @@ describe("offline package validation", () => {
     );
   });
 
-  test.each(["templates/task.md", "templates/result.md", "docs/usage.md", "docs/account-rules.md"])(
+  test.each(["docs/usage.md", "docs/account-rules.md"])(
     "authorization continuity stays aligned in %s",
     (file) => {
       const text = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");

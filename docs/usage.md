@@ -4,7 +4,7 @@ O holydot funciona pelas instruções e ferramentas do dot existente. Não depen
 
 ## Execução
 
-Priorize capacidades adequadas nesta ordem: dot, subagentes nativos e computador cloud do dot; Codex Cloud quando necessário; outro computador somente para dependências reais daquele ambiente. O tamanho da tarefa não escolhe o ambiente sozinho. Verifique capacidade, permissão e conexão reais.
+Escolha capacidades pelo trabalho, contexto e ambiente autorizado, sem ordem rígida: Codex/HolyCodex para engenharia de software e subagentes nativos para trabalhos adequados às suas capacidades. Outro computador exige dependência real daquele ambiente. Verifique capacidade, permissão e conexão reais; consulte a decisão canônica em [instructions/holydot.md](../instructions/holydot.md).
 
 Autonomia leva o trabalho autorizado ao resultado combinado. Não inventa autorização para publicar, fazer merge, implantar, enviar mensagens ou alterar contas. Aproveite aprovações informadas ainda válidas para a mesma ação e escopo. Uma ordem de parada interrompe novas ações e atribuições; preserve checkpoints e distinga solicitação de confirmação de parada.
 
@@ -28,7 +28,7 @@ Pending/ausência de review permanece pendente; disabled/skipped/quota é limite
 
 Os papéis são distintos: coordenação de sessões delegadas prefere GPT-6.1 Sol / medium; especialistas preferem GPT-6 Luna / high. Standard é padrão e Fast é opt-in. Essas escolhas só valem quando suportadas por controles reais; uma configuração salva não comprova roteamento. Não altere o modelo principal do dot.
 
-Use atribuições delimitadas, critérios de aceitação e propriedade de arquivos. Reutilize agentes compatíveis e preserve o trabalho concorrente. Um revisor independente deve ser distinto do autor; se só houver autocheck, declare essa limitação.
+Mantenha contextos, tarefas equivalentes e atribuições separados por projeto. Antes de criar uma sessão, descubra as existentes e aplique a política canônica de warm (menos de 20 minutos desde atividade efetiva), compatibilidade, ocupação e retomada cold. Use atribuições delimitadas, critérios de aceitação e propriedade de arquivos. Reutilize agentes compatíveis e preserve o trabalho concorrente. Um revisor independente deve ser distinto do autor; se só houver autocheck, declare essa limitação.
 
 ## Perguntas e comunicação
 
