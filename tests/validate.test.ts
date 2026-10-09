@@ -316,6 +316,7 @@ describe("offline package validation", () => {
   for (const file of [
     "templates/task.md",
     "tests/orchestration-policy.test.ts",
+    "tests/quality-policy.test.ts",
     "docs/operational-acceptance.md",
   ]) {
     test.each(["missing", "empty", "directory"])(
