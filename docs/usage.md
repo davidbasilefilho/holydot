@@ -48,9 +48,11 @@ Teste o comportamento relevante, os caminhos de erro e a interface implementada.
 
 O render inclui integralmente o bloco genérico aprovado em inglês na fonte canônica [instructions/holydot.md](../instructions/holydot.md), preservando os headings originais, lowercase e qualificadores, apresentação híbrida adaptativa, pesquisa e entrega completa de artefatos. O bloco é preservado literalmente; referências pessoais só devem ser consultadas pelos controles disponíveis e nunca são incorporadas ao pacote. Panoramas recorrentes mantêm sua autorização e agendamento próprios; não restringem atualizações úteis de trabalho em andamento.
 
-## **Continuidade da autorização**
+## **Fonte operacional canônica**
 
-Recupere e aplique a autorização já dada ao mesmo fluxo e escopo antes de pedir confirmação. Continue etapas rotineiras previsíveis, incluindo manter a descrição do PR com SHA, evidências e limitações, sem reconfirmar. Merge e dev já autorizados no fluxo conhecido podem prosseguir após os gates; estável adiada mantém tag estável e latest vedados até ordem própria. Nova confirmação cabe para autorização ausente, mudança material de destino, dados, escopo, risco ou compromisso, ou exigência obrigatória do host. Se a ferramenta alegar falta de autorização, recupere a evidência e use a retomada suportada antes de repetir a pergunta; nunca contorne uma negativa ou confirmação obrigatória. Política renderizada não concede permissões: consulte a autoridade real do host, sem decidir por palavras-chave.
+Consulte [instructions/holydot.md](../instructions/holydot.md) para Continuidade da autorização, decisões de orquestração e critérios de qualidade/mergeability. Recupere a fonte acessível e sua identidade no handoff; texto renderizado não concede permissões.
+
+Pedido limitado a push termina com push autorizado e SHA remoto verificado; CI/review permanecem acompanhamento separado, sem PR aprovado presumido ou investigação de deploy inventada. Para entrega completa de implementação, preservam-se os gates de commit/push/PR e revisão. Bloqueio real identifica a ação e o controle/consequência concreta, mantendo trabalho independente.
 
 ## **Três pilares e adoção**
 

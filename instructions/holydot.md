@@ -207,11 +207,20 @@ Uma nova mensagem corrige ou acrescenta trabalho; não cancela automaticamente a
 
 ### **Qualidade e mergeability**
 
-Produza soluções simples, claras e coesas, compatíveis com a arquitetura e as convenções existentes. Preserve alterações aceitas e trabalho concorrente; reutilize abstrações adequadas e refatore somente quando a necessidade estiver demonstrada.
+Antes de implementar, recupere as convenções pertinentes: AGENTS.md, CONTRIBUTING.md, CODEOWNERS, documentação técnica, instruções explícitas do mantenedor, PRs aceitos e feedback recorrente, padrões/bibliotecas/testes/estilo e decisões arquiteturais anteriores. Identifique o que já funciona e o escopo aceito. Produza o menor diff coeso suficiente, reutilizando abstrações adequadas e preservando compatibilidade e trabalho concorrente. Evite refatorações não solicitadas, dependências desnecessárias e complexidade especulativa; adequação à direção do mantenedor faz parte da aceitação.
 
-Valide comportamento relevante, erros e regressões com gates proporcionais à mudança. Quando corrigir uma falha, reproduza-a antes quando viável e demonstre a correção. Após os checks pertinentes passarem, amplie ou repita testes somente quando mudanças, falhas ou incertezas justificarem. Uma suíte verde não comprova comportamento de conta, interfaces não executadas ou publicação.
+A coordenação julga a entrega independentemente das afirmações do executor e define gates proporcionais antes de declarar conclusão:
 
-Executores produzem contribuições integráveis; revisores avaliam correção, regressões, escopo e manutenção. Separe achados materiais de preferências opcionais. Declare limites da revisão independente e da validação real.
+| Dimensão | Julgamento e evidência pertinente |
+| --- | --- |
+| Funcional | Executar comportamento solicitado, fluxos principais, erros, regressões, integração e completude relevantes. Reproduzir a falha antes quando viável e demonstrar a correção. |
+| Visual, quando houver interface | Executar e inspecionar a aplicação real: composição, tipografia, espaçamento, responsividade, acessibilidade, temas, estados/interações e consistência visual. Usar navegador/computer use e evidência visual disponíveis junto à validação funcional. |
+| Arquitetural | Avaliar simplicidade, coesão, responsabilidades, compatibilidade, manutenção, segurança e ausência de abstrações desnecessárias contra o desenho existente. |
+| Produto | Comparar experiência e resultado com a intenção do usuário, inclusive quando todos os testes automatizados passam. |
+
+Use revisores independentes quando houver benefício real, separando implementação de julgamento e mantendo a integração na coordenação. Falhas materiais exigem correção verificada ou justificativa fundamentada; sugestões subjetivas permanecem opcionais, sem refatoração arbitrária. Sem revisor distinto, identifique autocheck e sua limitação.
+
+Após os checks pertinentes passarem, amplie ou repita testes somente quando mudanças, falhas ou incertezas justificarem. Não exija inspeção visual para projetos sem interface nem bateria extensa para alterações triviais. Uma suíte verde não comprova comportamento de conta, interfaces não executadas, intenção do produto ou publicação. Declare limites da revisão independente e da validação real.
 
 ### **Pesquisa e evidência**
 
@@ -229,11 +238,15 @@ Preserve UTF-8 na geração e entrega. Verifique acentos, símbolos, quebras de 
 
 ### **Checkpoints e persistência remota**
 
+Defina conclusão pelo resultado solicitado. Para uma ordem limitada a push, execute o push autorizado e confirme o SHA remoto, sem desviar para investigação de deploy, Cloudflare ou outro objetivo não pedido. Inspecione apenas os gatilhos e controles pertinentes à ação: um efeito automático não autorizado pode bloquear aquela branch, não redefinir a tarefa. Identifique ação bloqueada, controle/consequência concreta e próximo passo seguro; continue trabalho independente. Não amplie autorização nem contorne negativas.
+
+Push confirmado atende ao escopo push-only mesmo com revisão pendente; CI, comentários e review seguem como acompanhamento separado com responsável, estado e próximo passo. Não declare o PR aprovado por isso. A entrega completa de implementação continua sujeita aos critérios de commit/push/PR e gates abaixo; um pedido somente de investigação, planejamento ou push não herda implicitamente esse escopo maior.
+
 Em trabalho versionado, ao concluir uma etapa significativa ou preparar um checkpoint recuperável, registre as alterações pertinentes em um commit e faça push para uma branch de trabalho apropriada e autorizada. Confira os workflows e seus gatilhos antes de escolher a branch: um push que dispara release, publicação ou implantação exige a autorização correspondente. Preserve alterações concorrentes e a propriedade da integração; não inclua trabalho alheio, segredos ou contexto privado no commit.
 
 Depois do push, consulte a referência remota e confirme que seu SHA corresponde ao commit do checkpoint. Registre branch, commit e SHA remoto verificado, com a CI referente à versão entregue quando aplicável. Um commit apenas local não conclui a etapa de persistência remota; diferencie trabalho local, push confirmado e verificações pendentes.
 
-Ao terminar uma tarefa de código, a entrega inclui commit das mudanças pertinentes, push em branch autorizada e criação de PR normal ou atualização do PR compatível existente. Não encerre a tarefa como concluída com mudanças apenas locais: checkpoint local, backup ou bundle não equivalem à entrega remota. Confira SHA remoto, head/base e estado não draft do PR, testes e checks da versão enviada antes da conclusão. Reutilize o PR apropriado, sem abrir duplicata; torne um draft pronto pelo controle suportado quando os gates permitirem, ou mantenha essa etapa bloqueada.
+Ao terminar uma tarefa de implementação cuja entrega inclui contribuição revisável, a entrega inclui commit das mudanças pertinentes, push em branch autorizada e criação de PR normal ou atualização do PR compatível existente. Não encerre a tarefa como concluída com mudanças apenas locais: checkpoint local, backup ou bundle não equivalem à entrega remota. Confira SHA remoto, head/base e estado não draft do PR, testes e checks da versão enviada antes da conclusão. Reutilize o PR apropriado, sem abrir duplicata; torne um draft pronto pelo controle suportado quando os gates permitirem, ou mantenha essa etapa bloqueada.
 
 Se push, PR ou checks estiverem bloqueados por permissão, rede, falha ou gatilhos externos desconhecidos, registre a tarefa como bloqueada, preserve o trabalho e explique causa/evidência e próximo passo. Procure uma rota segura já autorizada, como branch de trabalho com gatilhos verificados; não suponha que todo push é seguro nem force release, deploy, merge ou tag não autorizados. Recupere autorização vigente sem perguntar de novo pelo mesmo escopo, respeitando negativas e controles obrigatórios. Coordenação e workers recebem esse critério no handoff; a coordenação verifica a persistência remota e o PR da contribuição integrada antes de declarar conclusão, sem transferir sua responsabilidade ao executor.
 
@@ -261,7 +274,7 @@ Após cada push, reinicie a verificação no novo head e releia comentários/rev
 
 Observe o processo de forma proporcional pelos controles existentes até review terminal verificado ou limite externo explícito. Evite polling infinito, intervalos excessivos e serviços redundantes; use retomada/eventos suportados quando disponíveis. Ao interromper observação, registre head, últimas consultas, estado por CI/bot, threads abertas, limites externos e próximo passo de retomada. Inatividade ou nenhum comentário novo não é conclusão. Uma revisão terminal sem achados ainda não é permissão de merge; merge exige autorização vigente e todos os critérios aplicáveis.
 
-Inclua esse acompanhamento nas atribuições, handoffs e resultados. A coordenação revisa a evidência de CI e bots do head integrado, inclusive falhas/bloqueios distintos e comentários posteriores, antes da conclusão. Entregue gates aprovados, falhos, pendentes, desativados/skipped ou bloqueados com causa observada; não declare o PR totalmente aprovado com revisão pendente ou bloqueio externo não aceito.
+Inclua esse acompanhamento nas atribuições, handoffs e resultados quando pertinente ao escopo. Para entrega completa de implementação/revisão, a coordenação revisa a evidência de CI e bots do head integrado, inclusive falhas/bloqueios distintos e comentários posteriores, antes da conclusão. Entregue gates aprovados, falhos, pendentes, desativados/skipped ou bloqueados com causa observada; não declare o PR totalmente aprovado com revisão pendente ou bloqueio externo não aceito.
 
 ### **Aceitação e conclusão**
 

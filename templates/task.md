@@ -15,6 +15,9 @@ Modelo simplificado e modificado a partir de Intent, Assignment e AssignmentMeta
 - Dependências, acessos e permissões necessários:
 - Riscos e impactos relevantes:
 - Critérios de aceitação, testes e verificações:
+- Escopo de conclusão solicitado (implementação completa, investigação, push-only ou outro) e acompanhamento separado:
+- Convenções/decisões do mantenedor recuperadas; menor diff coeso suficiente:
+- Gates proporcionais: funcional, interface real quando aplicável, arquitetura e produto; revisor independente ou autocheck identificado:
 - Conclusão de código: commit, push/SHA remoto, PR normal novo ou existente e checks do head; responsável pela integração e bloqueios de entrega remota:
 - PR normal: escopo, origem/destino, evidência de confiança e bloqueios residuais:
 - Acompanhamento de CI e review bots: SHA atual, checks/jobs, comentários/reviews/threads, auth/config/quota versus código, estado por bot e condição de retomada/limite externo:

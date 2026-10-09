@@ -18,6 +18,7 @@ export const REQUIRED_FILES = [
   "tests/bootstrap.test.ts",
   "tests/review-policy.test.ts",
   "tests/orchestration-policy.test.ts",
+  "tests/quality-policy.test.ts",
   "docs/operational-acceptance.md",
   "instructions/specialist.md",
   "templates/task.md",

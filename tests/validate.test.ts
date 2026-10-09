@@ -213,22 +213,13 @@ describe("offline package validation", () => {
     );
   });
 
-  test.each(["docs/usage.md", "docs/account-rules.md"])(
-    "authorization continuity stays aligned in %s",
+  test.each(["templates/task.md", "templates/result.md", "docs/usage.md", "docs/account-rules.md"])(
+    "authorization policy references an accessible canonical source in %s",
     (file) => {
       const text = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
-      for (const requirement of [
-        "autorização já dada ao mesmo fluxo e escopo",
-        "descrição do PR com SHA, evidências e limitações",
-        "Merge e dev já autorizados no fluxo conhecido",
-        "tag estável e latest vedados até ordem própria",
-        "mudança material de destino, dados, escopo, risco ou compromisso",
-        "retomada suportada antes de repetir a pergunta",
-        "nunca contorne uma negativa ou confirmação obrigatória",
-        "Política renderizada não concede permissões",
-        "autoridade real do host, sem decidir por palavras-chave",
-      ])
-        expect(text).toContain(requirement);
+      expect(text).toContain("[instructions/holydot.md](../instructions/holydot.md)");
+      expect(text).toContain("Continuidade da autorização");
+      expect(text).not.toContain("Merge e dev já autorizados no fluxo conhecido");
     },
   );
   test("specialist and release boundaries reuse authorization without expanding it", () => {

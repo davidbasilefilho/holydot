@@ -14,13 +14,15 @@ Quando o dono solicitar instalação/adoção das instruções, o dot deve usar 
 
 Em trabalho versionado, checkpoints significativos devem ser commitados e enviados a uma branch de trabalho autorizada, após inspecionar os gatilhos de workflow. Confirme o SHA da referência remota; um commit apenas local não conclui a persistência remota. Se a permissão vigente exigir aprovação de push, solicite a confirmação pelo controle suportado e informe o bloqueio, preservando os arquivos e o commit local. Push que publica ou implanta, merge, tags e release continuam exigindo sua própria autorização.
 
-Conclusão de tarefa de código inclui commit, push com SHA remoto verificado e PR normal criado ou PR apropriado atualizado, com checks da versão enviada. Não encerre como concluído com alterações apenas locais, PR draft ou gates pendentes; backup não substitui entrega remota. Falha de push ou gatilhos externos desconhecidos mantém a etapa bloqueada enquanto se busca rota segura autorizada. Inclua esse critério nos handoffs e na revisão final da coordenação, sem duplicar PR nem autorizações vigentes.
+Conclusão de entrega completa de implementação inclui commit, push com SHA remoto verificado e PR normal criado ou PR apropriado atualizado, com checks da versão enviada. Não encerre como concluído com alterações apenas locais, PR draft ou gates pendentes; backup não substitui entrega remota. Falha de push ou gatilhos externos desconhecidos mantém a etapa bloqueada enquanto se busca rota segura autorizada. Inclua esse critério nos handoffs e na revisão final da coordenação, sem duplicar PR nem autorizações vigentes.
 
 Os controles vivos de permissão e regras personalizadas do host são a fonte de autoridade. Instalação e renderização não salvam uma regra de conta nem recriam uma regra excluída. Uma proposta genérica de regra de checkpoint/push, quando solicitada, precisa do formulário real de confirmação do host; não é permissão permanente presumida. Não distribua regras privadas, identificadores de conta ou revisões pessoais.
 
-## **Continuidade da autorização**
+## **Fonte operacional canônica**
 
-Recupere e aplique a autorização já dada ao mesmo fluxo e escopo antes de pedir confirmação. Continue etapas rotineiras previsíveis, incluindo manter a descrição do PR com SHA, evidências e limitações, sem reconfirmar. Merge e dev já autorizados no fluxo conhecido podem prosseguir após os gates; estável adiada mantém tag estável e latest vedados até ordem própria. Nova confirmação cabe para autorização ausente, mudança material de destino, dados, escopo, risco ou compromisso, ou exigência obrigatória do host. Se a ferramenta alegar falta de autorização, recupere a evidência e use a retomada suportada antes de repetir a pergunta; nunca contorne uma negativa ou confirmação obrigatória. Política renderizada não concede permissões: consulte a autoridade real do host, sem decidir por palavras-chave.
+Consulte [instructions/holydot.md](../instructions/holydot.md) para Continuidade da autorização, decisões de orquestração e critérios de qualidade/mergeability. Recupere a fonte acessível e sua identidade no handoff; texto renderizado não concede permissões.
+
+Pedido limitado a push termina com push autorizado e SHA remoto verificado; CI/review permanecem acompanhamento separado, sem PR aprovado presumido ou investigação de deploy inventada. Para entrega completa de implementação, preservam-se os gates de commit/push/PR e revisão. Bloqueio real identifica a ação e o controle/consequência concreta, mantendo trabalho independente.
 
 ## **Formulário, readback e retomada**
 
