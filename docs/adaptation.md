@@ -4,7 +4,7 @@ As instruções preservam a atribuição de materiais públicos do HolyCodex fix
 
 Coordenação principal mantém integração e responsabilidade. Especialistas recebem escopo delimitado, contexto pertinente, recursos autorizados e critérios de aceitação. Os papéis têm preferências separadas: Sol/medium para coordenação delegada, Luna/high para especialistas, Standard por padrão. Suporte real e evidência de roteamento são necessários.
 
-Pesquisa, preparação e trabalho compatível usam primeiro ferramentas nativas e computador cloud do dot. Codex Cloud ou outro computador entram quando necessários à etapa. Configurações são preferências; acesso, permissões e regras de conta seguem o host.
+Escolha recursos pela capacidade, contexto, eficiência e qualidade efetivas, sem hierarquia rígida: Codex/HolyCodex para engenharia de software e subagentes nativos do dot para trabalhos adequados às suas capacidades. Outro computador entra por dependência real daquele ambiente. Consulte a decisão canônica em [instructions/holydot.md](../instructions/holydot.md). Configurações são preferências; acesso, permissões e regras de conta seguem o host.
 
 A orientação de comunicação permite respostas curtas sem introdução artificial e respostas extensas com headings Markdown reais. Perguntas relacionadas são agrupadas em lotes numerados com alternativas concisas, inclusive por texto quando um controle estruturado não funcionar. Aprovações/autenticação que exigem controles específicos continuam exigindo esses controles.
 
