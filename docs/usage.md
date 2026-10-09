@@ -18,6 +18,12 @@ Recupere primeiro o contexto existente e pesquise opções suportadas. Resolva e
 
 Abra proativamente um PR normal, sem draft, para trabalho autorizado e delimitado quando verificações sustentarem confiança na funcionalidade e qualidade. Reutilize PRs compatíveis; confira origem/destino, estado normal e SHA do head, com testes/CI dessa versão. Declare bloqueios residuais e respeite controles obrigatórios. Merge, tags, release, publicação e implantação têm autorização separada.
 
+## CI e review bots
+
+Depois de cada push, acompanhe CI e bots existentes no SHA atual: checks/statuses/jobs, comentários de conversa/inline, reviews e threads. Separe falha de código de auth/config/quota pela evidência; CI bloqueada não impede review independente. Corrija materiais no escopo, teste e faça push, responda com evidência e confirme resolução da thread. Outdated não basta. Releia head novo e comentários posteriores; CI verde ou status success que diz review skipped não é aprovação.
+
+Pending/ausência de review permanece pendente; disabled/skipped/quota é limite externo explícito. Observe proporcionalmente até estado terminal ou limite, sem polling infinito, nova automação ou mudança de configuração de conta. Use revisão única suportada quando necessária e autorizada, sem duplicar execução. Entregue estado por gate/bot, última consulta e próximo passo de retomada. A coordenação verifica o head integrado; merge exige autoridade e critérios próprios.
+
 ## Coordenação e especialistas
 
 Os papéis são distintos: coordenação de sessões delegadas prefere GPT-6.1 Sol / medium; especialistas preferem GPT-6 Luna / high. Standard é padrão e Fast é opt-in. Essas escolhas só valem quando suportadas por controles reais; uma configuração salva não comprova roteamento. Não altere o modelo principal do dot.

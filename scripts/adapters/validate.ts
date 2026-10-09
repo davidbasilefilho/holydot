@@ -16,6 +16,7 @@ export const REQUIRED_FILES = [
   "scripts/adapters/instructions.ts",
   "tests/instructions.test.ts",
   "tests/bootstrap.test.ts",
+  "tests/review-policy.test.ts",
   "instructions/specialist.md",
   "templates/task.md",
   "templates/result.md",

@@ -5,6 +5,8 @@
 - Checkpoint: commit local, branch de trabalho, push e SHA remoto verificado (ou bloqueio/confirmação pendente):
 - Critérios atendidos e evidências correspondentes:
 - PR: referência, origem/destino, estado normal verificado e SHA do head:
+- CI e review bots no head: runs/jobs/checks, comentários/reviews/threads tratados, correção/resposta verificada e estado confirmado após resolução:
+- Bots pendentes/desativados/skipped ou quota; CI bloqueada por auth/config versus falha de código; última consulta e próximo passo de retomada:
 - Confiança em funcionalidade/qualidade e bloqueios residuais:
 - Verificações aprovadas:
 - Verificações com falha:
@@ -21,6 +23,8 @@ Um commit apenas local não conclui a persistência remota. Informe separadament
 Não marque uma tarefa de código concluída enquanto houver mudanças apenas locais, push não confirmado, PR ausente/draft ou checks pendentes/com falha. Backup/checkpoint recuperável preserva o trabalho, mas não substitui commit, push e PR normal apropriado. Informe bloqueio e próximo passo seguro quando a entrega remota não puder ser verificada.
 
 Relacione a evidência de testes/CI ao SHA do head do PR normal. Estado pronto para revisão não autoriza merge, release, publicação ou implantação; informe qualquer confirmação obrigatória ou controle indisponível.
+
+CI verde isolada não conclui o PR: acompanhe review bots e comentários posteriores no head atual. Review ausente/pending ou bot disabled/skipped/quota não é aprovação. Resolve exige evidência verificada e releitura; outdated não basta. Sem polling infinito ou automação redundante; limite externo permanece explícito e não autoriza merge.
 
 ## **Continuidade da autorização**
 

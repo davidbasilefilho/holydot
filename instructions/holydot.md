@@ -228,6 +228,20 @@ Confira repositório, branches de origem/destino, estado normal do PR e SHA do h
 
 Um PR normal solicita revisão, não autoriza merge, tag, release, publicação ou implantação por si só. Recupere e aplique a autorização específica já concedida ao fluxo; não exija uma nova ordem quando ela continuar válida. Antes de abrir ou atualizar, confira gatilhos de workflow e permissões reais; inferências de preferência não substituem confirmação exigida pelo host. Preserve a propriedade da integração e não amplie o escopo do trabalho.
 
+### **Acompanhamento de CI e review bots**
+
+Depois de commit/push e criação ou atualização do PR, acompanhe tanto CI quanto review bots no SHA atual. Leia checks/statuses, runs/jobs relevantes, comentários de conversa e inline, reviews e review threads pelos controles existentes, com paginação quando necessária. Relacione cada resultado ao head avaliado; CI verde isolada não encerra revisão nem comprova aprovação dos bots. Status success com mensagem review skipped também não é revisão aprovada.
+
+Separe falha de código/teste de bloqueio de autenticação, permissão, configuração ou quota usando logs/resultados observados, sem presumir a causa nem expor credenciais. Quando CI estiver bloqueada por auth/config, continue acompanhando e tratando os bots independentes. Não altere credenciais, conta ou configuração de bot para eliminar o bloqueio sem autoridade própria. Review pending ou ausência de review continua pendente; bot desativado, skipped ou limitado por quota é bloqueio externo explícito, nunca aprovação silenciosa.
+
+Analise comentários e achados com o código atual e evidência. Corrija materiais dentro do escopo, valide a correção, faça commit/push autorizado e responda na conversa correspondente com a versão e verificação reais. Resolva uma thread somente após correção ou resposta sustentada e verificada; outdated, arquivo removido ou status verde não bastam por si sós. Releia para confirmar resolução e preserve discordâncias/decisões pendentes. Não marque uma sugestão inválida como corrigida: explique a conclusão com evidência.
+
+Após cada push, reinicie a verificação no novo head e releia comentários/reviews/threads, inclusive comentários que chegaram depois do push ou se referem a uma versão anterior. Não use aprovação ou checks antigos como aceite automático da nova versão. Se o bot disponibilizar um comando de revisão única no mesmo PR e isso estiver no fluxo autorizado, use-o uma vez quando necessário; não habilite bot, contrate plano, crie automação ou duplique solicitação em execução só para monitorar.
+
+Observe o processo de forma proporcional pelos controles existentes até review terminal verificado ou limite externo explícito. Evite polling infinito, intervalos excessivos e serviços redundantes; use retomada/eventos suportados quando disponíveis. Ao interromper observação, registre head, últimas consultas, estado por CI/bot, threads abertas, limites externos e próximo passo de retomada. Inatividade ou nenhum comentário novo não é conclusão. Uma revisão terminal sem achados ainda não é permissão de merge; merge exige autorização vigente e todos os critérios aplicáveis.
+
+Inclua esse acompanhamento nas atribuições, handoffs e resultados. A coordenação revisa a evidência de CI e bots do head integrado, inclusive falhas/bloqueios distintos e comentários posteriores, antes da conclusão. Entregue gates aprovados, falhos, pendentes, desativados/skipped ou bloqueados com causa observada; não declare o PR totalmente aprovado com revisão pendente ou bloqueio externo não aceito.
+
 ### **Aceitação e conclusão**
 
 Compare o resultado com o contrato e relacione evidências à versão avaliada. Distinga gates aprovados, com falha, bloqueados e não executados; local, push, CI, pacote publicado e implantação são resultados distintos.

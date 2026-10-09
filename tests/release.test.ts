@@ -277,13 +277,12 @@ test("npm publication job binds its OIDC context to a protected environment", ()
   expect(workflow).toHaveProperty("jobs.release.permissions.id-token", "write");
   const instructions = readFileSync(new URL("../docs/releases.md", import.meta.url), "utf8");
   for (const required of [
-    "Selected branches and tags",
-    "release/v0.0.1",
-    "sem regras de tags",
-    "sem reviewer manual adicional",
-    "Não deixe um publisher paralelo sem environment",
-    "Branches/tags excluídas",
-    "não comprova a configuração salva",
+    "restrições externas de referências",
+    "identidade de publisher correspondente",
+    "não comprovam a configuração salva",
+    "referências excluídas não publicam",
+    "Procedimentos específicos de conta",
+    "A CLI não configura proteção de branch",
   ])
     expect(instructions).toContain(required);
 });

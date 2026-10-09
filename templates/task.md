@@ -17,6 +17,7 @@ Modelo simplificado e modificado a partir de Intent, Assignment e AssignmentMeta
 - Critérios de aceitação, testes e verificações:
 - Conclusão de código: commit, push/SHA remoto, PR normal novo ou existente e checks do head; responsável pela integração e bloqueios de entrega remota:
 - PR normal: escopo, origem/destino, evidência de confiança e bloqueios residuais:
+- Acompanhamento de CI e review bots: SHA atual, checks/jobs, comentários/reviews/threads, auth/config/quota versus código, estado por bot e condição de retomada/limite externo:
 - Efeitos externos já autorizados:
 - Checkpoint: branch de trabalho autorizada, gatilhos de workflow inspecionados e confirmação de push exigida pelo host:
 - Restrições e autorizações já concedidas:
