@@ -56,7 +56,7 @@ Recupere e aplique a autorização já dada ao mesmo fluxo e escopo antes de ped
 
 I. autonomia; II. eficiência; III. qualidade e mergeability são capítulos sem hierarquia e critérios conjuntos. Consulte o [fluxo de setup e adoção](setup.md) para configuração local, nome, regras opcionais, retomada e readback. A base pública da reescrita está em [orientação de prompts](prompt-design.md).
 
-A fonte atual substitui integralmente o bloco anterior. Somente as quebras CRLF são normalizadas para LF; detalhes de tamanho/hash e limites da verificação estão em [docs/prompt-design.md](prompt-design.md). O render não reescreve os headings literais para aplicar a própria orientação de formatação do texto.
+A fonte atual substitui integralmente o bloco anterior. A fonte canônica instalada deve preservar exatamente os bytes LF aprovados: a CLI não normaliza CRLF e rejeita bytes incompatíveis com o pin. Detalhes de tamanho/hash e limites da verificação estão em [docs/prompt-design.md](prompt-design.md). O render não reescreve os headings literais para aplicar a própria orientação de formatação do texto.
 
 ## Carregamento e retomada
 

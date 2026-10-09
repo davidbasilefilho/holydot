@@ -33,8 +33,9 @@ test.each([
   canonical.slice(0, -100),
   canonical + literal,
   canonical.replace(literal, "Reply in my latest language unless requested otherwise.\n"),
+  canonical.replace(/\n/g, "\r\n"),
 ])(
-  "actual setup/render/resume reject modified, truncated, duplicated or old canonical source",
+  "actual setup/render/resume reject modified, truncated, duplicated, old or CRLF canonical source",
   async (text) => {
     const pkg = makePackage(text);
     for (const command of ["setup", "render", "resume"]) {
