@@ -92,6 +92,33 @@ test("receiver continuity contract preserves precedence, later corrections and a
     expect(canonical.toLowerCase()).toContain(phrase.toLowerCase());
 });
 
+// Rendered policy regressions, not simulated GitHub/account permission enforcement.
+test.each([
+  [
+    "remote success",
+    "Confira SHA remoto, head/base e estado não draft do PR, testes e checks da versão enviada antes da conclusão",
+  ],
+  [
+    "push failure",
+    "registre a tarefa como bloqueada, preserve o trabalho e explique causa/evidência e próximo passo",
+  ],
+  ["existing PR", "Reutilize o PR apropriado, sem abrir duplicata"],
+  [
+    "draft is not completion",
+    "torne um draft pronto pelo controle suportado quando os gates permitirem, ou mantenha essa etapa bloqueada",
+  ],
+  [
+    "unknown external triggers",
+    "não suponha que todo push é seguro nem force release, deploy, merge ou tag não autorizados",
+  ],
+  [
+    "integration ownership",
+    "a coordenação verifica a persistência remota e o PR da contribuição integrada antes de declarar conclusão",
+  ],
+])("code completion contract (not host enforcement): %s", (_, phrase) => {
+  expect(canonical.toLowerCase()).toContain(phrase.toLowerCase());
+});
+
 test("render and resume carry the public rule recipes without requiring a separate guide", async () => {
   const pkg = makePackage(canonical);
   await Effect.runPromise(

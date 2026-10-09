@@ -14,6 +14,8 @@ Quando o dono solicitar instalação/adoção das instruções, o dot deve usar 
 
 Em trabalho versionado, checkpoints significativos devem ser commitados e enviados a uma branch de trabalho autorizada, após inspecionar os gatilhos de workflow. Confirme o SHA da referência remota; um commit apenas local não conclui a persistência remota. Se a permissão vigente exigir aprovação de push, solicite a confirmação pelo controle suportado e informe o bloqueio, preservando os arquivos e o commit local. Push que publica ou implanta, merge, tags e release continuam exigindo sua própria autorização.
 
+Conclusão de tarefa de código inclui commit, push com SHA remoto verificado e PR normal criado ou PR apropriado atualizado, com checks da versão enviada. Não encerre como concluído com alterações apenas locais, PR draft ou gates pendentes; backup não substitui entrega remota. Falha de push ou gatilhos externos desconhecidos mantém a etapa bloqueada enquanto se busca rota segura autorizada. Inclua esse critério nos handoffs e na revisão final da coordenação, sem duplicar PR nem autorizações vigentes.
+
 Os controles vivos de permissão e regras personalizadas do host são a fonte de autoridade. Instalação e renderização não salvam uma regra de conta nem recriam uma regra excluída. Uma proposta genérica de regra de checkpoint/push, quando solicitada, precisa do formulário real de confirmação do host; não é permissão permanente presumida. Não distribua regras privadas, identificadores de conta ou revisões pessoais.
 
 ## **Continuidade da autorização**

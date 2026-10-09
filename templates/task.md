@@ -15,6 +15,7 @@ Modelo simplificado e modificado a partir de Intent, Assignment e AssignmentMeta
 - Dependências, acessos e permissões necessários:
 - Riscos e impactos relevantes:
 - Critérios de aceitação, testes e verificações:
+- Conclusão de código: commit, push/SHA remoto, PR normal novo ou existente e checks do head; responsável pela integração e bloqueios de entrega remota:
 - PR normal: escopo, origem/destino, evidência de confiança e bloqueios residuais:
 - Efeitos externos já autorizados:
 - Checkpoint: branch de trabalho autorizada, gatilhos de workflow inspecionados e confirmação de push exigida pelo host:

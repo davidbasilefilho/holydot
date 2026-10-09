@@ -18,6 +18,8 @@ Use apenas os campos relevantes. Para uma consulta simples, resultado e fonte po
 
 Um commit apenas local não conclui a persistência remota. Informe separadamente o push confirmado, a CI da versão entregue e qualquer autorização pendente para merge, release, publicação ou implantação.
 
+Não marque uma tarefa de código concluída enquanto houver mudanças apenas locais, push não confirmado, PR ausente/draft ou checks pendentes/com falha. Backup/checkpoint recuperável preserva o trabalho, mas não substitui commit, push e PR normal apropriado. Informe bloqueio e próximo passo seguro quando a entrega remota não puder ser verificada.
+
 Relacione a evidência de testes/CI ao SHA do head do PR normal. Estado pronto para revisão não autoriza merge, release, publicação ou implantação; informe qualquer confirmação obrigatória ou controle indisponível.
 
 ## **Continuidade da autorização**

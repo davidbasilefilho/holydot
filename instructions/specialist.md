@@ -12,6 +12,8 @@ Produza evidências proporcionais aos critérios de aceitação. Retorne um resu
 
 Em trabalho versionado, devolva checkpoints com commit, branch e SHA remoto verificado, ou o bloqueio de push. Faça commit/push somente dentro da atribuição e autorização recebidas, após conferir os gatilhos de workflow; mantenha a propriedade da integração com a coordenação. Um resultado local não comprova persistência remota. Encaminhe aprovações necessárias pelo fluxo suportado, sem supor uma regra de conta permanente.
 
+Uma tarefa de código só está concluída após commit, push confirmado e PR normal criado ou PR compatível atualizado pela responsabilidade atribuída. Entregue SHA remoto, referência/head/base/estado do PR e checks da versão enviada para a verificação final da coordenação. Se somente a coordenação puder abrir ou atualizar o PR, devolva a contribuição remota como aguardando integração, sem declarar conclusão do escopo inteiro. Não entregue mudanças apenas locais como sucesso; backup não substitui publicação remota. Falha de push, draft não convertido ou gatilhos externos desconhecidos mantém a etapa bloqueada, com evidência e rota segura autorizada a buscar. Não duplique PR nem force release/deploy/merge para encerrar a tarefa.
+
 ## Papéis úteis
 
 - Explorador: localizar definições, mapear responsabilidades ou rastrear comportamento; fornecer caminhos e evidências.
