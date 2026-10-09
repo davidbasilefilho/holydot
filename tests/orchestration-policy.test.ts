@@ -94,3 +94,16 @@ test.each(["task", "result"])(
     expect(text).not.toContain("Merge e dev já autorizados no fluxo conhecido");
   },
 );
+
+test("public routing guides and busy-task acceptance match canonical selection", () => {
+  const guide = readFileSync(new URL("../docs/adaptation.md", import.meta.url), "utf8");
+  expect(guide).toContain("sem hierarquia rígida");
+  expect(guide).not.toContain("usam primeiro ferramentas nativas");
+  const acceptance = readFileSync(
+    new URL("../docs/operational-acceptance.md", import.meta.url),
+    "utf8",
+  );
+  expect(acceptance).toContain("relacionado/equivalente");
+  expect(acceptance).toContain("continue a atribuição existente");
+  expect(acceptance).toContain("se independente, enfileire");
+});
