@@ -373,6 +373,16 @@ Quando a revisão do Codex estiver indisponível por cota, configuração ou fal
 
 O fallback não aprova uma revisão externa nem ignora checks obrigatórios da plataforma, validação real ainda exigida, autorização de merge ou efeitos de release/deploy. Registre a indisponibilidade do Codex e a evidência nativa como categorias diferentes. Merge somente com autoridade vigente e após os critérios de merge-ready; se um gate obrigatório continuar bloqueado, mantenha o PR aberto e prossiga no trabalho independente autorizado. A ordem explícita de não mergear continua válida até ser substituída pelo usuário.
 
+### **Branches de release e stacks**
+
+Use `release/v<versão>/<mudança>` como padrão de branches para trabalho de release. Reserve `/integration` para uma consolidação real; não exija essa branch em toda release nem em toda stack. Um único PR consolidado não é uma stack. Preserve o esquema de versão do projeto, inclusive sufixos após o último número: `release/v0.17.0` e `release/v0.17.0-1` são prefixos de versões distintas. No HolyCodex, a convenção atual usa `v0.X.Y`; não imponha major zero a outros projetos nem interprete o asterisco de um padrão como caractere literal da branch.
+
+Uma stack contém vários PRs, cada um com sua própria branch e base na camada anterior; não é um único PR com várias branches. Quando uma feature substancial justificar uma stack, use `release/v<versão>/<mudança>` com um slug curto e específico, como `native-auth`, `sandbox-packaging` ou `trusted-publishing`. A ordem vem das dependências reais entre PRs, não de números no nome. Não crie stacks para mudanças triviais nem fragmente uma entrega que o usuário pediu em um único PR.
+
+Git não permite coexistirem a branch `release/v0.17.0` e suas descendentes `release/v0.17.0/native-auth`. Se uma branch sem sufixo já existir, antes da primeira camada renomeie a consolidada para `release/v0.17.0/integration` pelo fluxo suportado e só depois crie as branches de feature. Aplique a mesma transição a versões com sufixos. Não faça essa migração antecipadamente quando o pedido atual for apenas consolidar na branch sem sufixo. Confira refs, PRs e gatilhos antes/depois; preserve commits, diferenças não integradas e achados de revisão. Feche PRs substituídos somente dentro da autorização concedida e após verificar sua cobertura na entrega consolidada.
+
+Prefira a extensão oficial `gh stack` quando disponível e adequada: confira a versão e os comandos suportados antes de usar `init`, `add`, `submit`, `rebase` ou `push`. Se indisponível, uma cadeia explícita de bases de PR pode preservar as dependências, mas não alegue que o GitHub registrou uma stack nativa sem verificar. Registre trunk, head/base e SHA de cada camada, mantenha histórico compatível e reavalie checks e reviews após alterações. Nomes de branches, criação de stack ou renomeação não autorizam merge, force-push, publicação npm, tags ou deploy. Inspecione os workflows para que branches de feature não publiquem releases acidentalmente.
+
 ### **Instruções adotadas — texto integral**
 
 # communication and interpretation

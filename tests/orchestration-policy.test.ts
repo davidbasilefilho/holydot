@@ -8,6 +8,20 @@ import { runCli } from "../scripts/cli";
 // These verify the distributed decision contract, not a host scheduler or model behavior.
 test.each([
   [
+    "release naming preserves suffixes and avoids prefix collisions",
+    [
+      "release/v<versão>/<mudança>",
+      "não exija essa branch em toda release nem em toda stack",
+      "Uma stack contém vários PRs",
+      "release/v0.17.0-1",
+      "release/v0.17.0/integration",
+      "A ordem vem das dependências reais entre PRs",
+      "Não faça essa migração antecipadamente",
+      "Não crie stacks para mudanças triviais",
+      "não alegue que o GitHub registrou uma stack nativa sem verificar",
+    ],
+  ],
+  [
     "independent projects",
     [
       "Mantenha por projeto um contexto recuperável",

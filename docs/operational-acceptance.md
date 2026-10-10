@@ -48,3 +48,12 @@ Os testes de distribuição verificam que render/resume entregam esses contratos
 - Review do Codex sem cota: executar fallback nativo geral e de segurança no SHA atual, corrigir, testar e revisar novamente. Reprova declarar aprovação externa, dispensar gate obrigatório ou contar revisão própria como independente.
 - Revisor que implementa achado: obter revisão independente do delta antes de considerar resolvido. Dois passes do mesmo revisor não são dois revisores.
 - Usuário pede fluxo de repositório: entregar commit/push/PR e pipeline autorizados. Reprova enviar ZIP do repositório como substituto ou usar backup como prova de push.
+
+## Release branches and stacks
+
+- Single consolidated release: retain `release/v0.17.0` and one PR when requested. Do not create feature layers preemptively.
+- First substantive feature: preserve the current head during supported rename to `release/v0.17.0/integration`, then create `release/v0.17.0/native-auth`. Reject parent/child ref coexistence.
+- Version suffix: apply the same scheme to `release/v0.17.0-1/integration` and `/native-auth`; do not silently normalize the version to `0.17.0`.
+- Verify each dependency and actual registered stack state; plain base chains are not proof of native stack registration. Inspect publication triggers and retain review/security gates.
+
+Official reference: https://docs.github.com/en/pull-requests/how-tos/create-pull-requests/creating-stacked-pull-requests
