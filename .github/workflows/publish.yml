@@ -2,13 +2,14 @@ name: Publish
 
 on:
   push:
-    branches: [main, "release/**"]
+    branches: [main, "release/*"]
     tags: ["v*"]
 
 permissions:
   contents: read
 
-# Checkpoint branches (codex/**, work/**, feature/**) never enter publication.
+# Stack layers (release/<version>/<change>) and checkpoint branches never enter publication.
+# Single-star matches legacy bare release branches only; nested release work runs Validation.
 # A push to the release branches or a version tag still requires owner authorization.
 concurrency:
   group: holydot-publish

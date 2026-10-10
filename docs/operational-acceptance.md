@@ -57,3 +57,5 @@ Os testes de distribuição verificam que render/resume entregam esses contratos
 - Verify each dependency and actual registered stack state; plain base chains are not proof of native stack registration. Inspect publication triggers and retain review/security gates.
 
 Official reference: https://docs.github.com/en/pull-requests/how-tos/create-pull-requests/creating-stacked-pull-requests
+
+Nested release stack branches run Validation but cannot enter npm publication. The publication workflow and release planner both reject nested stack refs; main and authorized legacy bare release branches retain their existing dev behavior. Stable exact tags remain unchanged.

@@ -46,6 +46,9 @@ describe("Effect release planning", () => {
   test.each([
     "refs/heads/codex/holydot-reconstruct",
     "refs/heads/feature/one",
+    "refs/heads/release/v0.1.0/adopted-instructions",
+    "refs/heads/release/v0.1.0-1/review-policy",
+    "refs/heads/release/v0.1.0/native/auth",
     "refs/heads/work",
     "refs/tags/v0.1.0",
     "refs/tags/preview",
@@ -167,7 +170,7 @@ describe("immutable publication verification", () => {
 test("single publication workflow excludes checkpoint pushes and validates before writes", () => {
   const text = readFileSync(new URL("../.github/workflows/publish.yml", import.meta.url), "utf8");
   const workflow = Bun.YAML.parse(text);
-  expect(workflow).toHaveProperty("on.push.branches", ["main", "release/**"]);
+  expect(workflow).toHaveProperty("on.push.branches", ["main", "release/*"]);
   expect(workflow).toHaveProperty("on.push.tags", ["v*"]);
   expect(workflow).toHaveProperty("jobs.release.needs", "validate");
   expect(workflow).toHaveProperty("jobs.release.permissions.id-token", "write");
