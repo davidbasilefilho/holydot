@@ -11,10 +11,9 @@ test.each([
     "release naming preserves suffixes and avoids prefix collisions",
     [
       "release/v<versão>/<mudança>",
-      "não exija essa branch em toda release nem em toda stack",
       "Uma stack contém vários PRs",
       "release/v0.17.0-1",
-      "release/v0.17.0/integration",
+      "release/v0.17.0/release-routing",
       "A ordem vem das dependências reais entre PRs",
       "Não faça essa migração antecipadamente",
       "Não crie stacks para mudanças triviais",
@@ -323,4 +322,18 @@ test("nested HolyCodex is conditional and never justifies native-tier escalation
     "Alegações de economia ou desempenho exigem medição",
   ])
     expect(guide).toContain(phrase);
+});
+
+test("release policy does not prescribe integration branches", () => {
+  for (const file of [
+    "instructions/holydot.md",
+    "instructions/specialist.md",
+    "templates/task.md",
+    "templates/result.md",
+    "docs/operational-acceptance.md",
+  ]) {
+    const text = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
+    expect(text).not.toContain("/integration");
+    expect(text).toContain("release/v");
+  }
 });

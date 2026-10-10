@@ -52,8 +52,8 @@ Os testes de distribuição verificam que render/resume entregam esses contratos
 ## Release branches and stacks
 
 - Single consolidated release: retain `release/v0.17.0` and one PR when requested. Do not create feature layers preemptively.
-- First substantive feature: preserve the current head during supported rename to `release/v0.17.0/integration`, then create `release/v0.17.0/native-auth`. Reject parent/child ref coexistence.
-- Version suffix: apply the same scheme to `release/v0.17.0-1/integration` and `/native-auth`; do not silently normalize the version to `0.17.0`.
+- First substantive feature: preserve the current head during supported rename to `release/v0.17.0/release-routing`, then create `release/v0.17.0/native-auth`. Reject parent/child ref coexistence.
+- Version suffix: apply the same scheme to `release/v0.17.0-1/release-routing` and `/native-auth`; do not silently normalize the version to `0.17.0`.
 - Verify each dependency and actual registered stack state; plain base chains are not proof of native stack registration. Inspect publication triggers and retain review/security gates.
 
 Official reference: https://docs.github.com/en/pull-requests/how-tos/create-pull-requests/creating-stacked-pull-requests
