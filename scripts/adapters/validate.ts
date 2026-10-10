@@ -15,6 +15,7 @@ export const REQUIRED_FILES = [
   "instructions/integrity.json",
   "scripts/adapters/instructions.ts",
   "tests/instructions.test.ts",
+  "tests/render-language.test.ts",
   "tests/bootstrap.test.ts",
   "tests/review-policy.test.ts",
   "tests/orchestration-policy.test.ts",

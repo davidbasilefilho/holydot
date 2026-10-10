@@ -31,11 +31,11 @@ test("actual setup/render/resume delivers active receiver bootstrap first, witho
       runCli(["resume"], root, () => Effect.die("prompt forbidden")),
     );
     expect(resume).toBe(render);
-    expect(render.indexOf("### **Bootstrap ativo no dot receptor**")).toBeLessThan(
-      render.indexOf("## **I. Autonomia**"),
+    expect(render.indexOf("### **Active bootstrap in the receiving dot**")).toBeLessThan(
+      render.indexOf("## **I. Autonomy**"),
     );
-    expect(render).toContain("no primeiro turno após ler o render completo");
-    expect(render).toContain("Panorama: 45 minutos");
+    expect(render).toContain("on the first turn after reading the complete render");
+    expect(render).toContain("Overview: 45 minutes");
     expect(render.split(literal)).toHaveLength(2);
     expect(render).not.toContain("adoptInHost");
     expect(readFileSync(join(root, "holydot.config.json"))).toEqual(before);
@@ -53,60 +53,63 @@ test.each([
   [
     "first turn",
     [
-      "nem termine apenas apresentando receitas",
-      "Ler esta fonte para desenvolvimento, revisão ou teste do pacote não autoriza alterar essa conta",
+      "or finish by merely presenting recipes",
+      "Reading this source for package development, review, or testing does not authorize changing that account",
     ],
   ],
   [
     "resume or changed approved instructions",
     [
-      "Recarregar a fonte atual por resume/recurso real do host",
-      "preserve autoridade vigente, correções atuais, versão/digest",
-      "durante toda a thread",
+      "Reload the current source through resume/a real host resource",
+      "preserve current authority, current corrections, version/digest",
+      "throughout the thread",
     ],
   ],
   [
     "pending form",
-    ["manter pendente até resposta", "sem duplicar existentes ou reabrir formulário pendente"],
+    [
+      "keep it pending until a response",
+      "without duplicating existing items or reopening a pending form",
+    ],
   ],
   [
     "user denial or removal",
     [
-      "Cancelamento/negativa não autoriza a ação",
-      "Uma regra antes verificada que desapareceu permanece removida",
+      "Cancellation/denial does not authorize the action",
+      "A previously verified rule that disappeared remains removed",
     ],
   ],
   [
     "existing rule or schedule",
     [
-      "Comparar conteúdo, destino, escopo e estado, não só nomes",
-      "Compare a tarefa salva equivalente antes de criar outra",
-      "atualiza o identificador existente quando suportado",
+      "Compare content, destination, scope, and state, not just names",
+      "Compare the equivalent saved task before creating another",
+      "updates the existing identifier when supported",
     ],
   ],
   [
     "unavailable tools",
     [
-      "Ferramenta ausente, formulário pendente ou negativa bloqueia somente sua etapa",
-      "mantendo execução independente autorizada",
+      "A missing tool, pending form, or denial blocks only its own step",
+      "while independent authorized execution continues",
     ],
   ],
   [
     "current host schemas",
     [
-      "leia seus schemas atuais",
-      "campos obrigatórios, enumerações, limites, identificadores e resultados",
-      "não um nome fixo de ferramenta",
-      "Não invente duração ou destino ausentes",
+      "read their current schemas",
+      "required fields, enumerations, limits, identifiers, and results",
+      "not a fixed tool name",
+      "Do not invent a missing duration or destination",
     ],
   ],
   [
     "real scheduling intent",
     [
       "exact_schedule",
-      "não converta isso em `condition_watch`",
-      "nem altere o objetivo para caber no serviço",
-      "schedule preserva a recorrência e timezone",
+      "do not convert this to `condition_watch`",
+      "or change the objective to fit the service",
+      "the schedule preserves recurrence and time zone",
     ],
   ],
 ])("callplan in actual full render/resume (not native-tool acceptance): %s", async (_, phrases) => {
@@ -118,7 +121,7 @@ test.each([
         runCli([command], root, () => Effect.die("prompt forbidden")),
       );
       for (const phrase of phrases) expect(output.toLowerCase()).toContain(phrase.toLowerCase());
-      expect(output).toContain("testes de texto/callplan não são adoção na conta");
+      expect(output).toContain("text/callplan tests are not account adoption");
     }
   } finally {
     rmSync(root, { recursive: true, force: true });

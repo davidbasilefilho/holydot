@@ -23,6 +23,8 @@ X incrementa o segundo campo e reinicia Y e manutenção: `0.1.2-3 → 0.2.0`. Y
 
 Um único `publish.yml` publica dev/stable e chama `validation.yml` antes das operações externas. Mise-action instala ferramentas; release usa npm 11.21.0 com trusted publishing e `id-token: write`, sem NPM_TOKEN.
 
+Os filtros desta seção pertencem ao holydot. Em outro codebase, siga primeiro as convenções existentes, `AGENTS.md` e as orientações do mantenedor; `release/v<version>/<meaningful-slice>` é somente fallback sem convenção aplicável. Preserve branches válidas e mergeability, sem renomeações ou mudanças de workflow para impor o fallback.
+
 - Push autorizado em `main` ou branch legada de um nível `release/*` (por exemplo, `release/v0.1.0`): dev.
 - Push autorizado da tag exatamente `v{package.version}`: produto stable.
 - Camadas de stack `release/v<versão>/<mudança>` e checkpoints em `codex/**`, `work/**` ou `feature/**`: apenas validation.yml, nunca publicação.

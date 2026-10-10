@@ -51,11 +51,12 @@ Os testes de distribuição verificam que render/resume entregam esses contratos
 
 ## Release branches and stacks
 
-- Single consolidated release: retain `release/v0.17.0` and one PR when requested. Do not create feature layers preemptively.
-- First substantive feature: preserve the current head during supported rename to `release/v0.17.0/release-routing`, then create `release/v0.17.0/native-auth`. Reject parent/child ref coexistence.
-- Version suffix: apply the same scheme to `release/v0.17.0-1/release-routing` and `/native-auth`; do not silently normalize the version to `0.17.0`.
-- Verify each dependency and actual registered stack state; plain base chains are not proof of native stack registration. Inspect publication triggers and retain review/security gates.
+- Existing codebase conventions, `AGENTS.md`, documented branch policy and maintainer guidance come first. Keep a valid project-specific branch name; forcing the fallback or renaming it without a workflow need fails acceptance.
+- No applicable convention: use `release/v<version>/<meaningful-slice>` as the fallback, with the project's exact version suffixes and a descriptive slice name. The name does not authorize publication.
+- Single consolidated PR requested: preserve that scope. Do not split it into a stack preemptively or migrate a valid branch solely to match the fallback.
+- Authorized dependent stack: preserve commits, head/base relationships, actual dependencies and mergeability. If the selected names would collide as a Git ref and its prefix, resolve that specific collision through an authorized supported migration before creating the child; no blanket rename is required.
+- Verify actual registered stack state; plain base chains are not proof of native stack registration. Inspect publication triggers and retain CI, review/security and merge gates. Apply these gates to the current integrated head.
 
 Official reference: https://docs.github.com/en/pull-requests/how-tos/create-pull-requests/creating-stacked-pull-requests
 
-Nested release stack branches run Validation but cannot enter npm publication. The publication workflow and release planner both reject nested stack refs; main and authorized legacy bare release branches retain their existing dev behavior. Stable exact tags remain unchanged.
+In holydot's existing workflow, nested release stack branches run Validation but cannot enter npm publication. The publication workflow and release planner both reject nested stack refs; main and authorized legacy bare release branches retain their existing dev behavior. Stable exact tags remain unchanged. Other repositories require inspection of their own conventions and actual triggers.

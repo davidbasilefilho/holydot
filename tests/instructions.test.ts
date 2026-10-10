@@ -72,23 +72,23 @@ test("verified initial setup identifies actual package and resume reloads identi
   const resume = await Effect.runPromise(runCli(["resume"], pkg.consumer, noPrompt, pkg.url));
   expect(resume).toBe(render);
   expect(resume.split(literal)).toHaveLength(2);
-  expect(resume).toContain("70b8a168767100bb05a36ba65960b942d0e2b7491e6dece4b4e6a2adc11089ea");
+  expect(resume).toContain("56bfc5f4b2993e17f6e221079934d043f312efb92e67828b03880823c6c5073a");
   expect(readFileSync(join(pkg.consumer, "holydot.config.json"))).toEqual(config);
   expect(readdirSync(pkg.consumer)).toEqual(["holydot.config.json"]);
 });
 
 test("receiver continuity contract preserves precedence, later corrections and actual capability limits", () => {
   for (const phrase of [
-    "instruções superiores e controles obrigatórios",
-    "solicitações explícitas atuais do usuário",
-    "Uma correção explícita pode substituir uma decisão anterior no mesmo escopo",
-    "preferências locais apenas para seus campos configuráveis",
-    "esse comando não detecta compactação",
-    "Peça confirmação do carregamento real",
-    "não confunda uma string de digest repetida com leitura",
-    "Antes de entregar, revise internamente",
-    "após muitos turnos, resposta longa, status e resultado delegado",
-    "Não prometa 100% de compliance de LLM por prompt",
+    "higher-priority instructions and mandatory controls",
+    "the user's current explicit requests",
+    "An explicit correction can replace an earlier decision within the same scope",
+    "local preferences only for their configurable fields",
+    "This command does not detect compaction",
+    "Ask for confirmation of actual loading",
+    "do not confuse a repeated digest string with reading",
+    "Before delivery, internally review",
+    "after many turns, a long response, a status update, and a delegated result",
+    "Do not promise 100% LLM compliance through a prompt",
   ])
     expect(canonical.toLowerCase()).toContain(phrase.toLowerCase());
 });
@@ -97,24 +97,24 @@ test("receiver continuity contract preserves precedence, later corrections and a
 test.each([
   [
     "remote success",
-    "Confira SHA remoto, head/base e estado não draft do PR, testes e checks da versão enviada antes da conclusão",
+    "Check the remote SHA, the PR's head/base and non-draft state, and tests and checks for the submitted version before completion",
   ],
   [
     "push failure",
-    "registre a tarefa como bloqueada, preserve o trabalho e explique causa/evidência e próximo passo",
+    "record the task as blocked, preserve the work, and explain the cause/evidence and next step",
   ],
-  ["existing PR", "Reutilize o PR apropriado, sem abrir duplicata"],
+  ["existing PR", "Reuse the appropriate PR without opening a duplicate"],
   [
     "draft is not completion",
-    "torne um draft pronto pelo controle suportado quando os gates permitirem, ou mantenha essa etapa bloqueada",
+    "make a draft ready through the supported control when gates allow, or keep that step blocked",
   ],
   [
     "unknown external triggers",
-    "não suponha que todo push é seguro nem force release, deploy, merge ou tag não autorizados",
+    "do not assume every push is safe or force an unauthorized release, deployment, merge, or tag",
   ],
   [
     "integration ownership",
-    "a coordenação verifica a persistência remota e o PR da contribuição integrada antes de declarar conclusão",
+    "coordination verifies remote persistence and the PR for the integrated contribution before declaring completion",
   ],
 ])("code completion contract (not host enforcement): %s", (_, phrase) => {
   expect(canonical.toLowerCase()).toContain(phrase.toLowerCase());
@@ -130,25 +130,25 @@ test("render and resume carry the public rule recipes without requiring a separa
       runCli([command], pkg.consumer, () => Effect.die("render/resume must not prompt"), pkg.url),
     );
     for (const phrase of [
-      "Checkpoint de trabalho autorizado",
-      "PR normal e manutenção do mesmo escopo",
-      "Resolução de review confirmado",
-      "Estas receitas são propostas públicas",
-      "não use wildcard de todos os repositórios",
-      "Outdated não significa resolvido",
-      "30 minutos",
-      "estado, mudança, evidência, próxima etapa e verificação pendente",
-      "Após mencionar uma conclusão uma vez, retire a tarefa dos seguintes",
+      "Authorized work checkpoint",
+      "Normal PR and same-scope maintenance",
+      "Resolution of verified review findings",
+      "These recipes are public proposals",
+      "do not use an all-repositories wildcard",
+      "Outdated does not mean resolved",
+      "30 minutes",
+      "state, change, evidence, next step, and pending verification",
+      "After mentioning a completion once, remove the task from subsequent overviews",
       "exact_schedule",
       "condition_watch",
-      "Recupere timezone pessoal e canal de entrega da instância atual",
-      "Pedido enviado não é tarefa salva",
-      "tarefa salva sem readback permanece não verificada",
-      "não crie uma tarefa nesta sessão apenas para testar",
+      "Retrieve the personal time zone and delivery channel of the current instance",
+      "A sent request is not a saved task",
+      "a saved task without readback remains unverified",
+      "do not create a task in this session merely to test it",
     ])
       expect(output).toContain(phrase);
     expect(output.split(literal)).toHaveLength(2);
-    expect(output).toContain("formulário exato obrigatório");
+    expect(output).toContain("exact required form");
   }
 });
 
@@ -156,29 +156,26 @@ test("render and resume carry the public rule recipes without requiring a separa
 test.each([
   [
     "new installation executes host steps",
-    "execute essas etapas com as ferramentas reais do host disponíveis",
+    "execute those steps with the available real host tools",
   ],
-  ["idempotent reexecution", "execute somente o que ainda falta, sem duplicar o que existe"],
+  ["idempotent reexecution", "execute only what is still missing, without duplicating what exists"],
   [
     "pending and cancellation preserved",
-    "Não reabra formulário pendente nem cancelado por iniciativa própria",
+    "Do not reopen a pending or canceled form on your own initiative",
   ],
-  [
-    "saved requires host confirmation",
-    "Somente a confirmação de gravação pelo host permite marcar salva",
-  ],
+  ["saved requires host confirmation", "Only host write confirmation permits marking it saved"],
   [
     "verified requires corresponding readback",
-    "somente o readback correspondente permite marcar verificada",
+    "only a matching readback permits marking it verified",
   ],
   [
     "partial failure retains verified effects",
-    "preserve esses resultados e registre a falha parcial",
+    "preserve those results and record the partial failure",
   ],
-  ["missing definitions stay explicit", "bloqueada por definição incompleta"],
+  ["missing definitions stay explicit", "blocked by an incomplete definition"],
   [
     "task verification and no blind interval fallback",
-    "Não invente campos ausentes nem converta automaticamente 30 minutos",
+    "Do not invent missing fields or automatically convert 30 minutes",
   ],
 ])("host-installation contract (not live host evaluation): %s", (_, phrase) => {
   expect(canonical).toContain(phrase);

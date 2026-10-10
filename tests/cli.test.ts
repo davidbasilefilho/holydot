@@ -102,7 +102,7 @@ describe("settings and configured UTF-8 render", () => {
     );
     expect(output).toContain("Run holydot render");
     expect(output).toContain("Local setup does not apply or verify your dot name or custom rules");
-    expect(output).not.toContain("# **holydot — instruções principais**");
+    expect(output).not.toContain("# **holydot — main instructions**");
     const config = JSON.parse(readFileSync(join(root, "holydot.config.json"), "utf8"));
     expect(config.delegation.speed).toBe("fast");
     expect(config.statusUpdates.intervalMinutes).toBe(60);
@@ -141,7 +141,7 @@ describe("settings and configured UTF-8 render", () => {
     writeFileSync(path, original);
     const output = await Effect.runPromise(runCli(["render"], root, cancel));
     expect(await Effect.runPromise(runCli(["resume"], root, cancel))).toBe(output);
-    expect(output).toContain("Coordenação de sessões delegadas: gpt-6.1-sol / medium");
+    expect(output).toContain("Delegated session coordination: gpt-6.1-sol / medium");
     expect(readFileSync(path)).toEqual(original);
     expect(readdirSync(root)).toEqual(["holydot.config.json"]);
   });
@@ -164,12 +164,12 @@ describe("settings and configured UTF-8 render", () => {
       "utf8",
     ).trim();
     expect(output.startsWith(base)).toBe(true);
-    expect(output).toContain("Coordenação de sessões delegadas: gpt-6.1-sol / high");
-    expect(output).toContain("Especialistas: gpt-6-luna / high");
-    expect(output).toContain("Agrupe perguntas relacionadas em um único lote");
-    expect(output).toContain("Autonomia dentro do escopo autorizado, sem seletor rule-mode");
-    expect(output).toContain("Parada, pausa e retomada");
-    expect(output).toContain("não cria agendamento");
+    expect(output).toContain("Delegated session coordination: gpt-6.1-sol / high");
+    expect(output).toContain("Specialists: gpt-6-luna / high");
+    expect(output).toContain("Group related questions into one clear, self-contained batch");
+    expect(output).toContain("Autonomy within the authorized scope, without a rule-mode selector");
+    expect(output).toContain("Stopping, pausing, and resuming");
+    expect(output).toContain("does not create a schedule");
     expect(output).not.toMatch(/\uFFFD|Ã§|Ã£|â€“/);
     expect(Buffer.from(output, "utf8").toString("utf8")).toBe(output);
     expect(readFileSync(join(root, "holydot.config.json"))).toEqual(before);
@@ -180,33 +180,33 @@ describe("settings and configured UTF-8 render", () => {
     const before = readFileSync(join(root, "holydot.config.json"));
     const output = await Effect.runPromise(runCli(["render"], root, cancel));
     const checkpoint = output
-      .split("### **Checkpoints e persistência remota**")[1]!
+      .split("### **Checkpoints and remote persistence**")[1]!
       .split(/\n#{2,3} /)[0]!;
-    expect(checkpoint).toContain("ao concluir uma etapa significativa");
-    expect(checkpoint).toContain("commit e faça push");
-    expect(checkpoint).toContain("branch de trabalho apropriada e autorizada");
-    expect(checkpoint).toContain("Confira os workflows e seus gatilhos antes de escolher a branch");
-    expect(checkpoint).toContain("seu SHA corresponde ao commit do checkpoint");
+    expect(checkpoint).toContain("when completing a significant step");
+    expect(checkpoint).toContain("commit and push");
+    expect(checkpoint).toContain("appropriate, authorized working branch");
+    expect(checkpoint).toContain("Check workflows and their triggers before choosing the branch");
+    expect(checkpoint).toContain("its SHA matches the checkpoint commit");
     expect(checkpoint).toContain(
-      "Um commit apenas local não conclui a etapa de persistência remota",
+      "A local-only commit does not complete the remote persistence step",
     );
     expect(checkpoint).toContain(
-      "controles reais de autorização e regras personalizadas do host como fonte de autoridade",
+      "the host's actual authorization and custom-rule controls as the source of authority",
     );
     expect(checkpoint).toContain(
-      "Se o push exigir aprovação, solicite a confirmação pelo controle suportado somente quando ela ainda faltar ou for obrigatória",
+      "If push requires approval, request confirmation through the supported control only when it is still missing or mandatory",
     );
     expect(checkpoint).toContain(
-      "preserve o checkpoint local e informe o bloqueio até obter a resposta",
+      "preserve the local checkpoint and report the blocker until the response arrives",
     );
-    expect(checkpoint).toContain("Falha de conexão ou de push");
+    expect(checkpoint).toContain("A connection or push failure");
     expect(checkpoint).toContain(
-      "Não faça force-push, merge, tag, release, publicação ou implantação sem a autorização específica",
+      "Do not force-push, merge, tag, release, publish, or deploy without the applicable specific authorization",
     );
-    expect(checkpoint).toContain("não salvam uma regra de conta nem recriam uma regra excluída");
-    expect(checkpoint).toContain("proposta genérica de regra de checkpoint/push");
-    expect(checkpoint).toContain("confirmada pelo formulário real do host");
-    expect(checkpoint).toContain("não constituem permissão permanente");
+    expect(checkpoint).toContain("does not save an account rule or recreate a deleted rule");
+    expect(checkpoint).toContain("generic checkpoint/push rule proposal");
+    expect(checkpoint).toContain("confirmed through the host's actual form");
+    expect(checkpoint).toContain("do not constitute permanent permission");
     expect(checkpoint).not.toMatch(
       /libfile_|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
     );
@@ -217,38 +217,38 @@ describe("settings and configured UTF-8 render", () => {
     const root = directory();
     await Effect.runPromise(runCli(["setup"], root, save));
     const output = await Effect.runPromise(runCli(["render"], root, cancel));
-    const planning = output.split("### **Preparação e planejamento**")[1]!.split(/\n#{2,3} /)[0]!;
+    const planning = output.split("### **Preparation and planning**")[1]!.split(/\n#{2,3} /)[0]!;
     expect(
       planning.indexOf(
-        "Primeiro recupere o contexto existente e pesquise opções realmente suportadas",
+        "First retrieve the existing context and research options that are actually supported",
       ),
     ).toBeGreaterThanOrEqual(0);
-    expect(planning.indexOf("Depois use padrões de preferência fundamentados")).toBeGreaterThan(
-      planning.indexOf("Primeiro recupere"),
+    expect(planning.indexOf("Then use preference patterns grounded")).toBeGreaterThan(
+      planning.indexOf("First retrieve"),
     );
-    expect(planning.indexOf("apresente um plano coerente")).toBeGreaterThan(
-      planning.indexOf("Depois use"),
+    expect(planning.indexOf("present a coherent plan")).toBeGreaterThan(
+      planning.indexOf("Then use"),
     );
-    expect(planning).toContain("escolhas rotineiras e reversíveis");
-    expect(planning).toContain("Inferir uma preferência nunca fornece permissão");
-    expect(output).toContain("todas as decisões relacionadas necessárias à mesma etapa");
-    expect(output).toContain("sem um limite pequeno e arbitrário de perguntas");
-    expect(output).toContain("Mantenha o lote claro e manejável");
-    const prs = output.split("### **PRs e revisão**")[1]!.split(/\n#{2,3} /)[0]!;
+    expect(planning).toContain("routine, reversible choices");
+    expect(planning).toContain("Inferring a preference never grants permission");
+    expect(output).toContain("all related decisions needed for the same step");
+    expect(output).toContain("without a small arbitrary question limit");
+    expect(output).toContain("Keep the batch clear and manageable");
+    const prs = output.split("### **PRs and review**")[1]!.split(/\n#{2,3} /)[0]!;
     for (const requirement of [
-      "trabalho delimitado e autorizado",
-      "abra proativamente um PR normal, sem draft",
-      "confiança na funcionalidade e qualidade",
-      "Se já existir um PR compatível",
-      "marque-o como pronto para revisão pelo controle suportado",
-      "estado normal do PR e SHA do head",
-      "testes e CI a esse SHA",
-      "bloqueios residuais honestamente",
-      "não autoriza merge, tag, release, publicação ou implantação",
-      "confirmação exigida pelo host",
+      "bounded, authorized work",
+      "proactively open a regular, non-draft PR",
+      "confidence in functionality and quality",
+      "If a compatible PR already exists",
+      "mark it ready for review through the supported control",
+      "regular PR state, and actual submitted head SHA",
+      "tests and CI with that SHA",
+      "remaining blockers honestly",
+      "does not itself authorize merge, tag, release, publication, or deployment",
+      "host-required confirmation",
     ])
       expect(prs).toContain(requirement);
-    expect(output).toContain("Um commit apenas local não conclui a etapa de persistência remota");
+    expect(output).toContain("A local-only commit does not complete the remote persistence step");
     expect(output).not.toMatch(
       /libfile_|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
     );
@@ -256,41 +256,43 @@ describe("settings and configured UTF-8 render", () => {
   test.each([
     {
       scenario: "known merge/dev authorization continues while stable remains forbidden",
-      row: "| Merge e dev já autorizados; fluxo automático conhecido; apenas estável adiada | Continuar merge e dev após os gates, sem reconfirmar; manter tag estável e latest vedados até ordem própria. |",
+      row: "| Merge and dev already authorized; known automatic workflow; only stable postponed | Continue merge and dev after the gates without reconfirming; keep the stable tag and latest prohibited until specifically instructed otherwise. |",
     },
     {
       scenario: "approved routine PR maintenance proceeds without repeated approval",
-      row: "| Manutenção da descrição do PR aprovada no mesmo escopo | Atualizar SHA, evidências e limitações sem reconfirmar; preservar destino e excluir dados privados. |",
+      row: "| PR description maintenance approved within the same scope | Update SHA, evidence, and limitations without reconfirming; preserve the destination and exclude private data. |",
     },
     {
       scenario: "a new material external effect requires its own authority",
-      row: "| Novo efeito externo material não coberto | Pausar o efeito novo e pedir autorização específica; continuar trabalho independente autorizado. |",
+      row: "| New material external effect not covered | Pause the new effect and ask for specific authorization; continue independent authorized work. |",
     },
     {
       scenario: "mandatory host denial is never bypassed by earlier approval",
-      row: "| Negativa ou confirmação obrigatória do host | Respeitar o bloqueio e o controle exigido; não contornar nem tratar aprovação anterior como dispensa. |",
+      row: "| Host denial or mandatory confirmation | Respect the blocker and required control; do not bypass it or treat prior approval as a waiver. |",
     },
     {
       scenario: "claimed missing authorization first uses supported recovery",
-      row: "| Ferramenta alega falta de autorização para ação já coberta | Recuperar evidência e tentar retomada suportada; persistindo negativa obrigatória, pausar e relatar. |",
+      row: "| Tool claims missing authorization for an already covered action | Retrieve evidence and try supported resumption; if a mandatory denial persists, pause and report it. |",
     },
   ])("rendered authorization contract: $scenario", async ({ row }) => {
     const root = directory();
     await Effect.runPromise(runCli(["setup"], root, save));
     const before = readFileSync(join(root, "holydot.config.json"));
     const output = await Effect.runPromise(runCli(["render"], root, cancel));
-    const policy = output.split("### **Continuidade da autorização**")[1]!.split(/\n#{2,3} /)[0]!;
+    const policy = output.split("### **Authorization continuity**")[1]!.split(/\n#{2,3} /)[0]!;
     expect(policy).toContain(row);
-    expect(policy).toContain("recupere a evidência de autorização já dada");
-    expect(policy).toContain("não exija ordens duplicadas para cada etapa coberta");
-    expect(policy).toContain("restrições posteriores, pausas ou revogações");
+    expect(policy).toContain("retrieve evidence of authorization already given");
+    expect(policy).toContain("do not require duplicate instructions for each covered step");
+    expect(policy).toContain("later restrictions, pauses, or revocations");
     expect(policy).toContain(
-      "Um pedido isolado de merge, sem evidência de autorização dos efeitos de publicação, não autoriza presumir esses efeitos",
+      "An isolated merge request, without evidence authorizing publication effects, does not authorize assuming those effects",
     );
-    expect(policy).toContain("Nova confirmação cabe quando a autorização realmente faltar");
-    expect(policy).toContain("Nunca contorne uma negativa nem ignore exigência obrigatória");
-    expect(policy).toContain("política renderizada, não enforcement de permissões");
-    expect(policy).toContain("Não decida autorização por palavras-chave");
+    expect(policy).toContain(
+      "New confirmation is appropriate when authorization is genuinely missing",
+    );
+    expect(policy).toContain("Never bypass a denial or ignore a mandatory requirement");
+    expect(policy).toContain("rendered policy, not permission enforcement");
+    expect(policy).toContain("Do not decide authorization from keywords");
     expect(readFileSync(join(root, "holydot.config.json"))).toEqual(before);
     expect(readdirSync(root)).toEqual(["holydot.config.json"]);
   });
@@ -298,7 +300,7 @@ describe("settings and configured UTF-8 render", () => {
     const root = directory();
     const path = join(root, "holydot.config.json");
     await expectFailure(runCli(["render"], root, cancel));
-    for (const content of ["{bad", " ".repeat(65_537), '{"schemaVersion":2}', "\uFFFD"]) {
+    for (const content of ["{bad", " ".repeat(65_537), '{"schemaVersion":2}', "�"]) {
       writeFileSync(path, content);
       await expectFailure(runCli(["setup"], root, save));
       expect(readFileSync(path, "utf8")).toBe(content);
@@ -386,7 +388,7 @@ describe("settings and configured UTF-8 render", () => {
     expect(readdirSync(root)).toEqual(["custom.json"]);
     expect(
       await Effect.runPromise(runCli(["render", "--config", "custom.json"], root, cancel)),
-    ).toContain("# **holydot — instruções principais**");
+    ).toContain("# **holydot — main instructions**");
   });
 });
 

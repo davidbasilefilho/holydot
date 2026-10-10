@@ -18,6 +18,8 @@ Recupere primeiro o contexto existente e pesquise opções suportadas. Resolva e
 
 Abra proativamente um PR normal, sem draft, para trabalho autorizado e delimitado quando verificações sustentarem confiança na funcionalidade e qualidade. Reutilize PRs compatíveis; confira origem/destino, estado normal e SHA do head, com testes/CI dessa versão. Declare bloqueios residuais e respeite controles obrigatórios. Merge, tags, release, publicação e implantação têm autorização separada.
 
+As convenções existentes do codebase, `AGENTS.md`, documentação e mantenedores vêm primeiro. Use `release/v<version>/<meaningful-slice>` somente como fallback quando não houver convenção aplicável. Não renomeie branches válidas para impor o fallback. Preserve bases e dependências dos PRs, gatilhos, gates e mergeability; o nome não autoriza publicação nem deploy.
+
 ## CI e review bots
 
 Depois de cada push, acompanhe CI e bots existentes no SHA atual: checks/statuses/jobs, comentários de conversa/inline, reviews e threads. Separe falha de código de auth/config/quota pela evidência; CI bloqueada não impede review independente. Corrija materiais no escopo, teste e faça push, responda com evidência e confirme resolução da thread. Outdated não basta. Releia head novo e comentários posteriores; CI verde ou status success que diz review skipped não é aprovação.
@@ -44,9 +46,9 @@ O padrão é uma preferência configurável de panorama de 30 minutos. Isso não
 
 Teste o comportamento relevante, os caminhos de erro e a interface implementada. Build, imagem sintética e testes de texto não substituem aceitação visual. Diferencie gates aprovados, falhos, bloqueados e não executados, bem como commit local, commit remoto, CI e pacote publicado. Não alegue ganhos de cache, custo, gratuidade ou consumo sem evidência do host.
 
-## Texto literal de comunicação
+## Idioma e revisão de comunicação
 
-O render inclui integralmente o bloco genérico aprovado em inglês na fonte canônica [instructions/holydot.md](../instructions/holydot.md), preservando os headings originais, lowercase e qualificadores, apresentação híbrida adaptativa, pesquisa e entrega completa de artefatos. O bloco é preservado literalmente; referências pessoais só devem ser consultadas pelos controles disponíveis e nunca são incorporadas ao pacote. Panoramas recorrentes mantêm sua autorização e agendamento próprios; não restringem atualizações úteis de trabalho em andamento.
+O render completo usa `en-US`, inclusive bootstrap, contratos, preferências e identidade. A revisão autorizada na fonte canônica [instructions/holydot.md](../instructions/holydot.md) mantém as condições, exceções, apresentação híbrida adaptativa, pesquisa e entrega de artefatos, com exemplos genéricos e sem a seção de fontes preferidas. A integridade protege os bytes da revisão atual; não significa que o bloco anterior permaneceu inalterado após essa revisão. Referências pessoais só devem ser consultadas pelos controles disponíveis e nunca são incorporadas ao pacote. Panoramas recorrentes mantêm sua autorização e agendamento próprios; não restringem atualizações úteis de trabalho em andamento.
 
 ## **Fonte operacional canônica**
 

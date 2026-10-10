@@ -10,73 +10,66 @@ test.each([
   [
     "release naming preserves suffixes and avoids prefix collisions",
     [
-      "release/v<versão>/<mudança>",
-      "Uma stack contém vários PRs",
-      "release/v0.17.0-1",
-      "release/v0.17.0/release-routing",
-      "A ordem vem das dependências reais entre PRs",
-      "Não faça essa migração antecipadamente",
-      "Não crie stacks para mudanças triviais",
-      "não alegue que o GitHub registrou uma stack nativa sem verificar",
+      "release/v<version>/<meaningful-slice>",
+      "A stack contains multiple PRs",
+      "release/v1.2.0-1",
+      "release/v1.2.0/release-routing",
+      "The order comes from actual dependencies between PRs",
+      "Do not perform this migration in advance",
+      "Do not create stacks for trivial changes",
+      "do not claim that GitHub recorded a native stack without verification",
     ],
   ],
   [
     "independent projects",
     [
-      "Mantenha por projeto um contexto recuperável",
-      "não crie duplicata",
-      "preserve os demais trabalhos",
+      "Maintain recoverable context for each project",
+      "do not create a duplicate",
+      "preserve other work",
     ],
   ],
   [
     "12 minutes warm",
     [
-      "menos de 20 minutos desde sua última atividade efetiva observada",
-      "há 12 minutos",
-      "Reutilizar como warm",
+      "less than 20 minutes have elapsed since its last observed actual activity",
+      "12 minutes ago",
+      "Reuse as warm",
     ],
   ],
   [
     "20/21 minutes cold",
-    [
-      "há 20 minutos ou 21 minutos",
-      "Tratar como candidata cold",
-      "sem descartar contexto arbitrariamente",
-    ],
+    ["20 or 21 minutes ago", "Treat as a cold candidate", "without arbitrarily discarding context"],
   ],
-  [
-    "busy session",
-    ["Enfileirar quando suportado", "nunca sobrescrever silenciosamente trabalho ocupado"],
-  ],
+  ["busy session", ["Queue when supported", "never silently overwrite ongoing work"]],
   [
     "incompatible session",
     [
-      "projeto, repositório, ambiente, papel/contexto, branch/worktree",
-      "Frescor não supera incompatibilidade",
-      "serializar ou isolar conflitos antes de escrever",
+      "project, repository, environment, role/context, branch/worktree",
+      "Freshness does not override incompatibility",
+      "serialize or isolate conflicts before writing",
     ],
   ],
   [
     "missing controls",
     [
-      "não classificar como warm sem evidência nem alegar sessão retomada",
-      "não garante prompt caching, cobrança reduzida ou retenção",
+      "do not classify as warm without evidence or claim the session was resumed",
+      "does not guarantee prompt caching, reduced charges, or provider retention",
     ],
   ],
   [
     "capability selection",
     [
-      "subagentes nativos do dot > Codex Cloud > Codex em máquinas do usuário",
-      "inclusive engenharia de software, implementação, testes e revisão",
-      "insuficiência comprovada do anterior ou escolha explícita do usuário",
-      "não crie configuração concorrente nem finja sincronização ausente",
+      "native dot subagents > Codex Cloud > Codex on the user's machines",
+      "including software engineering, implementation, testing, and review",
+      "the previous one has a demonstrated insufficiency or the user explicitly chooses another environment",
+      "do not create a competing configuration or pretend that unavailable synchronization exists",
     ],
   ],
   [
     "idempotent recovery",
     [
-      "releia estado atual, fonte íntegra e checkpoints",
-      "não recrie tarefas nem sobrescreva alterações posteriores com notas antigas",
+      "reread the current state, complete source, and checkpoints",
+      "do not recreate tasks or overwrite later changes with old notes",
     ],
   ],
 ])("full render/resume preserves orchestration decision: %s", async (_, phrases) => {
@@ -89,8 +82,8 @@ test.each([
         runCli([command], root, () => Effect.die("prompt forbidden")),
       );
       for (const phrase of phrases) expect(output).toContain(phrase);
-      expect(output).not.toContain("sem hierarquia rígida de ferramentas");
-      expect(output).not.toContain("Use Codex/HolyCodex para engenharia de software");
+      expect(output).not.toContain("without a strict tool hierarchy");
+      expect(output).not.toContain("Use Codex/HolyCodex for software engineering");
     }
     expect(readFileSync(join(root, "holydot.config.json"))).toEqual(before);
   } finally {
@@ -129,128 +122,128 @@ test.each([
   [
     "native engineering before warm cloud",
     [
-      "O dot e seus subagentes nativos podem usar apps conectados",
-      "computador cloud do dot e uma sessão Codex Cloud são recursos diferentes",
-      "não justificam por si sós abrir Codex Cloud",
-      "não use ausência de ferramenta no coordenador como prova de ausência no executor",
-      "uma sessão warm em nível inferior não supera um subagente nativo suficiente",
+      "The dot and its native subagents may use connected apps",
+      "dot's cloud computer and a Codex Cloud session are different resources",
+      "do not by themselves justify opening Codex Cloud",
+      "do not use a tool's absence from the coordinator as proof that it is absent from the executor",
+      "a warm session at a lower-priority level does not take precedence over a sufficient native subagent",
     ],
   ],
   [
     "verified tier escalation and cost limits",
     [
-      "registre a capacidade, ferramenta, arquivo, runtime ou ambiente realmente necessário",
-      "Reuso e cache são otimizações dentro do nível adequado",
-      "sem alegar gratuidade de subagentes nativos, quota, cobrança reduzida ou economia não verificadas",
-      "Máquinas do usuário são o último nível",
-      "não há proibição absoluta desses recursos",
+      "record the capability, tool, file, runtime, or environment that is actually required",
+      "Reuse and caching are optimizations within the appropriate level",
+      "without making unverified claims about free native subagents, quotas, reduced charges, or savings",
+      "The user's machines are the last level",
+      "there is no absolute prohibition on these resources",
     ],
   ],
   [
     "routing checklist rejects unnecessary Codex delegation",
     [
-      "### **Checklist antes de delegar**",
-      "Se houver escolha explícita de ambiente, avalie-a primeiro",
-      "Sem escolha explícita de outro ambiente, confira se subagentes nativos",
-      "pesquisa, navegação, implementação, testes e revisão exigidos",
-      "Se atendem, atribua no nível nativo e encerre a seleção de ambiente",
-      "Somente se o nível nativo for insuficiente",
-      "Somente se os níveis cloud forem insuficientes",
-      "não são evidências de insuficiência",
-      "não invente sua ausência para escalar",
+      "### **Pre-delegation checklist**",
+      "If the user explicitly chose an environment, assess it first",
+      "Without an explicit choice of another environment, check whether native subagents",
+      "required research, browsing, implementation, testing, and review",
+      "If they can, assign the work at the native level and finish environment selection",
+      "Only if the native level is insufficient",
+      "Only if the cloud levels are insufficient",
+      "are not evidence of insufficiency",
+      "do not invent its absence to escalate",
     ],
   ],
   [
     "routine setup reuses bounded authority",
     [
-      "Um pedido de configurar uma CLI ou ambiente de desenvolvimento autoriza as etapas rotineiras necessárias daquele objetivo e destino",
-      "Não peça aprovação de cada comando, tentativa segura ou detalhe reversível já coberto",
-      "Alternativas equivalentes no mesmo destino/escopo e repetições permitidas conservam essa autoridade",
-      "um registro recuperável da autorização",
-      "ele referencia evidência e não cria permissão",
-      "Não exporte esse registro privado no pacote",
+      "A request to configure a CLI or development environment authorizes the routine steps necessary for that objective and destination",
+      "Do not ask for approval of each command, safe attempt, or reversible detail already covered",
+      "Equivalent alternatives at the same destination/within the same scope and permitted retries retain that authority",
+      "a retrievable authorization record",
+      "it references evidence and does not create permission",
+      "Do not export that private record in the package",
     ],
   ],
   [
     "configuration never waives credential and security gates",
     [
-      "criar ou ampliar acesso persistente, conceder credenciais/OAuth, mudar segurança ou transmitir segredos",
-      "peça somente a confirmação específica exigida pelo host",
-      "Uma aprovação ampla de configuração não substitui a confirmação por ação nem o handoff quando obrigatórios",
-      "Configuração exige novo grant OAuth, credencial persistente ou mudança de segurança",
-      "Alternativa muda destino, dados transmitidos ou compromisso material",
+      "creating or expanding persistent access, granting credentials/OAuth, changing security, or transmitting secrets",
+      "ask only for the specific confirmation required by the host",
+      "Broad configuration approval does not replace per-action confirmation or handoff when required",
+      "Configuration requires a new OAuth grant, persistent credential, or security change",
+      "Alternative changes the destination, transmitted data, or material commitment",
     ],
   ],
   [
     "explicit owner stop",
     [
-      "Trate uma ordem de parada como prioridade imediata",
-      "Interrompa novas ações e atribuições no escopo pedido",
-      "mantenha os demais trabalhos pausados",
+      "Treat a stop instruction as an immediate priority",
+      "Stop new actions and assignments within the requested scope",
+      "keep other work paused",
     ],
   ],
   [
     "tool cancellation is not owner intent or permission",
     [
       "`user cancelled`",
-      "cancelamento automático de revisão de aprovação",
-      "não comprova uma ordem de cancelamento do usuário",
-      "Confira a origem do evento",
-      "Ausência de ordem de parada também não concede uma aprovação que falta",
+      "automatic cancellation of approval review",
+      "does not prove a user cancellation instruction",
+      "Check the event's origin",
+      "The absence of a stop instruction also does not grant missing approval",
     ],
   ],
   [
     "confirmed outcome before bounded retry",
     [
-      "Inspecione resultado, identificador, artefatos e estado remoto",
-      "Se o efeito já ocorreu, confirme-o e continue a partir dele",
-      "Se o resultado de uma escrita for incerto, não repita às cegas",
-      "interrupção técnica comprovada sem efeito permite no máximo uma nova tentativa da mesma ação e destino",
-      "apenas quando a autorização continua válida e a política do host permite",
-      "sem loop de tentativas",
+      "Inspect the available result, identifier, artifacts, and remote state",
+      "If the effect already occurred, confirm it and continue from there",
+      "If a write's result is uncertain, do not retry blindly",
+      "verified technical interruption with no effect permits at most one retry of the same action and destination",
+      "only when authorization remains valid and host policy allows it",
+      "without a retry loop",
     ],
   ],
   [
     "publication recovery stays owned after a transient failure",
     [
-      "O limite da repetição imediata não encerra a recuperação",
-      "uma alternativa nunca pode contornar controle obrigatório",
-      "Uma falha transitória não transforma publicação em tarefa opcional",
-      "Mantenha a contribuição pendente com responsável",
-      "Um backup externo protege contra perda, mas continua sendo recuperação, não push confirmado",
-      "preserve as pausas explícitas do usuário",
+      "The immediate-retry limit does not end recovery",
+      "an alternative must never bypass a mandatory control",
+      "A transient failure does not make publication an optional task",
+      "Keep the contribution pending with an owner",
+      "An external backup protects against loss but remains recovery, not a confirmed push",
+      "preserve the user's explicit pauses",
     ],
   ],
   [
     "native review fallback preserves independence and merge gates",
     [
-      "revisão nativa independente da implementação",
-      "cobrindo qualidade geral e segurança",
-      "não use quantidade arbitrária de rodadas como aprovação",
-      "outra pessoa/agente deve verificar esse delta",
-      "não as apresente como dois revisores independentes",
-      "O fallback não aprova uma revisão externa nem ignora checks obrigatórios",
-      "A ordem explícita de não mergear continua válida",
+      "native review independent of implementation",
+      "covering general quality and security",
+      "do not treat an arbitrary number of rounds as approval",
+      "another person/agent must verify that delta",
+      "do not present them as two independent reviewers",
+      "The fallback does not approve an external review or bypass mandatory platform checks",
+      "An explicit instruction not to merge remains valid",
     ],
   ],
   [
     "repository delivery never becomes an unsolicited archive",
     [
-      "Não entregue ZIP, snapshot ou bundle de um repositório como substituto",
-      "Use o repositório e os workflows autorizados",
-      "um arquivo de recuperação pode preservar o trabalho, mas não substitui essa entrega",
+      "Do not deliver a ZIP, snapshot, or repository bundle as a substitute",
+      "Use the authorized repository and workflows",
+      "a recovery file can preserve the work but does not replace that delivery",
     ],
   ],
   [
     "safety floor and independent work",
     [
-      "Negativa real de acesso ou aprovação, bloqueio de segurança",
-      "formulário obrigatório pendente/cancelado",
-      "Não troque ferramenta, conta ou ambiente para contornar o bloqueio",
-      "nem use esta recuperação para recriar regras canceladas",
-      "Continue trabalho independente autorizado",
-      "não peça confirmação redundante por uma mensagem transitória",
-      "respeite sempre o piso de segurança do host",
+      "An actual access or approval denial, security block",
+      "pending/canceled mandatory form",
+      "Do not switch tools, accounts, or environments to bypass the blocker",
+      "or use this recovery to recreate canceled rules",
+      "Continue independent authorized work",
+      "do not ask for redundant confirmation because of a transient message",
+      "always respect the host's safety floor",
     ],
   ],
 ])("render/resume preserves execution priority and safe recovery: %s", async (_, phrases) => {
@@ -307,7 +300,7 @@ test("acceptance scenarios reject unintended escalation and unsafe cancellation 
 
 test("nested HolyCodex is conditional and never justifies native-tier escalation", () => {
   const source = readFileSync(new URL("../instructions/holydot.md", import.meta.url), "utf8");
-  expect(source).toContain("A possibilidade de instalá-la não justifica escalada");
+  expect(source).toContain("The ability to install it does not justify escalation");
   const guide = readFileSync(new URL("../docs/adaptation.md", import.meta.url), "utf8");
   for (const phrase of [
     "opção condicional",

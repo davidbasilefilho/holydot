@@ -11,6 +11,8 @@ bunx holydot@0.1.0 render > holydot.instructions.md
 
 A existência deste candidato não confirma sua disponibilidade no npm. Não é necessária instalação global, `bun add` nem dependência no seu projeto.
 
+O render completo usa inglês dos Estados Unidos (`en-US`), incluindo bootstrap, contratos operacionais, exemplos genéricos, preferências salvas e identidade verificada. Essa escolha é o idioma do artefato de instruções; não concede permissão para mudar o idioma de resposta solicitado pelo usuário. A revisão atual remove a seção de fontes preferidas. As atribuições públicas e os avisos de licença continuam em seus arquivos próprios.
+
 ## Editor interativo
 
 O setup usa OpenTUI + Solid. Tab/Shift+Tab ou ↑↓ muda o foco; ←→ altera opções; texto é editável nos campos de modelo, minutos e caminho. Ctrl+S ou Save confirma; Esc, Ctrl+C ou Cancel abandona sem escrever. Mouse seleciona campos e aciona Save/Cancel. Terminais menores que 48 × 24 mostram orientação para redimensionar. O editor mantém as escolhas anteriores.

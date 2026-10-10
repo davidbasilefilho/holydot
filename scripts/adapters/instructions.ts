@@ -30,7 +30,7 @@ export function loadInstructionSource(root: URL) {
         readFileSync(new URL("instructions/integrity.json", root), "utf8"),
       ) as Record<string, unknown>;
       const sha = (input: Uint8Array | string) => createHash("sha256").update(input).digest("hex");
-      const marker = "### **Instruções adotadas — texto integral**\n\n";
+      const marker = "### **Adopted instructions — complete text**\n\n";
       const pieces = text.split(marker);
       if (
         pin.schemaVersion !== 1 ||
