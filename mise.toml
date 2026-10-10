@@ -1,0 +1,71 @@
+[tools]
+bun = "1.4"
+node = "24"
+"npm:npm" = "11.21.0"
+
+[tasks.format]
+description = "Format source, JSDoc and documentation"
+run = "bunx --no-install oxfmt"
+
+[tasks.format-check]
+description = "Check formatting without changing files"
+run = "bunx --no-install oxfmt --check"
+
+[tasks.lint]
+description = "Run declarative type-aware lint and type checking"
+run = "bunx --no-install oxlint"
+
+[tasks.typecheck]
+description = "Run the same type-check-enabled Oxlint configuration"
+run = "bunx --no-install oxlint"
+
+[tasks.test]
+description = "Run Bun tests"
+run = "bun test"
+
+[tasks.validate]
+description = "Validate the instruction package offline"
+run = "bun scripts/validate.ts"
+
+[tasks.check]
+description = "Run quality gates and build the installable CLI"
+run = [
+  "mise run format-check",
+  "mise run lint",
+  "mise run test",
+  "mise run validate",
+  "mise run architecture",
+  "mise run build",
+]
+
+[tasks.hooks-install]
+description = "Install the explicitly requested local Git hooks"
+run = "bunx --no-install lefthook install"
+
+[tasks.release-dev]
+description = "Publish an authorized development release from CI"
+run = "mise exec npm:npm@11.21.0 -- bun scripts/release.ts dev"
+
+[tasks.release-stable]
+description = "Publish an authorized stable release from CI"
+run = "mise exec npm:npm@11.21.0 -- bun scripts/release.ts stable"
+
+[tasks.architecture]
+description = "Check Effect boundaries, public JSDoc and UTF-8"
+run = "bun scripts/architecture.ts"
+
+[tasks.bump-x]
+description = "Bump product X and reset Y/maintenance"
+run = "bun scripts/version.ts x"
+
+[tasks.bump-y]
+description = "Bump product Y and reset maintenance"
+run = "bun scripts/version.ts y"
+
+[tasks.bump-z]
+description = "Bump numeric product maintenance Z"
+run = "bun scripts/version.ts z"
+
+[tasks.build]
+description = "Build installable split Bun/Solid CLI"
+run = "bun scripts/build.ts"

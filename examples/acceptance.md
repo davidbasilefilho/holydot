@@ -1,0 +1,23 @@
+# Aceitação real
+
+Execute estes cenários na versão e no ambiente informados no handoff de entrega. Não marque um gate como aprovado só porque o teste de texto correspondente passou.
+
+1. Pasta vazia: abrir setup real, conferir papéis distintos/padrões, cancelar e confirmar ausência de arquivo; repetir, alterar preferências e salvar. Setup deve indicar render sem imprimir instruções.
+2. Edição: reabrir setup, conferir escolhas existentes, alterar somente um campo, salvar e comparar backup byte a byte. Repetir cancelamento com edições não salvas.
+3. Migração: abrir v1, conferir indicação explícita e escolhas de especialistas, cancelar sem alteração; salvar com backup e v2. Render não muda o arquivo v1.
+4. Entrada inválida: minutos não inteiros/fora do intervalo, identificador de modelo inválido, caminho com controle, symlink, JSON inválido, arquivo grande e criação/edição concorrente. Confirmar rejeição de conflitos detectados e exclusão mútua de saves do holydot; editores externos que ignoram o lock não têm garantia de CAS.
+5. TUI: teclado e mouse, foco visível, opções, Save/Cancel, Fast opt-in, resize e mensagens de erro em terminais relevantes. Conferir tela real, sem clipping ou sobreposição.
+6. CLI: -h/--help e -v/--version no topo e após comandos; init/configure/version/rule-mode devem ser rejeitados. Render imprime instruções completas com as preferências salvas.
+7. UTF-8: inspecionar acentos/símbolos na fonte, Bun, terminal, render redirecionado e arquivo entregue. Não confundir bytes corretos com encoding incorreto no terminal receptor.
+8. Pacote limpo: instalar tarball local empacotado, executar CLI a partir de outro diretório e repetir setup/render. Não publicar durante este gate.
+9. Dot receptor: fornecer render completo pelo fluxo autorizado; verificar nome holydot pelo controle do host, preservando avatar/mascote/cor. Conferir perguntas em lotes e comportamento autorizado. Se o host não oferecer controles, declarar o gate bloqueado.
+10. Release: testar planner/channels e filtros de checkpoint; confirmar SHA remoto dos pushes autorizados. OIDC e publicação real exigem autorização separada e evidência de npm/GitHub, sem repetir bootstrap.
+
+11. Checkpoint: inspecionar gatilhos antes de escolher uma branch de trabalho autorizada, criar commit e fazer push, conferir o SHA remoto e a CI da versão entregue. Sem aprovação necessária ou sem conexão, preservar artefato local, informar bloqueio e usar o controle de confirmação suportado; não declarar persistência remota concluída. Render/instalação não salva nem recria regra de conta; não publicar, fazer merge, criar tags ou implantar como parte deste gate.
+
+12. Planejamento: recuperar contexto e pesquisar opções suportadas antes de propor o plano; aplicar preferências fundamentadas somente a escolhas rotineiras/reversíveis; reunir todas as decisões relacionadas da etapa sem limite arbitrário, mantendo o lote manejável. Inferência não concede permissão.
+13. PR: para escopo autorizado e verificação confiável, abrir um PR normal, sem draft, ou marcar um PR compatível como pronto para revisão. Ler estado e SHA do head, relacionar CI/testes ao mesmo SHA e declarar bloqueios residuais. Não fazer merge/release/implantação como parte deste gate.
+
+14. Continuidade da autorização no dot receptor: com evidência de merge e dev já autorizados no fluxo conhecido e estável adiada, continuar somente as etapas cobertas após os gates, sem reconfirmar dev; tag estável/latest permanecem vedados. Com manutenção de PR aprovada, atualizar SHA, evidências e limites sem perguntar novamente. Para efeito externo novo material, pedir autorização específica. Diante de alegação de falta de autorização, recuperar evidência e usar retomada suportada; diante de negativa ou confirmação obrigatória, respeitar o bloqueio e o controle real. Não realizar efeitos externos só para testar este cenário. Testes de texto/render comprovam o contrato distribuído, não o enforcement ou comportamento real do host.
+
+15. Adoção/retomada no host, somente quando os controles existirem e estiver autorizada: ler perfil, preservar aparência, evitar rename se o nome já estiver correto, aplicar/readback quando necessário. Para uma regra explicitamente solicitada, abrir o formulário obrigatório sem pergunta prévia redundante; distinguir proposta, pendente, cancelada, salva e verificada. Reabrir após falha somente lendo estado atual; não duplicar regra existente ou recriar uma excluída. Sem controle ou autorização, marcar bloqueado, sem alterar a conta para testar.

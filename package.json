@@ -1,0 +1,65 @@
+{
+  "name": "holydot",
+  "version": "0.1.0",
+  "description": "Public HolyCodex-inspired instructions and work contracts for an existing dot",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidbasilefilho/holydot.git"
+  },
+  "bin": {
+    "holydot": "dist/cli.js"
+  },
+  "files": [
+    "README.md",
+    "LICENSE",
+    "NOTICE",
+    "AGENTS.md",
+    "instructions/",
+    "templates/",
+    "examples/",
+    "docs/",
+    "dist/"
+  ],
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "format": "mise run format",
+    "format:check": "mise run format-check",
+    "lint": "mise run lint",
+    "typecheck": "mise run typecheck",
+    "test": "mise run test",
+    "validate": "mise run validate",
+    "check": "mise run check",
+    "hooks:install": "mise run hooks-install",
+    "release:dev": "mise run release-dev",
+    "release:stable": "mise run release-stable",
+    "bump:x": "mise run bump-x",
+    "bump:y": "mise run bump-y",
+    "bump:z": "mise run bump-z",
+    "architecture": "mise run architecture",
+    "build": "mise run build",
+    "prepack": "mise run build"
+  },
+  "dependencies": {
+    "@opentui/core": "^0.5.16",
+    "@opentui/solid": "^0.5.16",
+    "effect": "^4.0.2",
+    "solid-js": "^1.9.12 <1.9.13"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.2",
+    "lefthook": "^2.2.0",
+    "oxc-parser": "^0.153.0",
+    "oxfmt": "^0.72.0",
+    "oxlint": "^1.87.0",
+    "oxlint-tsgolint": "^7.0.2003",
+    "typescript": "^7.0.2"
+  },
+  "engines": {
+    "bun": "1.4.x"
+  },
+  "packageManager": "bun@1.4.2"
+}
