@@ -4,7 +4,7 @@ O holydot funciona pelas instruções e ferramentas do dot existente. Não depen
 
 ## Execução
 
-Escolha capacidades pelo trabalho, contexto e ambiente autorizado, sem ordem rígida: Codex/HolyCodex para engenharia de software e subagentes nativos para trabalhos adequados às suas capacidades. Outro computador exige dependência real daquele ambiente. Verifique capacidade, permissão e conexão reais; consulte a decisão canônica em [instructions/holydot.md](../instructions/holydot.md).
+A prioridade é **subagentes nativos do dot > Codex Cloud > Codex em máquinas do usuário**, inclusive para engenharia de software. Use o próprio computador cloud do dot e os apps conectados quando suficientes. Só avance ao próximo nível por insuficiência comprovada do anterior ou escolha explícita do usuário. Reuso/cache fica dentro do nível adequado e não inverte essa ordem; considere o uso da assinatura sem prometer gratuidade ou economia não verificadas. Máquinas e remotes autorizados exigem capacidade, acesso e justificativa pertinentes. Verifique capacidade, permissão e conexão reais; consulte a decisão canônica em [instructions/holydot.md](../instructions/holydot.md).
 
 Autonomia leva o trabalho autorizado ao resultado combinado. Não inventa autorização para publicar, fazer merge, implantar, enviar mensagens ou alterar contas. Aproveite aprovações informadas ainda válidas para a mesma ação e escopo. Uma ordem de parada interrompe novas ações e atribuições; preserve checkpoints e distinga solicitação de confirmação de parada.
 
@@ -28,7 +28,7 @@ Pending/ausência de review permanece pendente; disabled/skipped/quota é limite
 
 Os papéis são distintos: coordenação de sessões delegadas prefere GPT-6.1 Sol / medium; especialistas preferem GPT-6 Luna / high. Standard é padrão e Fast é opt-in. Essas escolhas só valem quando suportadas por controles reais; uma configuração salva não comprova roteamento. Não altere o modelo principal do dot.
 
-Mantenha contextos, tarefas equivalentes e atribuições separados por projeto. Antes de criar uma sessão, descubra as existentes e aplique a política canônica de warm (menos de 20 minutos desde atividade efetiva), compatibilidade, ocupação e retomada cold. Use atribuições delimitadas, critérios de aceitação e propriedade de arquivos. Reutilize agentes compatíveis e preserve o trabalho concorrente. Um revisor independente deve ser distinto do autor; se só houver autocheck, declare essa limitação.
+Mantenha contextos, tarefas equivalentes e atribuições separados por projeto. Depois de escolher o nível de execução, antes de criar uma sessão nesse nível, descubra as existentes e aplique a política canônica de warm (menos de 20 minutos desde atividade efetiva), compatibilidade, ocupação e retomada cold. Use atribuições delimitadas, critérios de aceitação e propriedade de arquivos. Reutilize agentes compatíveis e preserve o trabalho concorrente. Um revisor independente deve ser distinto do autor; se só houver autocheck, declare essa limitação.
 
 ## Perguntas e comunicação
 
@@ -71,3 +71,5 @@ holydot resume --config holydot.config.json > holydot.instructions.md
 Use esse material no fluxo suportado do host para nova instância, retomada ou recuperação após compactação. O comando não detecta perda de contexto nem injeta regras em uma conta. Releitura pelo host e confirmação da fonte ativa continuam necessárias. Digest não prova leitura, contexto ativo ou conformidade comportamental; o pin é interno ao pacote, detecta corrupção/mistura de versões e não autentica um pacote inteiro substituído maliciosamente.
 
 O contrato operacional externo ao literal exige revisão interna de aplicabilidade antes de respostas/ações, conservação de correções posteriores, continuidade e handoff verificável aos delegados. As preferências locais substituem apenas seus campos de configuração, respeitando autoridade superior e pedidos atuais. Os testes com labels de muitos turnos são exemplos sintéticos; não são uma avaliação real de conversação longa nem promessa de 100% de compliance.
+
+Uma ordem explícita de parada é imediata. Uma mensagem isolada `user cancelled` ou cancelamento automático não comprova essa intenção: siga Parada, pausa e retomada na fonte canônica, confira origem e estado da operação, preserve resultados e avance no trabalho independente autorizado. Não repita escritas de resultado incerto nem contorne negativas, controles de aprovação ou bloqueios de segurança.

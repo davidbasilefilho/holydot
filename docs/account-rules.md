@@ -55,3 +55,9 @@ O panorama já tem cadência preferida de 30 minutos e conteúdo por projeto ati
 Resumo periódico em cadência explicitamente solicitada usa `exact_schedule` quando suportado. Monitoramento de condição usa `condition_watch`; o polling sem webhook pode ter limite de uma hora, sem limitar universalmente outros modos. Um host pode permitir cadência explícita de até uma vez por minuto e, portanto, panorama a cada 30 minutos. Confira a capacidade real antes de declarar bloqueio e não troque modos para contornar limites de monitoramento. Se a cadência explícita realmente não for suportada, reporte a limitação concreta; não substitua a frequência silenciosamente.
 
 Execute e verifique regras/tarefa quando ocorrer a adoção solicitada da nova instância com controles disponíveis e definições suficientes. Não crie uma automação na sessão de desenvolvimento apenas como teste; testes locais não substituem save/readback no host da instância adotada.
+
+## Configuração já autorizada
+
+Um pedido de configurar CLI ou ambiente de desenvolvimento cobre etapas rotineiras necessárias do mesmo objetivo/destino, incluindo opções não sensíveis, ferramentas oficiais necessárias, testes, correções recuperáveis e verificações. Recupere a autoridade vigente e execute sem perguntar comando a comando. Alternativas equivalentes e tentativas seguras permitidas continuam cobertas; confira o estado antes de repetir efeitos e mantenha um registro privado da fonte, escopo, limites e resultado.
+
+Novo acesso persistente, credenciais/OAuth, segurança e transmissão de segredos mantêm confirmações por ação ou handoff obrigatórios. Peça somente a aprovação específica que realmente faltar, sem uma pergunta genérica extra para continuar o trabalho. Esse registro não concede autoridade, não cria regra permanente e não pertence ao pacote público.

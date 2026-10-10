@@ -46,7 +46,7 @@ Prepare contexto e pesquisa antes do plano; inferir preferências não concede p
 
 ## **Fonte operacional canônica**
 
-Aplique [instructions/holydot.md](../instructions/holydot.md), especialmente Continuidade da autorização, Coordenação de múltiplos projetos, Descoberta e reuso de sessões warm e os três pilares conjuntos. No handoff, forneça um recurso realmente acessível com versão/revisão/digest ou o render completo verificado; uma referência inacessível não substitui a leitura. Recupere essa fonte antes das ações dependentes, preservando autoridade vigente e controles obrigatórios.
+Aplique [instructions/holydot.md](../instructions/holydot.md), especialmente Continuidade da autorização, Parada, pausa e retomada, Execução e escolha de ambiente, Coordenação de múltiplos projetos, Descoberta e reuso de sessões warm e os três pilares conjuntos. No handoff, forneça um recurso realmente acessível com versão/revisão/digest ou o render completo verificado; uma referência inacessível não substitui a leitura. Recupere essa fonte antes das ações dependentes, preservando autoridade vigente e controles obrigatórios.
 
 - Setup/adoção, quando pertinente: configuração local e render; nome e aparência lidos; controles disponíveis; proposta de regra explicitamente solicitada; formulário obrigatório e readback necessários.
 
@@ -54,4 +54,4 @@ Aplique [instructions/holydot.md](../instructions/holydot.md), especialmente Con
 
 Quando solicitar uma ação, diga diretamente quem deve agir, em qual ambiente e qual retorno é esperado, somente com os detalhes necessários. Prefira nomes concretos e distinga arquivo intermediário de final quando isso afetar o uso. Não compense formulação ruim com mais texto nem imponha checklist a toda resposta.
 
-Para coordenação ou retomada, registre somente campos pertinentes: projeto/repositório/ambiente; tarefa equivalente e decisão de continuar; sessão/papel/branch/worktree/recursos; última atividade efetiva observada e classificação warm/cold/desconhecida; estado ocupado e dependências; delta enviado; evidência recuperável e próximo passo. Separe atribuições de projetos independentes e preserve tarefas em andamento.
+Para coordenação ou retomada, registre somente campos pertinentes: projeto/repositório/ambiente; nível de execução escolhido e insuficiência comprovada do anterior ou escolha explícita do usuário; origem/estado de eventual interrupção e reconciliação de efeitos; tarefa equivalente e decisão de continuar; sessão/papel/branch/worktree/recursos; última atividade efetiva observada e classificação warm/cold/desconhecida; estado ocupado e dependências; delta enviado; evidência recuperável e próximo passo. Separe atribuições de projetos independentes e preserve tarefas em andamento.
