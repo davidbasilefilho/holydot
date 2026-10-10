@@ -134,6 +134,26 @@ describe("settings and configured UTF-8 render", () => {
     expect(readFileSync(path, "utf8")).toBe(before);
     expect(readdirSync(root)).toEqual(["holydot.config.json"]);
   });
+  test("render and resume read BOM-prefixed config without normalizing the saved file", async () => {
+    const root = directory();
+    const path = join(root, "holydot.config.json");
+    const original = Buffer.from(`\uFEFF${JSON.stringify(DEFAULT_CONFIG)}\r\n`, "utf8");
+    writeFileSync(path, original);
+    const output = await Effect.runPromise(runCli(["render"], root, cancel));
+    expect(await Effect.runPromise(runCli(["resume"], root, cancel))).toBe(output);
+    expect(output).toContain("Coordenação de sessões delegadas: gpt-6.1-sol / medium");
+    expect(readFileSync(path)).toEqual(original);
+    expect(readdirSync(root)).toEqual(["holydot.config.json"]);
+  });
+  test("multiple leading BOMs are invalid and never normalized by setup", async () => {
+    const root = directory();
+    const path = join(root, "holydot.config.json");
+    const original = Buffer.from(`\uFEFF\uFEFF${JSON.stringify(DEFAULT_CONFIG)}`, "utf8");
+    writeFileSync(path, original);
+    await expectFailure(runCli(["setup"], root, () => Effect.die("prompt should not run")));
+    expect(readFileSync(path)).toEqual(original);
+    expect(readdirSync(root)).toEqual(["holydot.config.json"]);
+  });
   test("render emits complete adopted instructions plus distinct saved roles in UTF-8", async () => {
     const root = directory();
     await Effect.runPromise(runCli(["setup", "--coordinator-effort", "high"], root, save));

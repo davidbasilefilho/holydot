@@ -53,7 +53,8 @@ export function readConfigFile(path: string): Effect.Effect<StoredFile | null, H
       try {
         const bytes = readFileSync(fd);
         if (bytes.length > 65_536) throw new Error("Configuration is too large.");
-        const content = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+        // Retain a leading BOM in the snapshot so comparison and backup preserve every byte.
+        const content = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true }).decode(bytes);
         return { content };
       } finally {
         closeSync(fd);
@@ -69,14 +70,14 @@ export function readConfigFile(path: string): Effect.Effect<StoredFile | null, H
 }
 
 /**
- * Parse native JSON at the adapter boundary; domain schemas handle validation.
+ * Parse native JSON at the adapter boundary, accepting one UTF-8 BOM without changing snapshots.
  *
  * @param text - Exact file contents.
  * @returns Unknown parsed data or a typed parse error.
  */
 export function parseJson(text: string): Effect.Effect<unknown, HolydotError> {
   return Effect.try({
-    try: () => JSON.parse(text) as unknown,
+    try: () => JSON.parse(text.startsWith("\uFEFF") ? text.slice(1) : text) as unknown,
     catch: (cause) =>
       new HolydotError({ message: "Configuration is not valid JSON; original preserved.", cause }),
   });

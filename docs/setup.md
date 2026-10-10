@@ -48,7 +48,7 @@ Modelos são identificadores validados, não comprovação de disponibilidade. S
 
 ## Persistência e migração
 
-Na edição, a gravação mantém uma cópia `.bak-…` com os bytes originais. Inicialização cria o arquivo de forma exclusiva e atômica; não sobrescreve uma criação concorrente. Falha de permissões, arquivo inválido, symlink, UTF-8 corrompido ou mudança detectada durante o editor aborta a parte afetada.
+Na edição, a gravação mantém uma cópia `.bak-…` com os bytes originais, inclusive um BOM UTF-8 inicial quando presente. O parser aceita esse BOM sem removê-lo do snapshot usado na comparação e no backup; Save normaliza a nova configuração, enquanto Cancel e render preservam o arquivo original. Inicialização cria o arquivo de forma exclusiva e atômica; não sobrescreve uma criação concorrente. Falha de permissões, arquivo inválido, symlink, UTF-8 corrompido ou mudança detectada durante o editor aborta a parte afetada.
 
 Gravações do holydot usam um lock exclusivo `<arquivo>.lock` durante leitura, comparação, backup e substituição. Outro processo de setup que tenta salvar nesse período recebe um erro e deve recarregar antes de tentar novamente; não há espera nem sobrescrita por outro writer cooperante. O lock é liberado em sucesso, cancelamento da operação ou falha tratada. Após encerramento abrupto pode restar um lock: confira que nenhum processo está gravando, preserve os arquivos e remova apenas o lock obsoleto antes de repetir. O programa não remove locks existentes automaticamente.
 

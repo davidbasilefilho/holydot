@@ -23,9 +23,9 @@ X incrementa o segundo campo e reinicia Y e manutenção: `0.1.2-3 → 0.2.0`. Y
 
 Um único `publish.yml` publica dev/stable e chama `validation.yml` antes das operações externas. Mise-action instala ferramentas; release usa npm 11.21.0 com trusted publishing e `id-token: write`, sem NPM_TOKEN.
 
-- Push autorizado em `main` ou `release/**`: dev.
+- Push autorizado em `main` ou branch legada de um nível `release/*` (por exemplo, `release/v0.1.0`): dev.
 - Push autorizado da tag exatamente `v{package.version}`: produto stable.
-- Checkpoints em `codex/**`, `work/**` ou `feature/**`: apenas validation.yml, nunca publicação.
+- Camadas de stack `release/v<versão>/<mudança>` e checkpoints em `codex/**`, `work/**` ou `feature/**`: apenas validation.yml, nunca publicação.
 
 A fonte deve estar limpa e no SHA exato do evento. O planner rejeita branches de checkpoint também no código. Pacote npm existente precisa ter a mesma integridade; conflitos não são sobrescritos. Uma operação interrompida preserva draft verificável no GitHub; atrasos de visibilidade só repetem leituras, nunca npm publish. Uma repetição idêntica não retrocede dist-tags.
 

@@ -34,7 +34,7 @@ Além dos testes de domínio, execute setup inicial, edição, cancelamento, err
 
 ## Checkpoints
 
-Faça commits e pushes dos checkpoints autorizados e confirme o SHA remoto. Branches `codex/**`, `work/**` e `feature/**` não acionam publish.yml. Branches `main`, `release/**` e tags `v*` podem publicar e exigem autorização de publicação antes de push. Nunca coloque handoffs privados, credenciais ou estado pessoal no pacote.
+Faça commits e pushes dos checkpoints autorizados e confirme o SHA remoto. Branches `codex/**`, `work/**`, `feature/**` e camadas de stack `release/v<versão>/<mudança>` não acionam publish.yml. Branches `main`, branches legadas de um nível `release/*` (por exemplo, `release/v0.1.0`) e tags `v*` podem publicar e exigem autorização de publicação antes de push. Nunca coloque handoffs privados, credenciais ou estado pessoal no pacote.
 
 Os bumps de X/Y/Z estão em [versões e publicação](releases.md); não são comandos públicos da CLI.
 
