@@ -251,3 +251,23 @@ test.each([
     ).toEqual([]);
   },
 );
+
+test.each([{ npmVersion: "11.19.0" }, { nodeVersion: "v20.0.0" }])(
+  "actual publication preflight rejects an unexpected child runtime before writes: %j",
+  async (runtime) => {
+    const child = Bun.spawn(
+      [
+        process.execPath,
+        fixture,
+        JSON.stringify({ sha, mode: "dev", base: "0.1.0", channels: {}, ...runtime }),
+        adapter,
+      ],
+      { stdout: "pipe", stderr: "pipe" },
+    );
+    const result = JSON.parse(await new Response(child.stdout).text());
+    expect(await child.exited).toBe(0);
+    expect(result.error).toContain("configured npm 11.21.0 and Node 24 child runtime");
+    expect(result.restored).toBe(true);
+    expect(result.actions).toEqual(["npm --version", "node --version"]);
+  },
+);

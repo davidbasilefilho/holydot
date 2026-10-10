@@ -18,6 +18,12 @@ Recupere primeiro o contexto existente e pesquise opções suportadas. Resolva e
 
 Abra proativamente um PR normal, sem draft, para trabalho autorizado e delimitado quando verificações sustentarem confiança na funcionalidade e qualidade. Reutilize PRs compatíveis; confira origem/destino, estado normal e SHA do head, com testes/CI dessa versão. Declare bloqueios residuais e respeite controles obrigatórios. Merge, tags, release, publicação e implantação têm autorização separada.
 
+## CI e review bots
+
+Depois de cada push, acompanhe CI e bots existentes no SHA atual: checks/statuses/jobs, comentários de conversa/inline, reviews e threads. Separe falha de código de auth/config/quota pela evidência; CI bloqueada não impede review independente. Corrija materiais no escopo, teste e faça push, responda com evidência e confirme resolução da thread. Outdated não basta. Releia head novo e comentários posteriores; CI verde ou status success que diz review skipped não é aprovação.
+
+Pending/ausência de review permanece pendente; disabled/skipped/quota é limite externo explícito. Observe proporcionalmente até estado terminal ou limite, sem polling infinito, nova automação ou mudança de configuração de conta. Use revisão única suportada quando necessária e autorizada, sem duplicar execução. Entregue estado por gate/bot, última consulta e próximo passo de retomada. A coordenação verifica o head integrado; merge exige autoridade e critérios próprios.
+
 ## Coordenação e especialistas
 
 Os papéis são distintos: coordenação de sessões delegadas prefere GPT-6.1 Sol / medium; especialistas preferem GPT-6 Luna / high. Standard é padrão e Fast é opt-in. Essas escolhas só valem quando suportadas por controles reais; uma configuração salva não comprova roteamento. Não altere o modelo principal do dot.
@@ -40,7 +46,7 @@ Teste o comportamento relevante, os caminhos de erro e a interface implementada.
 
 ## Texto literal de comunicação
 
-O render inclui integralmente o bloco genérico aprovado em inglês na fonte canônica [instructions/holydot.md](../instructions/holydot.md), incluindo headings em negrito, estilo consistente em respostas longas e entrega completa de artefatos. O bloco é preservado literalmente; referências pessoais só devem ser consultadas pelos controles disponíveis e nunca são incorporadas ao pacote. Panoramas recorrentes mantêm sua autorização e agendamento próprios; não restringem atualizações úteis de trabalho em andamento.
+O render inclui integralmente o bloco genérico aprovado em inglês na fonte canônica [instructions/holydot.md](../instructions/holydot.md), preservando os headings originais, lowercase e qualificadores, apresentação híbrida adaptativa, pesquisa e entrega completa de artefatos. O bloco é preservado literalmente; referências pessoais só devem ser consultadas pelos controles disponíveis e nunca são incorporadas ao pacote. Panoramas recorrentes mantêm sua autorização e agendamento próprios; não restringem atualizações úteis de trabalho em andamento.
 
 ## **Continuidade da autorização**
 
@@ -49,3 +55,17 @@ Recupere e aplique a autorização já dada ao mesmo fluxo e escopo antes de ped
 ## **Três pilares e adoção**
 
 I. autonomia; II. eficiência; III. qualidade e mergeability são capítulos sem hierarquia e critérios conjuntos. Consulte o [fluxo de setup e adoção](setup.md) para configuração local, nome, regras opcionais, retomada e readback. A base pública da reescrita está em [orientação de prompts](prompt-design.md).
+
+A fonte atual substitui integralmente o bloco anterior. A fonte canônica instalada deve preservar exatamente os bytes LF aprovados: a CLI não normaliza CRLF e rejeita bytes incompatíveis com o pin. Detalhes de tamanho/hash e limites da verificação estão em [docs/prompt-design.md](prompt-design.md). O render não reescreve os headings literais para aplicar a própria orientação de formatação do texto.
+
+## Carregamento e retomada
+
+`setup` verifica os bytes canônicos e o bloco adotado contra `instructions/integrity.json` antes de abrir o editor ou salvar preferências. A saída identifica versão instalada, revisão e digests. `render` e `resume` repetem essa verificação e entregam o render completo mais a identidade realmente lida do pacote. Fonte alterada/truncada/duplicada ou bloco antigo falha antes de prompt/escrita; restaure uma versão aprovada antes de continuar.
+
+```sh
+holydot resume --config holydot.config.json > holydot.instructions.md
+```
+
+Use esse material no fluxo suportado do host para nova instância, retomada ou recuperação após compactação. O comando não detecta perda de contexto nem injeta regras em uma conta. Releitura pelo host e confirmação da fonte ativa continuam necessárias. Digest não prova leitura, contexto ativo ou conformidade comportamental; o pin é interno ao pacote, detecta corrupção/mistura de versões e não autentica um pacote inteiro substituído maliciosamente.
+
+O contrato operacional externo ao literal exige revisão interna de aplicabilidade antes de respostas/ações, conservação de correções posteriores, continuidade e handoff verificável aos delegados. As preferências locais substituem apenas seus campos de configuração, respeitando autoridade superior e pedidos atuais. Os testes com labels de muitos turnos são exemplos sintéticos; não são uma avaliação real de conversação longa nem promessa de 100% de compliance.

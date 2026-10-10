@@ -7,11 +7,11 @@ import { Effect } from "effect";
 import { runCli } from "../scripts/cli";
 
 const approved = readFileSync(new URL("./fixtures/approved-communication.md", import.meta.url));
-const digest = "8d35ae8d9d1ba6656abad7cb44b93320112d7c01f367905a4414360789b4a5ff";
+const digest = "70b8a168767100bb05a36ba65960b942d0e2b7491e6dece4b4e6a2adc11089ea";
 
 test("approved communication block remains byte-exact in the canonical source", () => {
   expect(createHash("sha256").update(approved).digest("hex")).toBe(digest);
-  expect(approved.length).toBe(8646);
+  expect(approved.length).toBe(14816);
   const source = readFileSync(new URL("../instructions/holydot.md", import.meta.url));
   const offset = source.indexOf(approved);
   expect(offset).toBeGreaterThanOrEqual(0);
@@ -30,12 +30,14 @@ test("full render preserves exact Markdown, bold headings, privacy and unrelated
     const bytes = Buffer.from(output, "utf8");
     const offset = bytes.indexOf(approved);
     expect(bytes.subarray(offset, offset + approved.length)).toEqual(approved);
-    for (const heading of output.split("\n").filter((line) => /^#{1,3} /.test(line)))
+    const outsideLiteral = output.replace(approved.toString("utf8"), "");
+    for (const heading of outsideLiteral.split("\n").filter((line) => /^#{1,3} /.test(line)))
       expect(heading).toMatch(/^#{1,3} \*\*.+\*\*$/);
+    expect(bytes.indexOf(approved, offset + approved.length)).toBe(-1);
+    expect(output).toContain("match my vocabulary, directness, and sentence rhythm");
     expect(output).toContain(
-      "length or technical depth is not a reason to revert to generic prose",
+      "when I request raw Markdown, provide its complete source in a code fence",
     );
-    expect(output).toContain("When I need raw Markdown, put the complete source in a fenced block");
     expect(output).toContain("Um commit apenas local não conclui a etapa de persistência remota");
     expect(output).toContain("não autoriza merge, tag, release, publicação ou implantação");
     expect(output).toContain("não salvam uma regra de conta nem recriam uma regra excluída");
@@ -52,86 +54,33 @@ test("full render preserves exact Markdown, bold headings, privacy and unrelated
   }
 });
 
-test("direct wording states the intended test, environment and expected log without response rituals", () => {
+test("replacement keeps conditional research, presentation and channel guidance intact", () => {
   const source = readFileSync(new URL("../instructions/holydot.md", import.meta.url), "utf8");
-  const section = source
-    .split("### **Formulação direta**")[1]
-    ?.split("### **Comunicação e apresentação")[0];
-  expect(section).toBeDefined();
   for (const phrase of [
-    "ação ou intenção real",
-    "quem deve agir",
-    "qual retorno é esperado",
-    "nomes concretos",
-    "arquivo intermediário de final",
-    "contexto que ainda não foi comunicado",
-    "mais curta que preserve escopo",
-    "sem compensar uma frase ruim com mais parágrafos",
-    "não exige checklist, títulos ou relatório em toda resposta",
-    "profundidade e formatos úteis quando solicitados",
-    "teste no Windows já instalado no seu PC e me envie o log",
-    "não instala nem formata nada",
-    "não é instalar Windows",
-    "candidata de diagnóstico",
-    "deixa ação, ambiente e retorno indefinidos",
+    "prefer lowercase except I and its contractions, proper names, acronyms, and identifiers",
+    "when reporting on multiple projects, send a separate message for each project or task where the channel supports it",
+    "otherwise, separate projects clearly without mixing their progress",
+    "don't assume ChatGPT Intelligent UI or DIL rendering is available in a dot conversation",
+    "these are preferences, not a whitelist",
+    "rather than treating every conditional preference as mandatory in every situation",
+    "apply an adaptive hybrid design system to supported rich content and created artifacts",
   ])
-    expect(section).toContain(phrase);
+    expect(source).toContain(phrase);
+  for (const removed of [
+    "Conformidade persistente",
+    "Uma mensagem por projeto ou tarefa",
+    "Formulação direta",
+    "Neither is mandatory in every paragraph or response.",
+    "Reply in my latest language unless requested otherwise.",
+  ])
+    expect(source).not.toContain(removed);
 });
 
-const persistentRequirements = [
-  "Cumprir todas as instruções aplicáveis é obrigatório em cada resposta e ação",
-  "Muitos turnos, retomada, compactação, resposta longa, carga de trabalho e delegação",
-  "não suspendem nem enfraquecem essa obrigação",
-  "formatação, write-like-me, precisão, preservação de nuances",
-  "inclusive em status e resultados de workers",
-  "Preserve condições, escopo, exceções e autoridade",
-  "não significa executar toda ferramenta ou incluir todo recurso de formatação",
-  "“quando útil” continua significando quando útil",
-  "Antes de enviar, faça uma checagem final de conformidade",
-  "**negrito significativo**",
-  "*itálico significativo*",
-  "nem toda resposta precisa conter esses recursos",
-  "Havendo seções, use headings reais no nível adequado com título em negrito",
-  "não exige exibir um checklist",
-  "Envie uma mensagem por projeto ou tarefa",
-  "inclusive ao responder a um pedido de status de tudo",
-  "Não junte projetos ou tarefas independentes em um único texto",
-  "sem fragmentar uma frase em várias mensagens",
-  "Responda a cada parte solicitada nas mensagens correspondentes",
-  "evite duplicar atualizações",
-];
-
-test("persistent compliance and separate-message policy stay outside the exact literal", () => {
-  const source = readFileSync(new URL("../instructions/holydot.md", import.meta.url), "utf8");
-  const operational = source
-    .split("### **Conformidade persistente**")[1]
-    ?.split("### **Formulação direta**")[0];
-  expect(operational).toBeDefined();
-  for (const requirement of persistentRequirements) expect(operational).toContain(requirement);
-  expect(approved.toString("utf8")).not.toContain("Conformidade persistente");
-});
-
-test("full render propagates persistent obligations without changing conditional literal guidance", async () => {
-  const root = mkdtempSync(join(tmpdir(), "holydot-persistent-"));
-  try {
-    await Effect.runPromise(runCli(["setup"], root, (config) => Effect.succeed(config)));
-    const output = await Effect.runPromise(
-      runCli(["render"], root, () => Effect.die("render prompted")),
-    );
-    for (const requirement of persistentRequirements) expect(output).toContain(requirement);
-    expect(output).toContain("Neither is mandatory in every paragraph or response.");
-    expect(output).toContain("Make section headings explicitly bold");
-    expect(Buffer.from(output).indexOf(approved)).toBeGreaterThanOrEqual(0);
-  } finally {
-    rmSync(root, { recursive: true, force: true });
-  }
-});
-
-// Authored acceptance examples test contract expectations, not generated model behavior.
+// Synthetic presentation examples: turn labels are scenario descriptions, not actual model turns.
 const presentationCases = [
   {
     kind: "long response after many turns",
-    turns: 120,
+    describedPriorTurns: 120,
     meaningfulEmphasis: true,
     messages: [
       {
@@ -147,7 +96,7 @@ const presentationCases = [
   },
   {
     kind: "status of every active project",
-    turns: 80,
+    describedPriorTurns: 80,
     meaningfulEmphasis: true,
     messages: [
       {
@@ -162,7 +111,7 @@ const presentationCases = [
   },
   {
     kind: "integrated worker result",
-    turns: 100,
+    describedPriorTurns: 100,
     meaningfulEmphasis: true,
     messages: [
       {
@@ -173,7 +122,7 @@ const presentationCases = [
   },
   {
     kind: "short answer without useful emphasis",
-    turns: 120,
+    describedPriorTurns: 120,
     meaningfulEmphasis: false,
     messages: [{ scope: "task-d", text: "A versão instalada é 0.1.0." }],
   },
@@ -195,8 +144,8 @@ const presentationErrors = (example: (typeof presentationCases)[number]) => {
   return errors;
 };
 for (const example of presentationCases)
-  test(`authored persistent-compliance acceptance: ${example.kind}`, () => {
-    expect(example.turns).toBeGreaterThanOrEqual(80);
+  test(`synthetic presentation contract (no model evaluation): ${example.kind}`, () => {
+    expect(example.describedPriorTurns).toBeGreaterThanOrEqual(80);
     expect(presentationErrors(example)).toEqual([]);
     if (example.kind.startsWith("long"))
       expect(example.messages[0]!.text.length).toBeGreaterThan(1000);
@@ -207,7 +156,7 @@ test("authored rejection cases catch lost emphasis/headings and mixed or duplica
   expect(
     presentationErrors({
       kind: "degraded long answer",
-      turns: 120,
+      describedPriorTurns: 120,
       meaningfulEmphasis: true,
       messages: [{ scope: "project-a", text: "## Resultado\n\nTeste local passou." }],
     }),
@@ -215,7 +164,7 @@ test("authored rejection cases catch lost emphasis/headings and mixed or duplica
   expect(
     presentationErrors({
       kind: "mixed status",
-      turns: 80,
+      describedPriorTurns: 80,
       meaningfulEmphasis: false,
       messages: [{ scope: "project-a,project-b", text: "Dois projetos em uma mensagem." }],
     }),
@@ -223,7 +172,7 @@ test("authored rejection cases catch lost emphasis/headings and mixed or duplica
   expect(
     presentationErrors({
       kind: "duplicated status",
-      turns: 80,
+      describedPriorTurns: 80,
       meaningfulEmphasis: false,
       messages: [
         { scope: "project-a", text: "Teste passou." },

@@ -277,3 +277,22 @@ test.each([
   if (allowed && ref.startsWith("refs/heads/"))
     expect(Effect.runSync(createReleasePlan({ ...input, ref })).distTag).toBe("dev");
 });
+
+test("npm publication job binds its OIDC context to a protected environment", () => {
+  const workflow = Bun.YAML.parse(
+    readFileSync(new URL("../.github/workflows/publish.yml", import.meta.url), "utf8"),
+  );
+  expect(workflow).toHaveProperty("jobs.release.environment", "holydot-publish");
+  expect(workflow).toHaveProperty("jobs.release.needs", "validate");
+  expect(workflow).toHaveProperty("jobs.release.permissions.id-token", "write");
+  const instructions = readFileSync(new URL("../docs/releases.md", import.meta.url), "utf8");
+  for (const required of [
+    "restrições externas de referências",
+    "identidade de publisher correspondente",
+    "não comprovam a configuração salva",
+    "referências excluídas não publicam",
+    "Procedimentos específicos de conta",
+    "A CLI não configura proteção de branch",
+  ])
+    expect(instructions).toContain(required);
+});

@@ -24,6 +24,8 @@ jobs:
       contents: read
 
   release:
+    # Admin-configured ref restrictions plus matching npm OIDC binding are required.
+    environment: holydot-publish
     needs: validate
     runs-on: ubuntu-latest
     timeout-minutes: 20

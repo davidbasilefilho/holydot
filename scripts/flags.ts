@@ -2,10 +2,10 @@ import { Effect, Schema } from "effect";
 import { HolydotError } from "./errors";
 import { DEFAULT_CONFIG, parseConfig, type HolydotConfig } from "./config";
 
-/** Validated CLI input; only setup/render are public task commands. */
+/** Validated CLI input; setup/render/resume are public task commands. */
 export interface CliFlags {
   /** Informational output or requested task. */
-  readonly command: "help" | "version" | "setup" | "render";
+  readonly command: "help" | "version" | "setup" | "render" | "resume";
   /** Optional settings filename, resolved against the invoking directory. */
   readonly configPath: string;
   /** Overrides validated before reading/writing any configuration. */
@@ -94,10 +94,10 @@ export function parseFlags(input: unknown): Effect.Effect<CliFlags, HolydotError
             new HolydotError({ message: "Use one informational flag at a time." }),
           );
         info = selected;
-      } else if (arg === "setup" || arg === "render") {
+      } else if (arg === "setup" || arg === "render" || arg === "resume") {
         if (command !== undefined)
           return yield* Effect.fail(
-            new HolydotError({ message: "Use exactly one command: setup or render." }),
+            new HolydotError({ message: "Use exactly one command: setup, render or resume." }),
           );
         command = arg;
       } else if (arg === "--config" || preferences.has(arg)) {

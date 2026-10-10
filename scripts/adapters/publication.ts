@@ -151,6 +151,17 @@ export async function executePublication(): Promise<void> {
       "npm trusted publishing requires id-token: write and an approved npm trusted publisher.",
     );
   }
+  // Check the actual child CLI rather than assuming the mise-selected package won PATH.
+  const npmVersion = await run(["npm", "--version"]);
+  const nodeVersion = await run(["node", "--version"]);
+  console.log(
+    `Publication runtime: npm ${npmVersion}; Node ${nodeVersion}; GitHub Actions and both OIDC request variables present.`,
+  );
+  if (npmVersion !== "11.21.0" || !/^v24\./.test(nodeVersion)) {
+    throw new Error(
+      "Publication requires the configured npm 11.21.0 and Node 24 child runtime; check mise/PATH before retrying.",
+    );
+  }
   const event = JSON.parse(await readFile(process.env.GITHUB_EVENT_PATH, "utf8")) as {
     deleted: boolean;
     repository: { fork: boolean; full_name: string };

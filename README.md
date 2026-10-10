@@ -20,7 +20,7 @@ bun scripts/cli.ts -h
 bun scripts/cli.ts --version
 ```
 
-`setup` abre um editor OpenTUI + Solid, cria ou altera `holydot.config.json` e salva somente quando você escolhe Save. Esc/Cancel cancela. Ao terminar, orienta executar `render`; não imprime as instruções completas. `render` imprime o texto configurado em UTF-8, sem alterar a conta ou o host.
+`setup` abre um editor OpenTUI + Solid, cria ou altera `holydot.config.json` e salva somente quando você escolhe Save. Esc/Cancel cancela. Ao terminar, orienta executar `render`; não imprime as instruções completas. `render` imprime o texto configurado em UTF-8, sem alterar a conta ou o host. Seu início contém o bootstrap ativo: no pedido de adoção, o dot receptor chama os controles nativos de nome, regras com formulário obrigatório e tarefa definida, verificando resultados e preservando estado em retomadas.
 
 Padrões: coordenação de sessões delegadas GPT-6.1 Sol / medium; especialistas GPT-6 Luna / high; Standard, com Fast opt-in; panorama de 30 minutos como preferência, sem criar agendamento. Repositório e branch pertencem a cada tarefa, não ao setup geral.
 
@@ -34,6 +34,7 @@ Padrões: coordenação de sessões delegadas GPT-6.1 Sol / medium; especialista
 - [Desenvolvimento e arquitetura Effect](docs/development.md)
 - [Versões e publicação](docs/releases.md)
 - [Mapa de políticas e evidências](docs/policy-index.md)
+- [Bootstrap no host e limite arquitetural](docs/host-bootstrap.md)
 - [Aceitação real](examples/acceptance.md)
 
 Licença Apache-2.0. Preserve [LICENSE](LICENSE) e [NOTICE](NOTICE) ao redistribuir materiais derivados.
