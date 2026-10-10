@@ -7,11 +7,11 @@ import { Effect } from "effect";
 import { runCli } from "../scripts/cli";
 
 const approved = readFileSync(new URL("./fixtures/approved-communication.md", import.meta.url));
-const digest = "70b8a168767100bb05a36ba65960b942d0e2b7491e6dece4b4e6a2adc11089ea";
+const digest = "56bfc5f4b2993e17f6e221079934d043f312efb92e67828b03880823c6c5073a";
 
 test("approved communication block remains byte-exact in the canonical source", () => {
   expect(createHash("sha256").update(approved).digest("hex")).toBe(digest);
-  expect(approved.length).toBe(14816);
+  expect(approved.length).toBe(13396);
   const source = readFileSync(new URL("../instructions/holydot.md", import.meta.url));
   const offset = source.indexOf(approved);
   expect(offset).toBeGreaterThanOrEqual(0);
@@ -38,10 +38,12 @@ test("full render preserves exact Markdown, bold headings, privacy and unrelated
     expect(output).toContain(
       "when I request raw Markdown, provide its complete source in a code fence",
     );
-    expect(output).toContain("Um commit apenas local não conclui a etapa de persistência remota");
-    expect(output).toContain("não autoriza merge, tag, release, publicação ou implantação");
-    expect(output).toContain("não salvam uma regra de conta nem recriam uma regra excluída");
-    expect(output).toContain("confirme sua configuração antes de afirmar que está ativo");
+    expect(output).toContain("A local-only commit does not complete the remote persistence step");
+    expect(output).toContain(
+      "does not itself authorize merge, tag, release, publication, or deployment",
+    );
+    expect(output).toContain("does not save an account rule or recreate a deleted rule");
+    expect(output).toContain("confirm its configuration before claiming it is active");
     expect(output).not.toContain("Não envie aviso imediato a cada mudança substancial");
     expect(output).not.toContain("Use write-like-me em trabalhos de escrita nos quais");
     expect(output).not.toMatch(
@@ -61,7 +63,6 @@ test("replacement keeps conditional research, presentation and channel guidance 
     "when reporting on multiple projects, send a separate message for each project or task where the channel supports it",
     "otherwise, separate projects clearly without mixing their progress",
     "don't assume ChatGPT Intelligent UI or DIL rendering is available in a dot conversation",
-    "these are preferences, not a whitelist",
     "rather than treating every conditional preference as mandatory in every situation",
     "apply an adaptive hybrid design system to supported rich content and created artifacts",
   ])
@@ -74,6 +75,21 @@ test("replacement keeps conditional research, presentation and channel guidance 
     "Reply in my latest language unless requested otherwise.",
   ])
     expect(source).not.toContain(removed);
+});
+
+test("removing preferred outlets preserves general evidence-based source selection", () => {
+  const source = readFileSync(new URL("../instructions/holydot.md", import.meta.url), "utf8");
+  const guidance =
+    "prioritize relevance, reliability, primary evidence, independent verification, and appropriate specialist expertise.";
+  const research = approved
+    .toString("utf8")
+    .split("# research and evidence\n\n")[1]!
+    .split("\n# ")[0]!;
+  expect(research).toContain(guidance);
+  expect(source.split(guidance)).toHaveLength(2);
+  expect(source).not.toContain("# preferred research sources");
+  expect(source).not.toContain("these are preferences, not a whitelist");
+  expect(source).not.toContain("**international:** AP, AFP, Reuters");
 });
 
 // Synthetic presentation examples: turn labels are scenario descriptions, not actual model turns.

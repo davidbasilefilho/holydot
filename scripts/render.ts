@@ -13,15 +13,15 @@ export function renderInstructions(base: string, config: HolydotConfig) {
     const parsed = yield* parseConfig(config);
     const { coordinator, specialist, speed } = parsed.delegation;
     return (
-      `${base.trim()}\n\n## **Preferências explícitas desta configuração**\n\n` +
-      `Esta seção substitui os padrões correspondentes. São preferências locais, sem conceder acesso ou aprovação.\n\n` +
-      `- Coordenação de sessões delegadas: ${coordinator.model} / ${coordinator.effort}.\n` +
-      `- Especialistas: ${specialist.model} / ${specialist.effort}.\n` +
-      `- Velocidade: ${speed === "standard" ? "Standard" : "Fast (opt-in explícito)"}.\n` +
-      `- Panorama: ${parsed.statusUpdates.intervalMinutes} minutos; não cria agendamento.\n` +
-      `- CODEX_HOME: ${parsed.codexHome === null ? "respeitar valor explícito do ambiente ou padrão ~/.codex" : JSON.stringify(parsed.codexHome)}.\n\n` +
-      "Aplique escolhas somente por controles reais e quando suportadas. Não altere o modelo principal do dot. " +
-      "Se a integração futura com HolyCodex funcionar, prefira suas configurações como fonte de verdade, evitando seletores duplicados.\n"
+      `${base.trim()}\n\n## **Explicit preferences for this configuration**\n\n` +
+      `This section overrides the corresponding defaults. These are local preferences, without granting access or approval.\n\n` +
+      `- Delegated session coordination: ${coordinator.model} / ${coordinator.effort}.\n` +
+      `- Specialists: ${specialist.model} / ${specialist.effort}.\n` +
+      `- Speed: ${speed === "standard" ? "Standard" : "Fast (explicit opt-in)"}.\n` +
+      `- Overview: ${parsed.statusUpdates.intervalMinutes} minutes; does not create a schedule.\n` +
+      `- CODEX_HOME: ${parsed.codexHome === null ? "respect the explicit environment value or default ~/.codex" : JSON.stringify(parsed.codexHome)}.\n\n` +
+      "Apply choices only through real controls and when supported. Do not change the dot's main model. " +
+      "If a future HolyCodex integration works, prefer its settings as the source of truth, avoiding duplicate selectors.\n"
     );
   });
 }

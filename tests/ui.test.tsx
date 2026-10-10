@@ -43,14 +43,20 @@ test("actual OpenTUI/Solid frame supports keyboard choices, Save and cancellatio
 });
 
 test("small terminals show resize/cancel guidance instead of clipped controls", async () => {
+  let saves = 0;
+  let cancelled = false;
   const screen = await testRender(
     () => (
       <SetupEditor
         config={DEFAULT_CONFIG}
         migrated={true}
         error={() => ""}
-        onSave={() => {}}
-        onCancel={() => {}}
+        onSave={() => {
+          saves++;
+        }}
+        onCancel={() => {
+          cancelled = true;
+        }}
       />
     ),
     { width: 40, height: 16 },
@@ -59,10 +65,20 @@ test("small terminals show resize/cancel guidance instead of clipped controls", 
     await screen.renderOnce();
     expect(screen.captureCharFrame()).toContain("Resize to at least 48 × 24");
     expect(screen.captureCharFrame()).not.toContain("Coordinator · model");
+    await screen.mockInput.pressKeys(["TAB", "TAB", "TAB", "TAB", "ARROW_RIGHT"]);
+    screen.mockInput.pressKey("s", { ctrl: true });
+    expect(saves).toBe(0);
     screen.resize(80, 30);
     await screen.renderOnce();
     expect(screen.captureCharFrame()).toContain("Legacy settings");
     expect(screen.captureCharFrame()).toContain("Save");
+    expect(screen.captureCharFrame()).toContain("Standard · host support");
+    screen.resize(40, 16);
+    await screen.renderOnce();
+    screen.mockInput.pressEscape();
+    await Bun.sleep(100);
+    await screen.flush();
+    expect(cancelled).toBe(true);
   } finally {
     screen.renderer.destroy();
   }

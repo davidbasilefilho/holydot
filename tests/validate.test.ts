@@ -38,14 +38,12 @@ describe("offline package validation", () => {
       new URL("../instructions/holydot.md", import.meta.url),
       "utf8",
     );
-    expect(instructions).toContain("Agrupe perguntas relacionadas em um único lote");
-    expect(instructions).toContain("GPT-6.1 Sol com esforço medium");
-    expect(instructions).toContain("GPT-6 Luna com esforço high");
-    expect(instructions).toContain("sem seletor rule-mode");
-    expect(instructions).toContain(
-      "Uma chamada aceita pela ferramenta não comprova que o formulário apareceu",
-    );
-    expect(instructions).toContain("licença Apache-2.0");
+    expect(instructions).toContain("Group related questions into one clear, self-contained batch");
+    expect(instructions).toContain("GPT-6.1 Sol with medium effort");
+    expect(instructions).toContain("GPT-6 Luna with high effort");
+    expect(instructions).toContain("without a rule-mode selector");
+    expect(instructions).toContain("An accepted tool call does not prove that the form appeared");
+    expect(instructions).toContain("Apache-2.0 license");
   });
 
   test("adoption uses real rename and readback, preserves profile appearance and qualifies status claims", () => {
@@ -53,25 +51,29 @@ describe("offline package validation", () => {
       new URL("../instructions/holydot.md", import.meta.url),
       "utf8",
     );
-    const adoption = instructions.split("### **Identidade e adoção**")[1]!.split(/\n#{2,3} /)[0]!;
-    expect(adoption).toContain("Quando o dono pedir para adotar ou instalar");
+    const adoption = instructions.split("### **Identity and adoption**")[1]!.split(/\n#{2,3} /)[0]!;
+    expect(adoption).toContain("When the owner asks to adopt or install");
     expect(adoption).toContain("cloud_threads.change_orbit_name");
-    expect(adoption).toContain("definindo **holydot**");
+    expect(adoption).toContain("setting **holydot**");
     expect(adoption).toContain("cloud_threads.get_orbit_profile");
-    expect(adoption).toContain("Só afirme que o nome mudou se o resultado confirmar **holydot**");
-    expect(adoption).toContain("Preserve o avatar e as cores atuais");
-    expect(adoption).toContain("Não altere pet, imagem, cor, nem outras configurações do perfil");
-    expect(adoption).toContain("Diferencie instruções em uso de nome de perfil verificado");
-    expect(adoption).toContain("Se a alteração ou a verificação falhar ou não estiver disponível");
-    expect(adoption).toContain("o que continua pendente, com o próximo passo suportado");
-    expect(adoption).toContain("não comprova a mudança");
-    expect(adoption).toContain("sem pedir que o usuário repita uma autorização já explícita");
-    const status = instructions.split("### **Atualizações de status**")[1]!.split(/\n#{2,3} /)[0]!;
-    expect(status).toContain("Uma preferência de intervalo não cria um agendamento");
-    expect(status).toContain("confirme sua configuração antes de afirmar que está ativo");
-    expect(status).toContain("uma mensagem curta por projeto ainda ativo");
-    expect(status).toContain("verificação pendente");
-    expect(status).toContain("Responda imediatamente a pedidos de status");
+    expect(adoption).toContain(
+      "Only claim that the name changed if the result confirms **holydot**",
+    );
+    expect(adoption).toContain("Preserve the current avatar and colors");
+    expect(adoption).toContain("Do not change the pet, image, color, or other profile settings");
+    expect(adoption).toContain("Distinguish instructions in use from a verified profile name");
+    expect(adoption).toContain("If a change or verification fails or is unavailable");
+    expect(adoption).toContain("what remains pending, with the next supported step");
+    expect(adoption).toContain("does not prove the change");
+    expect(adoption).toContain(
+      "without asking the user to repeat authorization that is already explicit",
+    );
+    const status = instructions.split("### **Status updates**")[1]!.split(/\n#{2,3} /)[0]!;
+    expect(status).toContain("An interval preference does not create a schedule");
+    expect(status).toContain("confirm its configuration before claiming it is active");
+    expect(status).toContain("a short message for each still-active project");
+    expect(status).toContain("pending verification");
+    expect(status).toContain("Respond immediately to status requests");
   });
 
   test.each([
@@ -213,22 +215,13 @@ describe("offline package validation", () => {
     );
   });
 
-  test.each(["docs/usage.md", "docs/account-rules.md"])(
-    "authorization continuity stays aligned in %s",
+  test.each(["templates/task.md", "templates/result.md", "docs/usage.md", "docs/account-rules.md"])(
+    "authorization policy references an accessible canonical source in %s",
     (file) => {
       const text = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
-      for (const requirement of [
-        "autorização já dada ao mesmo fluxo e escopo",
-        "descrição do PR com SHA, evidências e limitações",
-        "Merge e dev já autorizados no fluxo conhecido",
-        "tag estável e latest vedados até ordem própria",
-        "mudança material de destino, dados, escopo, risco ou compromisso",
-        "retomada suportada antes de repetir a pergunta",
-        "nunca contorne uma negativa ou confirmação obrigatória",
-        "Política renderizada não concede permissões",
-        "autoridade real do host, sem decidir por palavras-chave",
-      ])
-        expect(text).toContain(requirement);
+      expect(text).toContain("[instructions/holydot.md](../instructions/holydot.md)");
+      expect(text).toContain("Continuidade da autorização");
+      expect(text).not.toContain("Merge e dev já autorizados no fluxo conhecido");
     },
   );
   test("specialist and release boundaries reuse authorization without expanding it", () => {
@@ -252,58 +245,58 @@ describe("offline package validation", () => {
   test("general instructions have exactly three peer chapters and retain the approved block", () => {
     const text = readFileSync(new URL("../instructions/holydot.md", import.meta.url), "utf8");
     const chapters = Array.from(text.matchAll(/^## \*\*(.*?)\*\*$/gm), (match) => match[1]);
-    expect(chapters).toEqual(["I. Autonomia", "II. Eficiência", "III. Qualidade e mergeability"]);
-    expect(text).toContain("três pilares são capítulos sem hierarquia");
-    expect(text).toContain("critérios conjuntos");
-    expect(text).not.toContain("quatro objetivos");
-    expect(text).toContain("Eficiência não impõe cortes de raciocínio, testes ou qualidade");
-    expect(text).toContain("Reutilize sessões e subagentes compatíveis");
+    expect(chapters).toEqual(["I. Autonomy", "II. Efficiency", "III. Quality and mergeability"]);
+    expect(text).toContain("three pillars are chapters without a hierarchy");
+    expect(text).toContain("joint criteria");
+    expect(text).not.toContain("four objectives");
+    expect(text).toContain("Efficiency does not impose cuts to the reasoning, testing, or quality");
+    expect(text).toContain("Reuse compatible sessions and subagents");
   });
   test.each([
     [
       "profile read before rename and no-op when already correct",
-      "Se o nome já for holydot, confirme o estado atual sem gravar novamente",
+      "If the name is already holydot, confirm the current state without writing it again",
     ],
     [
       "uncertain rename reconciles before retry",
-      "Quando houver falha ou leitura divergente, registre a etapa e confira o estado antes de repetir uma gravação",
+      "On failure or a conflicting read, record the step and check the state before repeating a write",
     ],
     [
       "mandatory rule form replaces redundant chat approval",
-      "esse formulário é o ponto de confirmação. Não acrescente uma pergunta de chat redundante antes",
+      "that form is the confirmation point. Do not add a redundant chat question beforehand",
     ],
     [
       "pending or cancelled form does not grant authority",
-      "Formulário pendente ou cancelado não autoriza a ação coberta",
+      "A pending or canceled form does not authorize the covered action",
     ],
     [
       "saved rule needs matching readback",
-      "Só registre salva após confirmação do host e verificada após leitura que corresponda à proposta",
+      "Record saved only after host confirmation and verified only after a read that matches the proposal",
     ],
     [
       "deduplicate by actual scope/behavior, preserving unrelated rules",
-      "Compare ação, destino, escopo e comportamento para identificar a regra correspondente",
+      "Compare the action, destination, scope, and behavior to identify the corresponding rule",
     ],
     [
       "pending and cancelled proposals are not silently reopened",
-      "Não reabra uma proposta pendente nem uma cancelada por iniciativa própria",
+      "Do not reopen a pending or canceled proposal on your own initiative",
     ],
     [
       "deleted rule is never automatically restored",
-      "Nunca recrie automaticamente uma regra excluída nem restaure uma cópia antiga",
+      "Never automatically recreate a deleted rule or restore an old copy",
     ],
     [
       "missing native controls only block the dependent step",
-      "Descubra capacidades reais, relate controles desabilitados e mantenha trabalho independente autorizado",
+      "Discover actual capabilities, report disabled controls, and continue independent authorized work",
     ],
   ])(
     "host adoption contract (text gate, not account integration): %s",
     (_scenario, requirement) => {
       const text = readFileSync(new URL("../instructions/holydot.md", import.meta.url), "utf8");
       expect(text).toContain(requirement);
-      expect(text).toContain("Não altere pet, imagem, cor, nem outras configurações do perfil");
+      expect(text).toContain("Do not change the pet, image, color, or other profile settings");
       expect(text).toContain(
-        "Não grave regras pessoais, identificadores privados ou permissões atuais no pacote",
+        "Do not write personal rules, private identifiers, or current permissions into the package",
       );
     },
   );
@@ -325,6 +318,7 @@ describe("offline package validation", () => {
   for (const file of [
     "templates/task.md",
     "tests/orchestration-policy.test.ts",
+    "tests/quality-policy.test.ts",
     "docs/operational-acceptance.md",
   ]) {
     test.each(["missing", "empty", "directory"])(

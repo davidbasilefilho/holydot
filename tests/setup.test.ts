@@ -67,6 +67,52 @@ test("legacy settings without status/scope retain safe defaults", async () => {
   );
 });
 
+test.each([1, 2])(
+  "UTF-8 BOM config v%i keeps exact backup bytes and supports Save",
+  async (version) => {
+    const path = fixture();
+    const source =
+      version === 1
+        ? {
+            schemaVersion: 1,
+            delegation: { model: "gpt-6-luna", effort: "high", speed: "standard" },
+          }
+        : DEFAULT_CONFIG;
+    const original = Buffer.from(`\uFEFF${JSON.stringify(source, null, 4)}\r\n`, "utf8");
+    writeFileSync(path, original);
+    expect((await Effect.runPromise(loadSettings(path)))?.config.delegation.speed).toBe("standard");
+    await Effect.runPromise(setup(path, { "--speed": "fast" }, () => Effect.succeed(null)));
+    expect(readFileSync(path)).toEqual(original);
+    expect(readdirSync(roots[0]!)).toEqual(["holydot.config.json"]);
+
+    const save = (config: typeof DEFAULT_CONFIG) => Effect.succeed(config);
+    await Effect.runPromise(setup(path, { "--speed": "fast" }, save));
+    expect((await Effect.runPromise(loadSettings(path)))?.config.delegation.speed).toBe("fast");
+    const backup = readdirSync(roots[0]!).find((name) => name.includes(".bak-"))!;
+    expect(readFileSync(join(roots[0]!, backup))).toEqual(original);
+    await Effect.runPromise(setup(path, {}, save));
+    expect(readdirSync(roots[0]!).filter((name) => name.includes(".bak-"))).toHaveLength(1);
+  },
+);
+
+test.each([false, true])(
+  "changing only the BOM during setup is detected: initially %s",
+  async (hasBOM) => {
+    const path = fixture();
+    const json = JSON.stringify(DEFAULT_CONFIG);
+    writeFileSync(path, `${hasBOM ? "\uFEFF" : ""}${json}`);
+    const external = `${hasBOM ? "" : "\uFEFF"}${json}`;
+    await expectFailure(
+      setup(path, { "--speed": "fast" }, (config) => {
+        writeFileSync(path, external);
+        return Effect.succeed(config);
+      }),
+    );
+    expect(readFileSync(path, "utf8")).toBe(external);
+    expect(readdirSync(roots[0]!)).toEqual(["holydot.config.json"]);
+  },
+);
+
 test("concurrent edit during setup is detected without overwriting another writer", async () => {
   const path = fixture();
   writeFileSync(path, JSON.stringify(DEFAULT_CONFIG));

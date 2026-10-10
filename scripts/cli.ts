@@ -69,7 +69,7 @@ export function runCli(
         new HolydotError({ message: "Configuration is missing. Run holydot setup first." }),
       );
     const rendered = yield* renderInstructions(source.text, loaded.config);
-    return `${rendered}\nIdentidade verificada do pacote: ${identity}.\n`;
+    return `${rendered}\nVerified package identity: ${identity}.\n`;
   });
 }
 

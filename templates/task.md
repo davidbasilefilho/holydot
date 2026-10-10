@@ -15,6 +15,9 @@ Modelo simplificado e modificado a partir de Intent, Assignment e AssignmentMeta
 - Dependências, acessos e permissões necessários:
 - Riscos e impactos relevantes:
 - Critérios de aceitação, testes e verificações:
+- Escopo de conclusão solicitado (implementação completa, investigação, push-only ou outro) e acompanhamento separado:
+- Convenções/decisões do mantenedor recuperadas; menor diff coeso suficiente:
+- Gates proporcionais: funcional, interface real quando aplicável, arquitetura e produto; revisor independente ou autocheck identificado:
 - Conclusão de código: commit, push/SHA remoto, PR normal novo ou existente e checks do head; responsável pela integração e bloqueios de entrega remota:
 - PR normal: escopo, origem/destino, evidência de confiança e bloqueios residuais:
 - Acompanhamento de CI e review bots: SHA atual, checks/jobs, comentários/reviews/threads, auth/config/quota versus código, estado por bot e condição de retomada/limite externo:
@@ -43,7 +46,7 @@ Prepare contexto e pesquisa antes do plano; inferir preferências não concede p
 
 ## **Fonte operacional canônica**
 
-Aplique [instructions/holydot.md](../instructions/holydot.md), especialmente Continuidade da autorização, Coordenação de múltiplos projetos, Descoberta e reuso de sessões warm e os três pilares conjuntos. No handoff, forneça um recurso realmente acessível com versão/revisão/digest ou o render completo verificado; uma referência inacessível não substitui a leitura. Recupere essa fonte antes das ações dependentes, preservando autoridade vigente e controles obrigatórios.
+Aplique [instructions/holydot.md](../instructions/holydot.md), especialmente Continuidade da autorização, Parada, pausa e retomada, Execução e escolha de ambiente, Coordenação de múltiplos projetos, Descoberta e reuso de sessões warm e os três pilares conjuntos. No handoff, forneça um recurso realmente acessível com versão/revisão/digest ou o render completo verificado; uma referência inacessível não substitui a leitura. Recupere essa fonte antes das ações dependentes, preservando autoridade vigente e controles obrigatórios.
 
 - Setup/adoção, quando pertinente: configuração local e render; nome e aparência lidos; controles disponíveis; proposta de regra explicitamente solicitada; formulário obrigatório e readback necessários.
 
@@ -51,4 +54,10 @@ Aplique [instructions/holydot.md](../instructions/holydot.md), especialmente Con
 
 Quando solicitar uma ação, diga diretamente quem deve agir, em qual ambiente e qual retorno é esperado, somente com os detalhes necessários. Prefira nomes concretos e distinga arquivo intermediário de final quando isso afetar o uso. Não compense formulação ruim com mais texto nem imponha checklist a toda resposta.
 
-Para coordenação ou retomada, registre somente campos pertinentes: projeto/repositório/ambiente; tarefa equivalente e decisão de continuar; sessão/papel/branch/worktree/recursos; última atividade efetiva observada e classificação warm/cold/desconhecida; estado ocupado e dependências; delta enviado; evidência recuperável e próximo passo. Separe atribuições de projetos independentes e preserve tarefas em andamento.
+Para coordenação ou retomada, registre somente campos pertinentes: projeto/repositório/ambiente; nível de execução escolhido e insuficiência comprovada do anterior ou escolha explícita do usuário; origem/estado de eventual interrupção e reconciliação de efeitos; tarefa equivalente e decisão de continuar; sessão/papel/branch/worktree/recursos; última atividade efetiva observada e classificação warm/cold/desconhecida; estado ocupado e dependências; delta enviado; evidência recuperável e próximo passo. Separe atribuições de projetos independentes e preserve tarefas em andamento.
+
+Publicação pendente mantém responsável e próxima ação: commit local, SHA remoto esperado, efeitos reconciliados e rota suportada de recuperação. Falha transitória ou backup externo não conclui o push. Retome quando a rota autorizada estiver disponível, sem repetir escrita incerta nem contornar negativas reais; preserve pausas explícitas.
+
+Se reviews do Codex estiverem indisponíveis, atribua revisão nativa independente geral e de segurança; registre o SHA e repita correção/checks/revisão até cumprir os gates. Não substitua fluxo de repositório por ZIP não solicitado; merge e deploy preservam suas autorizações.
+
+Branches: siga primeiro as convenções existentes do codebase, `AGENTS.md`, documentação e mantenedores. Use `release/v<version>/<meaningful-slice>` somente como fallback sem convenção aplicável, preservando os sufixos de versão. Não renomeie branches válidas para impor o fallback. Stacks têm vários PRs/branches dependentes; um PR único não é uma stack. Resolva uma colisão real entre ref e prefixo pelo fluxo autorizado antes de criar a ref dependente, sem impor migração genérica. Registre trunk, dependências, head/base e SHAs; preserve CI, review, gatilhos e mergeability. Não fragmente um PR único solicitado nem dispare publicação por convenção de nome.

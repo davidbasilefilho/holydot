@@ -10,61 +10,61 @@ test.each([
   [
     "bot pending",
     [
-      "Review pending ou ausência de review continua pendente",
-      "Inatividade ou nenhum comentário novo não é conclusão",
+      "Review pending or the absence of a review remains pending",
+      "Inactivity or no new comments is not completion",
     ],
   ],
   [
     "bot disabled/skipped",
     [
-      "bot desativado, skipped ou limitado por quota é bloqueio externo explícito",
-      "Status success com mensagem review skipped também não é revisão aprovada",
+      "a disabled, skipped, or quota-limited bot is an explicit external blocker",
+      "A success status with a review skipped message is not an approved review either",
     ],
   ],
   [
     "CI auth/config blocked",
     [
-      "continue acompanhando e tratando os bots independentes",
-      "usando logs/resultados observados, sem presumir a causa",
-      "Não altere credenciais, conta ou configuração de bot",
+      "continue tracking and addressing independent bots",
+      "using observed logs/results, without assuming the cause",
+      "Do not change credentials, accounts, or bot configuration",
     ],
   ],
   [
     "late comments after push",
     [
-      "Após cada push, reinicie a verificação no novo head",
-      "inclusive comentários que chegaram depois do push",
-      "Não use aprovação ou checks antigos como aceite automático",
+      "After every push, restart verification on the new head",
+      "including comments that arrived after the push",
+      "Do not use old approvals or checks as automatic acceptance",
     ],
   ],
   [
     "resolved only after verification",
     [
-      "Resolva uma thread somente após correção ou resposta sustentada e verificada",
-      "Releia para confirmar resolução",
-      "outdated, arquivo removido ou status verde não bastam",
+      "Resolve a thread only after a supported, verified correction or response",
+      "Reread to confirm resolution",
+      "outdated status, a removed file, or green status is not sufficient",
     ],
   ],
   [
     "green CI is insufficient",
     [
-      "CI verde isolada não encerra revisão",
-      "não declare o PR totalmente aprovado com revisão pendente",
+      "green CI alone does not close review",
+      "do not declare the PR fully approved with review pending",
     ],
   ],
   [
     "bounded observation",
     [
-      "até review terminal verificado ou limite externo explícito",
-      "Evite polling infinito",
-      "não habilite bot, contrate plano, crie automação",
+      "until a verified terminal review state or an explicit external limit",
+      "Avoid infinite polling",
+      "do not enable a bot, purchase a plan, create an automation",
     ],
   ],
   [
     "integration and merge authority",
     [
-      "A coordenação revisa a evidência de CI e bots do head integrado",
-      "merge exige autorização vigente e todos os critérios aplicáveis",
+      "coordination reviews CI and bot evidence for the integrated head",
+      "merge requires current authorization and all applicable criteria",
     ],
   ],
 ])("CI/review policy in full render/resume (not provider acceptance): %s", async (_, phrases) => {
@@ -78,7 +78,7 @@ test.each([
       );
       for (const phrase of phrases) expect(output.toLowerCase()).toContain(phrase.toLowerCase());
       expect(output).toContain("checks/statuses");
-      expect(output).toContain("comentários de conversa e inline, reviews e review threads");
+      expect(output).toContain("conversation and inline comments, reviews, and review threads");
     }
     expect(readFileSync(join(root, "holydot.config.json"))).toEqual(before);
   } finally {
@@ -103,5 +103,5 @@ test("public release/provenance docs exclude owner account runbook and private e
   ])
     expect(prompt).not.toContain(phrase);
   expect(prompt).toContain("tests/communication.test.ts");
-  expect(prompt).toContain("70b8a168767100bb05a36ba65960b942d0e2b7491e6dece4b4e6a2adc11089ea");
+  expect(prompt).toContain("instructions/integrity.json");
 });

@@ -11,6 +11,8 @@ bunx holydot@0.1.0 render > holydot.instructions.md
 
 A existência deste candidato não confirma sua disponibilidade no npm. Não é necessária instalação global, `bun add` nem dependência no seu projeto.
 
+O render completo usa inglês dos Estados Unidos (`en-US`), incluindo bootstrap, contratos operacionais, exemplos genéricos, preferências salvas e identidade verificada. Essa escolha é o idioma do artefato de instruções; não concede permissão para mudar o idioma de resposta solicitado pelo usuário. A revisão atual remove a seção de fontes preferidas. As atribuições públicas e os avisos de licença continuam em seus arquivos próprios.
+
 ## Editor interativo
 
 O setup usa OpenTUI + Solid. Tab/Shift+Tab ou ↑↓ muda o foco; ←→ altera opções; texto é editável nos campos de modelo, minutos e caminho. Ctrl+S ou Save confirma; Esc, Ctrl+C ou Cancel abandona sem escrever. Mouse seleciona campos e aciona Save/Cancel. Terminais menores que 48 × 24 mostram orientação para redimensionar. O editor mantém as escolhas anteriores.
@@ -48,7 +50,7 @@ Modelos são identificadores validados, não comprovação de disponibilidade. S
 
 ## Persistência e migração
 
-Na edição, a gravação mantém uma cópia `.bak-…` com os bytes originais. Inicialização cria o arquivo de forma exclusiva e atômica; não sobrescreve uma criação concorrente. Falha de permissões, arquivo inválido, symlink, UTF-8 corrompido ou mudança detectada durante o editor aborta a parte afetada.
+Na edição, a gravação mantém uma cópia `.bak-…` com os bytes originais, inclusive um BOM UTF-8 inicial quando presente. O parser aceita esse BOM sem removê-lo do snapshot usado na comparação e no backup; Save normaliza a nova configuração, enquanto Cancel e render preservam o arquivo original. Inicialização cria o arquivo de forma exclusiva e atômica; não sobrescreve uma criação concorrente. Falha de permissões, arquivo inválido, symlink, UTF-8 corrompido ou mudança detectada durante o editor aborta a parte afetada.
 
 Gravações do holydot usam um lock exclusivo `<arquivo>.lock` durante leitura, comparação, backup e substituição. Outro processo de setup que tenta salvar nesse período recebe um erro e deve recarregar antes de tentar novamente; não há espera nem sobrescrita por outro writer cooperante. O lock é liberado em sucesso, cancelamento da operação ou falha tratada. Após encerramento abrupto pode restar um lock: confira que nenhum processo está gravando, preserve os arquivos e remova apenas o lock obsoleto antes de repetir. O programa não remove locks existentes automaticamente.
 

@@ -34,7 +34,9 @@ Além dos testes de domínio, execute setup inicial, edição, cancelamento, err
 
 ## Checkpoints
 
-Faça commits e pushes dos checkpoints autorizados e confirme o SHA remoto. Branches `codex/**`, `work/**` e `feature/**` não acionam publish.yml. Branches `main`, `release/**` e tags `v*` podem publicar e exigem autorização de publicação antes de push. Nunca coloque handoffs privados, credenciais ou estado pessoal no pacote.
+Siga primeiro as convenções existentes do codebase, `AGENTS.md`, documentação e mantenedores. O padrão `release/v<version>/<meaningful-slice>` é fallback apenas sem convenção aplicável; não impõe renomeação de branches válidas. Preserve a mergeability, as bases dos PRs e os gatilhos efetivos. No próprio holydot, a stack de release existente continua válida e os filtros abaixo descrevem o workflow deste repositório, não uma regra universal para outros projetos.
+
+Faça commits e pushes dos checkpoints autorizados e confirme o SHA remoto. Branches `codex/**`, `work/**`, `feature/**` e camadas de stack `release/v<versão>/<mudança>` não acionam publish.yml. Branches `main`, branches legadas de um nível `release/*` (por exemplo, `release/v0.1.0`) e tags `v*` podem publicar e exigem autorização de publicação antes de push. Nunca coloque handoffs privados, credenciais ou estado pessoal no pacote.
 
 Os bumps de X/Y/Z estão em [versões e publicação](releases.md); não são comandos públicos da CLI.
 

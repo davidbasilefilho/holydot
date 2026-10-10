@@ -83,12 +83,12 @@ export function createReleasePlan(input: ReleaseInput): Effect.Effect<ReleasePla
     if (
       parsed.mode === "dev" &&
       parsed.ref !== "refs/heads/main" &&
-      !/^refs\/heads\/release\/[A-Za-z0-9._/-]+$/.test(parsed.ref)
+      !/^refs\/heads\/release\/[A-Za-z0-9._-]+$/.test(parsed.ref)
     )
       return yield* Effect.fail(
         new HolydotError({
           message:
-            "Dev publication is restricted to main and release branches; checkpoint branches never publish.",
+            "Dev publication is restricted to main and legacy bare release branches; stack layers and checkpoint branches never publish.",
         }),
       );
     const prerelease = parsed.mode === "dev";

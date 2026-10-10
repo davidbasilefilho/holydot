@@ -80,6 +80,9 @@ export function SetupEditor(props: EditorProps): JSX.Element {
     if (key.name === "escape" || (key.ctrl && key.name === "c")) {
       key.preventDefault();
       props.onCancel();
+    } else if (dimensions().width < 48 || dimensions().height < 24) {
+      // The resize fallback hides the form; do not edit or submit unseen preferences.
+      key.preventDefault();
     } else if (key.name === "tab") {
       key.preventDefault();
       move(key.shift ? -1 : 1);
