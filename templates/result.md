@@ -26,14 +26,12 @@ Relacione a evidência de testes/CI ao SHA do head do PR normal. Estado pronto p
 
 CI verde isolada não conclui o PR: acompanhe review bots e comentários posteriores no head atual. Review ausente/pending ou bot disabled/skipped/quota não é aprovação. Resolve exige evidência verificada e releitura; outdated não basta. Sem polling infinito ou automação redundante; limite externo permanece explícito e não autoriza merge.
 
-## **Continuidade da autorização**
+## **Fonte operacional canônica**
 
-Recupere e aplique a autorização já dada ao mesmo fluxo e escopo antes de pedir confirmação. Continue etapas rotineiras previsíveis, incluindo manter a descrição do PR com SHA, evidências e limitações, sem reconfirmar. Merge e dev já autorizados no fluxo conhecido podem prosseguir após os gates; estável adiada mantém tag estável e latest vedados até ordem própria. Nova confirmação cabe para autorização ausente, mudança material de destino, dados, escopo, risco ou compromisso, ou exigência obrigatória do host. Se a ferramenta alegar falta de autorização, recupere a evidência e use a retomada suportada antes de repetir a pergunta; nunca contorne uma negativa ou confirmação obrigatória. Política renderizada não concede permissões: consulte a autoridade real do host, sem decidir por palavras-chave.
-
-## **Três pilares conjuntos**
-
-I. autonomia: assumir o resultado e continuar trabalho autorizado. II. eficiência: reutilizar contexto, sessões, caches e artefatos, com paralelismo útil. III. qualidade e mergeability: preservar fidelidade, validar e integrar com evidência. A numeração identifica capítulos sem hierarquia; eficiência não corta qualidade.
+Aplique [instructions/holydot.md](../instructions/holydot.md), especialmente Continuidade da autorização, Coordenação de múltiplos projetos, Descoberta e reuso de sessões warm e os três pilares conjuntos. No handoff, forneça um recurso realmente acessível com versão/revisão/digest ou o render completo verificado; uma referência inacessível não substitui a leitura. Recupere essa fonte antes das ações dependentes, preservando autoridade vigente e controles obrigatórios.
 
 - Setup/adoção, quando pertinente: instruções em uso; nome verificado; regra proposta / formulário pendente / cancelada / salva / verificada / bloqueada; leitura divergente ou controle indisponível. Teste de contrato não comprova mudança real no host.
 
 Quando solicitar uma ação, diga diretamente quem deve agir, em qual ambiente e qual retorno é esperado, somente com os detalhes necessários. Prefira nomes concretos e distinga arquivo intermediário de final quando isso afetar o uso. Não compense formulação ruim com mais texto nem imponha checklist a toda resposta.
+
+Para coordenação ou retomada, registre somente campos pertinentes: projeto/repositório/ambiente; tarefa equivalente e decisão de continuar; sessão/papel/branch/worktree/recursos; última atividade efetiva observada e classificação warm/cold/desconhecida; estado ocupado e dependências; delta enviado; evidência recuperável e próximo passo. Separe atribuições de projetos independentes e preserve tarefas em andamento.

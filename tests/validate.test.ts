@@ -213,7 +213,7 @@ describe("offline package validation", () => {
     );
   });
 
-  test.each(["templates/task.md", "templates/result.md", "docs/usage.md", "docs/account-rules.md"])(
+  test.each(["docs/usage.md", "docs/account-rules.md"])(
     "authorization continuity stays aligned in %s",
     (file) => {
       const text = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
@@ -322,14 +322,23 @@ describe("offline package validation", () => {
     ]);
   });
 
-  test.each(["missing", "empty", "directory"])("rejects a %s required file", (condition) => {
-    const root = fixture();
-    const path = join(root, "templates/task.md");
-    rmSync(path);
-    if (condition === "empty") writeFileSync(path, " \n");
-    if (condition === "directory") mkdirSync(path);
-    expect(validatePackage(root)).toContain("Missing or empty required file: templates/task.md");
-  });
+  for (const file of [
+    "templates/task.md",
+    "tests/orchestration-policy.test.ts",
+    "docs/operational-acceptance.md",
+  ]) {
+    test.each(["missing", "empty", "directory"])(
+      `rejects a %s required file: ${file}`,
+      (condition) => {
+        const root = fixture();
+        const path = join(root, file);
+        rmSync(path);
+        if (condition === "empty") writeFileSync(path, " \n");
+        if (condition === "directory") mkdirSync(path);
+        expect(validatePackage(root)).toContain(`Missing or empty required file: ${file}`);
+      },
+    );
+  }
 
   test.each([
     ["[broken](missing.md)", "Broken local link"],
