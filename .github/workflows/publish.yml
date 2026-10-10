@@ -2,14 +2,14 @@ name: Publish
 
 on:
   push:
-    branches: [main, "release/**"]
+    branches: [main]
     tags: ["v*"]
 
 permissions:
   contents: read
 
-# Checkpoint branches (codex/**, work/**, feature/**) never enter publication.
-# A push to the release branches or a version tag still requires owner authorization.
+# Migration guard: branch renames and this old release-branch checkpoint cannot publish.
+# Existing stable tag semantics remain unchanged; future DEV publishing needs explicit authorization.
 concurrency:
   group: holydot-publish
   # GitHub.com supports up to 100 pending runs; default single would replace older events.
