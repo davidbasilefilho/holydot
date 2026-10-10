@@ -198,6 +198,37 @@ test.each([
     ],
   ],
   [
+    "publication recovery stays owned after a transient failure",
+    [
+      "O limite da repetição imediata não encerra a recuperação",
+      "uma alternativa nunca pode contornar controle obrigatório",
+      "Uma falha transitória não transforma publicação em tarefa opcional",
+      "Mantenha a contribuição pendente com responsável",
+      "Um backup externo protege contra perda, mas continua sendo recuperação, não push confirmado",
+      "preserve as pausas explícitas do usuário",
+    ],
+  ],
+  [
+    "native review fallback preserves independence and merge gates",
+    [
+      "revisão nativa independente da implementação",
+      "cobrindo qualidade geral e segurança",
+      "não use quantidade arbitrária de rodadas como aprovação",
+      "outra pessoa/agente deve verificar esse delta",
+      "não as apresente como dois revisores independentes",
+      "O fallback não aprova uma revisão externa nem ignora checks obrigatórios",
+      "A ordem explícita de não mergear continua válida",
+    ],
+  ],
+  [
+    "repository delivery never becomes an unsolicited archive",
+    [
+      "Não entregue ZIP, snapshot ou bundle de um repositório como substituto",
+      "Use o repositório e os workflows autorizados",
+      "um arquivo de recuperação pode preservar o trabalho, mas não substitui essa entrega",
+    ],
+  ],
+  [
     "safety floor and independent work",
     [
       "Negativa real de acesso ou aprovação, bloqueio de segurança",
